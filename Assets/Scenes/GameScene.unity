@@ -445,6 +445,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ArcadeMachineV2
       objectReference: {fileID: 0}
+    - target: {fileID: 5047439721539105029, guid: cb1e139dd8bd8c242abc1f42ae322388, type: 3}
+      propertyPath: Interpolate
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8086946124664911986, guid: cb1e139dd8bd8c242abc1f42ae322388, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -460,6 +464,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4834567401552106671, guid: cb1e139dd8bd8c242abc1f42ae322388, type: 3}
       insertIndex: -1
       addedObject: {fileID: 0}
+    - targetCorrespondingSourceObject: {fileID: 6389252183236009199, guid: cb1e139dd8bd8c242abc1f42ae322388, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 789227677}
   m_SourcePrefab: {fileID: 100100000, guid: cb1e139dd8bd8c242abc1f42ae322388, type: 3}
 --- !u!1 &789227673 stripped
 GameObject:
@@ -507,6 +514,23 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 6389252183236009199, guid: cb1e139dd8bd8c242abc1f42ae322388, type: 3}
   m_PrefabInstance: {fileID: 789227672}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &789227677
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 789227676}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6c0be61502bb534f922ebb746851216, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkRigidbodyBaseExpanded: 0
+  UseRigidBodyForMotion: 0
+  AutoUpdateKinematicState: 1
+  AutoSetKinematicOnDespawn: 1
 --- !u!1 &1607936405
 GameObject:
   m_ObjectHideFlags: 0
