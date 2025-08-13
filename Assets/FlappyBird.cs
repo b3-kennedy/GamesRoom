@@ -7,93 +7,77 @@ public class FlappyBird : ArcadeGame
 {
     public GameObject mainMenu;
     public GameObject gameScene;
-
     public FlappyBirdLevel level;
 
     public enum GameState { MAIN_MENU, GAME, GAME_OVER }
 
-    private GameState _gameState = GameState.MAIN_MENU;
+    // Network variable for syncing game state across clients
+    public NetworkVariable<GameState> netGameState = new NetworkVariable<GameState>(
+        GameState.MAIN_MENU,
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Server
+    );
 
     public TextMeshPro scoreText;
-    public GameState gameState
-    {
-        get => _gameState;
-        set
-        {
-            if (_gameState != value)
-            {
-                _gameState = value;
-                OnGameStateChanged(_gameState);
-            }
-        }
-    }
 
     void Start()
     {
-        gameScene.SetActive(false);
-        mainMenu.SetActive(true);
+        // Listen for state changes
+        netGameState.OnValueChanged += OnNetworkGameStateChanged;
+
+        // Apply initial state locally
+        ApplyState(netGameState.Value);
     }
 
     public override void Begin()
     {
-        gameState = GameState.GAME;
-    }
-
-    private void OnGameStateChanged(GameState newState)
-    {
-        // This method fires **once** when the game state changes
-        Debug.Log("Game state changed to: " + newState);
-
-        switch (newState)
+        if (IsServer) // Only server changes the state
         {
-            case GameState.MAIN_MENU:
-                MainMenuServerRpc();
-                break;
-            case GameState.GAME:
-                GameStateServerRpc();
-                level.SpawnPipesServerRpc();
- 
-                break;
-            case GameState.GAME_OVER:
-                // Handle game over UI
-                break;
+            netGameState.Value = GameState.GAME;
         }
     }
 
     void Update()
     {
-        if (gameState == GameState.GAME)
+        if (netGameState.Value == GameState.GAME)
         {
             level.Move();
-
         }
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    void GameStateServerRpc()
+    private void OnNetworkGameStateChanged(GameState oldState, GameState newState)
     {
-        GameStateClientRpc();
+        Debug.Log($"Game state changed from {oldState} to {newState}");
+        ApplyState(newState);
+
+        if (IsServer && newState == GameState.GAME)
+        {
+            // Server triggers pipe spawning when game starts
+            level.SpawnPipesServerRpc();
+        }
     }
 
-    [ClientRpc]
-    void GameStateClientRpc()
+    private void ApplyState(GameState state)
     {
-        mainMenu.SetActive(false);
-        gameScene.SetActive(true);
-    }
+        switch (state)
+        {
+            case GameState.MAIN_MENU:
+                mainMenu.SetActive(true);
+                gameScene.SetActive(false);
+                break;
 
-    [ServerRpc(RequireOwnership = false)]
-    void MainMenuServerRpc()
-    {
-        Debug.Log("main menu");
-        MainMenuClientRpc();
-    }
+            case GameState.GAME:
+                mainMenu.SetActive(false);
+                gameScene.SetActive(true);
+                break;
 
-    [ClientRpc]
-    void MainMenuClientRpc()
-    {
-        mainMenu.SetActive(true);
-        gameScene.SetActive(false);
+            case GameState.GAME_OVER:
+                mainMenu.SetActive(true);
+                gameScene.SetActive(false);
+                // TODO: Add game over UI logic here
+                break;
+        }
     }
-    
 }
+
+    
