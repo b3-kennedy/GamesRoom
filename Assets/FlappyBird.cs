@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem.LowLevel;
 
@@ -11,6 +12,8 @@ public class FlappyBird : ArcadeGame
     public enum GameState { MAIN_MENU, GAME, GAME_OVER }
 
     private GameState _gameState = GameState.MAIN_MENU;
+
+    public TextMeshPro scoreText;
     public GameState gameState
     {
         get => _gameState;
@@ -47,7 +50,7 @@ public class FlappyBird : ArcadeGame
                 gameScene.SetActive(false);
                 break;
             case GameState.GAME:
-                level.SpawnPipes();
+                level.SpawnPipesServerRpc();
                 mainMenu.SetActive(false);
                 gameScene.SetActive(true);
                 break;

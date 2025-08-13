@@ -1,7 +1,8 @@
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class FlappyBirdLevel : MonoBehaviour
+public class FlappyBirdLevel : NetworkBehaviour
 {
     public GameObject pipeSet;
     public float minHeight;
@@ -15,15 +16,16 @@ public class FlappyBirdLevel : MonoBehaviour
 
     public float speed = 3f;
 
-    public void SpawnPipes()
+    [ServerRpc(RequireOwnership = false)]
+    public void SpawnPipesServerRpc()
     {
         float height = Random.Range(minHeight, maxHeight);
-        Vector3 spawnPos = new Vector3(spawnPoint.position.x, height, spawnPoint.position.z);
+        Vector3 spawnPos = new Vector3(spawnPoint.position.x, spawnPoint.position.y + height, spawnPoint.position.z);
         GameObject pipe = Instantiate(pipeSet, spawnPos, pipeSet.transform.rotation);
+        pipe.GetComponent<NetworkObject>().Spawn();
         pipe.transform.SetParent(transform);
         spawnedPipes.Add(pipe);
     }
-    
     
 
     public void Move()
@@ -46,13 +48,7 @@ public class FlappyBirdLevel : MonoBehaviour
         if (spawnedPipes.Count == 0 ||
             spawnedPipes[spawnedPipes.Count - 1].transform.position.x <= spawnPoint.position.x - distanceBetweenPipes)
         {
-            SpawnPipes();
-        }
-
-        if (spawnedPipes.Count == 0 ||
-            spawnedPipes[spawnedPipes.Count - 1].transform.position.x <= spawnPoint.position.x - distanceBetweenPipes)
-        {
-            SpawnPipes();
+            SpawnPipesServerRpc();
         }
     }
 }
