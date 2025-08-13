@@ -6,9 +6,12 @@ public class Bird : MonoBehaviour
     Rigidbody rb;
     public float force;
 
+    FlappyBird flappyBird;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        flappyBird = transform.parent.parent.GetComponent<FlappyBird>();
         rb = GetComponent<Rigidbody>();
     }
 
@@ -22,6 +25,14 @@ public class Bird : MonoBehaviour
         {
             rb.linearVelocity = Vector3.zero;
             rb.AddForce(transform.up * force, ForceMode.Impulse);
+        }
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("FlappyBirdScore"))
+        {
+            flappyBird.IncreaseScoreServerRpc();
         }
     }
 }

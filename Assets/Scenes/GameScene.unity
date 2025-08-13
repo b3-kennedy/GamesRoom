@@ -687,7 +687,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &333184023
 Transform:
   m_ObjectHideFlags: 0
@@ -723,6 +723,10 @@ MonoBehaviour:
   mainMenu: {fileID: 690780634}
   gameScene: {fileID: 620206245}
   level: {fileID: 858379828}
+  score:
+    m_InternalValue: 0
+  netGameState:
+    m_InternalValue: 0
   scoreText: {fileID: 0}
 --- !u!114 &333184025
 MonoBehaviour:

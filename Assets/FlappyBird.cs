@@ -9,6 +9,8 @@ public class FlappyBird : ArcadeGame
     public GameObject gameScene;
     public FlappyBirdLevel level;
 
+    public NetworkVariable<int> score = new NetworkVariable<int>();
+
     public enum GameState { MAIN_MENU, GAME, GAME_OVER }
 
     // Network variable for syncing game state across clients
@@ -55,6 +57,12 @@ public class FlappyBird : ArcadeGame
             // Server triggers pipe spawning when game starts
             level.SpawnPipesServerRpc();
         }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void IncreaseScoreServerRpc()
+    {
+        score.Value++;
     }
 
     private void ApplyState(GameState state)
