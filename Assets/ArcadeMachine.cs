@@ -11,7 +11,7 @@ public class ArcadeMachine : NetworkBehaviour
 
     public void StartGame()
     {
-        arcadeGame.BeginServerRpc();
+        arcadeGame.BeginServerRpc(NetworkManager.Singleton.LocalClientId);
     }
 
     [ServerRpc(RequireOwnership = false)]

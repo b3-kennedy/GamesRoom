@@ -27,7 +27,7 @@ public class Interact : NetworkBehaviour
                 Debug.Log(machine);
                 if (machine)
                 {
-                    machine.arcadeGame.BeginServerRpc();
+                    machine.arcadeGame.BeginServerRpc(NetworkManager.Singleton.LocalClientId);
                 }
             }
         }

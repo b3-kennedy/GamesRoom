@@ -9,6 +9,8 @@ public class FlappyBird : ArcadeGame
     public GameObject gameScene;
     public FlappyBirdLevel level;
 
+    public GameObject bird;
+
     public NetworkVariable<int> score = new NetworkVariable<int>();
 
     public enum GameState { MAIN_MENU, GAME, GAME_OVER }
@@ -32,9 +34,10 @@ public class FlappyBird : ArcadeGame
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public override void BeginServerRpc()
+    public override void BeginServerRpc(ulong clientID)
     {
         netGameState.Value = GameState.GAME;
+        bird.GetComponent<NetworkObject>().ChangeOwnership(clientID);
     }
 
 

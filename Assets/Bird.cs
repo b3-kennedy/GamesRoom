@@ -1,6 +1,7 @@
+using Unity.Netcode;
 using UnityEngine;
 
-public class Bird : MonoBehaviour
+public class Bird : NetworkBehaviour
 {
 
     Rigidbody rb;
@@ -18,6 +19,7 @@ public class Bird : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!IsOwner) return;
 
         if (!gameObject.activeSelf) return;
 
