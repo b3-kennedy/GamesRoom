@@ -1,4 +1,5 @@
 using TMPro;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem.LowLevel;
 
@@ -46,13 +47,12 @@ public class FlappyBird : ArcadeGame
         switch (newState)
         {
             case GameState.MAIN_MENU:
-                mainMenu.SetActive(true);
-                gameScene.SetActive(false);
+                MainMenuServerRpc();
                 break;
             case GameState.GAME:
+                GameStateServerRpc();
                 level.SpawnPipesServerRpc();
-                mainMenu.SetActive(false);
-                gameScene.SetActive(true);
+ 
                 break;
             case GameState.GAME_OVER:
                 // Handle game over UI
@@ -65,7 +65,35 @@ public class FlappyBird : ArcadeGame
         if (gameState == GameState.GAME)
         {
             level.Move();
-            
+
         }
     }
+
+    [ServerRpc(RequireOwnership = false)]
+    void GameStateServerRpc()
+    {
+        GameStateClientRpc();
+    }
+
+    [ClientRpc]
+    void GameStateClientRpc()
+    {
+        mainMenu.SetActive(false);
+        gameScene.SetActive(true);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    void MainMenuServerRpc()
+    {
+        Debug.Log("main menu");
+        MainMenuClientRpc();
+    }
+
+    [ClientRpc]
+    void MainMenuClientRpc()
+    {
+        mainMenu.SetActive(true);
+        gameScene.SetActive(false);
+    }
+    
 }
