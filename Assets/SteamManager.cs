@@ -9,6 +9,8 @@ using Unity.Netcode;
 public class SteamManager : NetworkBehaviour
 {
 
+    public static SteamManager Instance;
+
     public TMP_InputField input;
 
     public TextMeshProUGUI lobbyIDText;
@@ -25,6 +27,16 @@ public class SteamManager : NetworkBehaviour
 
     void Awake()
     {
+
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+
         lobbyUI.SetActive(false);
         mainMenuUI.SetActive(true);
     }
