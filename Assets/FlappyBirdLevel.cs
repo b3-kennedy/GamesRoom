@@ -44,6 +44,8 @@ public class FlappyBirdLevel : NetworkBehaviour
             }
         }
 
+        if (!IsServer) return;
+
         // Spawn a new pipe if needed
         if (spawnedPipes.Count == 0 ||
             spawnedPipes[spawnedPipes.Count - 1].transform.position.x <= spawnPoint.position.x - distanceBetweenPipes)
