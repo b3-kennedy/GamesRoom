@@ -19,14 +19,15 @@ public class FlappyBirdLevel : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void SpawnPipesServerRpc()
     {
-        SpawnPipesClientRpc();
+        float height = Random.Range(minHeight, maxHeight);
+        Vector3 spawnPos = new Vector3(spawnPoint.position.x, spawnPoint.position.y + height, spawnPoint.position.z);
+        SpawnPipesClientRpc(spawnPos);
     }
 
     [ClientRpc]
-    void SpawnPipesClientRpc()
+    void SpawnPipesClientRpc(Vector3 spawnPos)
     {
-        float height = Random.Range(minHeight, maxHeight);
-        Vector3 spawnPos = new Vector3(spawnPoint.position.x, spawnPoint.position.y + height, spawnPoint.position.z);
+
         GameObject pipe = Instantiate(pipeSet, spawnPos, pipeSet.transform.rotation);
         pipe.transform.SetParent(transform);
         spawnedPipes.Add(pipe);
