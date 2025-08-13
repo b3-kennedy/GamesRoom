@@ -32,6 +32,8 @@ public class Bird : NetworkBehaviour
 
     void OnTriggerEnter(Collider other)
     {
+        if (!IsOwner) return;
+        
         if (other.CompareTag("FlappyBirdScore"))
         {
             flappyBird.IncreaseScoreServerRpc();

@@ -65,6 +65,7 @@ public class FlappyBird : ArcadeGame
     public void IncreaseScoreServerRpc()
     {
         score.Value++;
+        scoreText.text = $"SCORE: {score.Value}";
     }
 
     private void ApplyState(GameState state)

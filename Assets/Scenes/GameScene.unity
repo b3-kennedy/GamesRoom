@@ -385,6 +385,22 @@ PrefabInstance:
       propertyPath: InScenePlacedSourceGlobalObjectIdHash
       value: 1545382152
       objectReference: {fileID: 0}
+    - target: {fileID: 2715767171500903619, guid: cb1e139dd8bd8c242abc1f42ae322388, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 18.0299
+      objectReference: {fileID: 0}
+    - target: {fileID: 2715767171500903619, guid: cb1e139dd8bd8c242abc1f42ae322388, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 1.1814
+      objectReference: {fileID: 0}
+    - target: {fileID: 2715767171500903619, guid: cb1e139dd8bd8c242abc1f42ae322388, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0.1024
+      objectReference: {fileID: 0}
+    - target: {fileID: 2715767171500903619, guid: cb1e139dd8bd8c242abc1f42ae322388, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 4.5416
+      objectReference: {fileID: 0}
     - target: {fileID: 2912180739464058609, guid: cb1e139dd8bd8c242abc1f42ae322388, type: 3}
       propertyPath: bird
       value: 
