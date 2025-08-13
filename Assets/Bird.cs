@@ -25,15 +25,9 @@ public class Bird : NetworkBehaviour
 
         if (Input.GetButtonDown("Fire1"))
         {
-            FlapServerRpc();
+            rb.linearVelocity = Vector3.zero;
+            rb.AddForce(transform.up * force, ForceMode.Impulse);
         }
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    void FlapServerRpc()
-    {
-        rb.linearVelocity = Vector3.zero;
-        rb.AddForce(transform.up * force, ForceMode.Impulse);
     }
 
     void OnTriggerEnter(Collider other)
