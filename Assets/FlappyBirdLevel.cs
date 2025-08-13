@@ -37,14 +37,20 @@ public class FlappyBirdLevel : NetworkBehaviour
     {
         for (int i = spawnedPipes.Count - 1; i >= 0; i--)
         {
-            Destroy(spawnedPipes[i].gameObject);
-            spawnedPipes.Clear();
+            if (spawnedPipes[i] != null)
+            {
+                Destroy(spawnedPipes[i]);
+            }
         }
+
+        spawnedPipes.Clear();
     }
-    
+
 
     public void Move()
     {
+
+        if (!gameObject.activeSelf) return;
 
         // Move all pipes
         for (int i = spawnedPipes.Count - 1; i >= 0; i--)

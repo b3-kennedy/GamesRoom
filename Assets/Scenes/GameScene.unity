@@ -369,6 +369,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1709797293512072176, guid: cb1e139dd8bd8c242abc1f42ae322388, type: 3}
+      propertyPath: m_Constraints
+      value: 112
+      objectReference: {fileID: 0}
     - target: {fileID: 2196518196206403851, guid: cb1e139dd8bd8c242abc1f42ae322388, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 2139260708

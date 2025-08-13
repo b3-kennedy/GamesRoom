@@ -47,9 +47,16 @@ public class FlappyBird : ArcadeGame
 
     public override void Reset()
     {
-        ApplyState(GameState.MAIN_MENU);
-        bird.transform.localPosition = Vector3.zero;
+
+        bird.transform.localPosition = new Vector3(0f, 0f, 1.59f);
+        bird.GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
+        scoreText.text = "SCORE: 0";
         level.ClearPipes();
+        if (IsServer)
+        {
+            score.Value = 0;
+            netGameState.Value = GameState.MAIN_MENU;
+        }
     }
 
 
