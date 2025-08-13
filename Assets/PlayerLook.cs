@@ -15,9 +15,16 @@ public class PlayerLook : NetworkBehaviour
 
     void Start()
     {
-        // Lock cursor to center
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+    }
+
+    public override void OnNetworkSpawn()
+    {
+        if (!IsOwner)
+        {
+            cam.gameObject.SetActive(false);
+        }
     }
 
     void Update()
