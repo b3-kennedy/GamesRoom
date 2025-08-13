@@ -47,9 +47,12 @@ public class FlappyBird : ArcadeGame
 
     public override void Reset()
     {
-        netGameState.Value = GameState.MAIN_MENU;
+        ApplyState(GameState.MAIN_MENU);
+        bird.transform.position = Vector3.zero;
         level.ClearPipes();
     }
+
+
 
 
     void Update()
