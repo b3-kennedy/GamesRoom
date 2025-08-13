@@ -4,6 +4,9 @@ using UnityEngine;
 public abstract class ArcadeGame : NetworkBehaviour
 {
     [ServerRpc(RequireOwnership = false)]
-    public abstract void BeginServerRpc();
+    public virtual void BeginServerRpc()
+    { 
+
+    }
 
 }
