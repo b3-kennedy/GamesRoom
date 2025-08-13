@@ -65,6 +65,13 @@ public class FlappyBird : ArcadeGame
     public void IncreaseScoreServerRpc()
     {
         score.Value++;
+        UpdateScoreClientRpc();
+        
+    }
+
+    [ClientRpc]
+    void UpdateScoreClientRpc()
+    {
         scoreText.text = $"SCORE: {score.Value}";
     }
 
