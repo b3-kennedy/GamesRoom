@@ -45,6 +45,12 @@ public class FlappyBird : ArcadeGame
         bird.GetComponent<NetworkObject>().ChangeOwnership(clientID);
     }
 
+    public override void Reset()
+    {
+        netGameState.Value = GameState.MAIN_MENU;
+        level.ClearPipes();
+    }
+
 
     void Update()
     {

@@ -32,6 +32,15 @@ public class FlappyBirdLevel : NetworkBehaviour
         pipe.transform.SetParent(transform);
         spawnedPipes.Add(pipe);
     }
+
+    public void ClearPipes()
+    {
+        for (int i = spawnedPipes.Count - 1; i >= 0; i--)
+        {
+            Destroy(spawnedPipes[i].gameObject);
+            spawnedPipes.Clear();
+        }
+    }
     
 
     public void Move()

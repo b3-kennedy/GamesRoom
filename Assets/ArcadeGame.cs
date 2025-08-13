@@ -5,8 +5,13 @@ public abstract class ArcadeGame : NetworkBehaviour
 {
     [ServerRpc(RequireOwnership = false)]
     public virtual void BeginServerRpc(ulong clientID)
-    { 
+    {
 
+    }
+
+    public virtual void Reset()
+    {
+        
     }
 
 }

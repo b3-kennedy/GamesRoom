@@ -30,7 +30,8 @@ public class ArcadeMachine : NetworkBehaviour
     {
         if (nearPlayers.Count == 0)
         {
-            screen.SetActive(false);    
+            screen.SetActive(false);
+            arcadeGame.Reset();  
         }
     }
 }
