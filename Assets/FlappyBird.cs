@@ -48,7 +48,7 @@ public class FlappyBird : ArcadeGame
     public override void Reset()
     {
         ApplyState(GameState.MAIN_MENU);
-        bird.transform.position = Vector3.zero;
+        bird.transform.localPosition = Vector3.zero;
         level.ClearPipes();
     }
 
