@@ -31,6 +31,11 @@ public class FlappyBird : ArcadeGame
 
         // Apply initial state locally
         ApplyState(netGameState.Value);
+
+        scoreText.text = "SCORE: 0";
+
+        score.OnValueChanged += OnScoreChanged;
+
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -61,18 +66,17 @@ public class FlappyBird : ArcadeGame
         }
     }
 
+    // Server only: increment score
     [ServerRpc(RequireOwnership = false)]
     public void IncreaseScoreServerRpc()
     {
         score.Value++;
-        UpdateScoreClientRpc();
-        
     }
 
-    [ClientRpc]
-    void UpdateScoreClientRpc()
+    // Called automatically on all clients when score changes
+    private void OnScoreChanged(int oldValue, int newValue)
     {
-        scoreText.text = $"SCORE: {score.Value}";
+        scoreText.text = $"SCORE: {newValue}";
     }
 
     private void ApplyState(GameState state)
