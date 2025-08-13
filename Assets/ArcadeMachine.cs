@@ -11,7 +11,7 @@ public class ArcadeMachine : NetworkBehaviour
 
     public void StartGame()
     {
-        arcadeGame.Begin();
+        arcadeGame.BeginServerRpc();
     }
 
     [ServerRpc(RequireOwnership = false)]

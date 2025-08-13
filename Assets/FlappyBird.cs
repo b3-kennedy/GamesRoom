@@ -31,13 +31,12 @@ public class FlappyBird : ArcadeGame
         ApplyState(netGameState.Value);
     }
 
-    public override void Begin()
+    [ServerRpc(RequireOwnership = false)]
+    public override void BeginServerRpc()
     {
-        if (IsServer) // Only server changes the state
-        {
-            netGameState.Value = GameState.GAME;
-        }
+        netGameState.Value = GameState.GAME;
     }
+
 
     void Update()
     {
