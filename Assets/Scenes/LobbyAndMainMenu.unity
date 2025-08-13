@@ -307,8 +307,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 85276865}
-  - component: {fileID: 85276864}
   - component: {fileID: 85276866}
+  - component: {fileID: 85276864}
   m_Layer: 0
   m_Name: PlayerSpawner
   m_TagString: Untagged
@@ -329,7 +329,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  playerPrefab: {fileID: 0}
+  playerPrefab: {fileID: 3594527728878532603, guid: f4c3cb85faaee244e92557760b977558, type: 3}
 --- !u!4 &85276865
 Transform:
   m_ObjectHideFlags: 0
