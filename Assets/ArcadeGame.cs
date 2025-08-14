@@ -9,9 +9,10 @@ public abstract class ArcadeGame : NetworkBehaviour
 
     }
 
-    public virtual void Reset()
+    [ServerRpc(RequireOwnership = false)]
+    public virtual void ResetServerRpc()
     {
-        
+
     }
 
 }

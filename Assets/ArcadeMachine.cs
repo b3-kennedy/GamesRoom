@@ -33,7 +33,7 @@ public class ArcadeMachine : NetworkBehaviour
         if (nearPlayers.Count == 0)
         {
             screen.SetActive(false);
-            arcadeGame.Reset();
+            arcadeGame.ResetServerRpc();
         }
     }
 }
