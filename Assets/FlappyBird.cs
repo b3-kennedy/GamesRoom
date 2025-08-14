@@ -59,16 +59,22 @@ public class FlappyBird : ArcadeGame
             Destroy(bird);
         }
         bird = Instantiate(birdPrefab);
-        bird.GetComponent<Bird>().flappyBird = this;
+
         bird.transform.position = birdPosition;
         var netObj = bird.GetComponent<NetworkObject>();
-        netObj.TrySetParent(gameScene.GetComponent<NetworkObject>(), false);
         netObj.SpawnWithOwnership(clientID);
+        SpawnBirdClientRpc();
 
     }
 
+    [ClientRpc]
+    void SpawnBirdClientRpc()
+    {
+        bird.GetComponent<Bird>().flappyBird = this;
+    }
 
-    [ServerRpc]    
+
+    [ServerRpc(RequireOwnership = false)]    
     public override void ResetServerRpc()
     {
         score.Value = 0;
