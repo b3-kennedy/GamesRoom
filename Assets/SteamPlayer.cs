@@ -8,6 +8,7 @@ public class SteamPlayer : NetworkBehaviour
 
     public void Start()
     {
+        if (!IsOwner) return;
         if (SteamClient.IsLoggedOn && SteamClient.IsValid)
         {
             playerName = SteamClient.Name;
