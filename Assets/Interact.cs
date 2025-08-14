@@ -11,6 +11,8 @@ public class Interact : NetworkBehaviour
 
     public PlayerInteractPanel playerInteractMenu;
 
+    NetworkObject playerInteractingWith;
+
     void Start()
     {
         cam = GetComponent<PlayerLook>().cam;
@@ -43,8 +45,13 @@ public class Interact : NetworkBehaviour
                     SteamPlayer steamPlayer = hit.collider.GetComponent<SteamPlayer>();
                     if (!playerInteractMenu.gameObject.activeSelf)
                     {
+                        playerInteractingWith = hit.collider.GetComponent<NetworkObject>();
                         playerInteractMenu.title.text = $"Interact With {steamPlayer.playerName}";
+                        playerInteractMenu.clientID = NetworkManager.Singleton.LocalClientId;
+                        playerInteractMenu.otherClientID = playerInteractingWith.OwnerClientId;
                         playerInteractMenu.gameObject.SetActive(true);
+                        Cursor.lockState = CursorLockMode.Confined;
+                        
                     }
                 }
 
@@ -53,6 +60,8 @@ public class Interact : NetworkBehaviour
         else if (Input.GetKeyUp(interactKey) && playerInteractMenu.gameObject.activeSelf)
         {
             playerInteractMenu.gameObject.SetActive(false);
+            Cursor.lockState = CursorLockMode.Locked;
+            playerInteractingWith = null;
         }
 
     }
