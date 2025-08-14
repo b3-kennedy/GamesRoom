@@ -1237,8 +1237,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 7357702672847081605}
-        m_TargetAssemblyTypeName: PlayerInteractPanel, Assembly-CSharp
+      - m_Target: {fileID: 3541274523719127700}
+        m_TargetAssemblyTypeName: Interact, Assembly-CSharp
         m_MethodName: RockPaperScissorsInvite
         m_Mode: 1
         m_Arguments:

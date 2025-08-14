@@ -13,6 +13,9 @@ public class Interact : NetworkBehaviour
 
     NetworkObject playerInteractingWith;
 
+    ulong clientID;
+    ulong otherClientID;
+
     void Start()
     {
         cam = GetComponent<PlayerLook>().cam;
@@ -28,7 +31,6 @@ public class Interact : NetworkBehaviour
             if (Physics.Raycast(cam.transform.position, cam.transform.forward, out RaycastHit hit, range))
             {
                 ArcadeMachine machine = hit.collider.GetComponent<ArcadeMachine>();
-                Debug.Log(machine);
                 if (machine)
                 {
                     machine.arcadeGame.BeginServerRpc(NetworkManager.Singleton.LocalClientId);
@@ -46,6 +48,9 @@ public class Interact : NetworkBehaviour
                     if (!playerInteractMenu.gameObject.activeSelf)
                     {
                         playerInteractingWith = hit.collider.GetComponent<NetworkObject>();
+                        clientID = NetworkManager.Singleton.LocalClientId;
+                        otherClientID = playerInteractingWith.OwnerClientId;
+                        
                         playerInteractMenu.title.text = $"Interact With {steamPlayer.playerName}";
                         playerInteractMenu.clientID = NetworkManager.Singleton.LocalClientId;
                         playerInteractMenu.otherClientID = playerInteractingWith.OwnerClientId;
@@ -64,6 +69,28 @@ public class Interact : NetworkBehaviour
             playerInteractingWith = null;
         }
 
+    }
+
+    public void RockPaperScissorsInvite()
+    {
+        RockPaperScissorsInviteServerRpc(otherClientID, clientID);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void RockPaperScissorsInviteServerRpc(ulong receiverClientID, ulong senderClientID)
+    {
+        RockPaperScissorsInviteClientRpc(receiverClientID, senderClientID);
+    }
+
+    [ClientRpc]
+    void RockPaperScissorsInviteClientRpc(ulong receiverClientID, ulong senderClientID)
+    {
+        if (NetworkManager.Singleton.LocalClientId == receiverClientID)
+        {
+            var senderPlayer = NetworkManager.Singleton.ConnectedClients[senderClientID].PlayerObject;
+            var senderName = senderPlayer.GetComponent<SteamPlayer>().playerName;
+            Debug.Log($"Received a rps invite from {senderName}");
+        }
     }
 
 
