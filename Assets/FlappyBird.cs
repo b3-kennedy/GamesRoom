@@ -63,9 +63,19 @@ public class FlappyBird : ArcadeGame
         bird.transform.position = birdPosition;
         var netObj = bird.GetComponent<NetworkObject>();
         netObj.SpawnWithOwnership(clientID);
-        bird.GetComponent<Bird>().hitPipe.AddListener(HitPipe);
-        bird.GetComponent<Bird>().increaseScore.AddListener(IncreaseScore);
+        HookBirdEventsClientRpc(netObj.NetworkObjectId);
 
+    }
+
+    [ClientRpc]
+    void HookBirdEventsClientRpc(ulong birdNetId)
+    {
+        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(birdNetId, out var netObj))
+        {
+            var b = netObj.GetComponent<Bird>();
+            b.hitPipe.AddListener(HitPipe);
+            b.increaseScore.AddListener(IncreaseScore);
+        }
     }
 
     void HitPipe()
