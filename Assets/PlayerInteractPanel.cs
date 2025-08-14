@@ -2,7 +2,7 @@ using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 
-public class PlayerInteractPanel : NetworkBehaviour
+public class PlayerInteractPanel : MonoBehaviour
 {
     public TextMeshProUGUI title;
     public ulong clientID;
