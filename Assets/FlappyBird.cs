@@ -63,16 +63,20 @@ public class FlappyBird : ArcadeGame
         bird.transform.position = birdPosition;
         var netObj = bird.GetComponent<NetworkObject>();
         netObj.SpawnWithOwnership(clientID);
-        SpawnBirdClientRpc();
+        bird.GetComponent<Bird>().hitPipe.AddListener(HitPipe);
+        bird.GetComponent<Bird>().increaseScore.AddListener(IncreaseScore);
 
     }
 
-    [ClientRpc]
-    void SpawnBirdClientRpc()
+    void HitPipe()
     {
-        bird.GetComponent<Bird>().flappyBird = this;
+        GameOverServerRpc();
     }
 
+    void IncreaseScore()
+    { 
+        IncreaseScoreServerRpc();
+    }
 
     [ServerRpc(RequireOwnership = false)]    
     public override void ResetServerRpc()

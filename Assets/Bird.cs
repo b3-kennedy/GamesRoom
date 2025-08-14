@@ -1,5 +1,6 @@
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Bird : NetworkBehaviour
 {
@@ -8,6 +9,10 @@ public class Bird : NetworkBehaviour
     public float force;
 
     [HideInInspector] public FlappyBird flappyBird;
+
+    [HideInInspector] public UnityEvent hitPipe;
+
+    [HideInInspector] public UnityEvent increaseScore;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -35,13 +40,13 @@ public class Bird : NetworkBehaviour
 
         if (other.CompareTag("FlappyBirdScore"))
         {
-            flappyBird.IncreaseScoreServerRpc();
+            increaseScore.Invoke();
         }
     }
 
     void OnCollisionEnter(Collision collision)
     {
-        flappyBird.GameOverServerRpc();
+        hitPipe.Invoke();
     }
 
 
