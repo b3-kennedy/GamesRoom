@@ -522,7 +522,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   range: 5
   interactKey: 101
-  playerInteractMenu: {fileID: 365314809753919389}
+  playerInteractMenu: {fileID: 7357702672847081605}
 --- !u!114 &-8399362392592308065
 MonoBehaviour:
   m_ObjectHideFlags: 0
