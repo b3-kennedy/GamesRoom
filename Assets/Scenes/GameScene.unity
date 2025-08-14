@@ -1375,6 +1375,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1665019736804227401}
+  - component: {fileID: 2912180740218682986}
   - component: {fileID: 2912180740218682985}
   m_Layer: 0
   m_Name: FlappyBird
@@ -1979,6 +1980,31 @@ MonoBehaviour:
   scoreText: {fileID: 2410464548545631325}
   gameOverScoreText: {fileID: 1432909741}
   speedText: {fileID: 1398296391}
+--- !u!114 &2912180740218682986
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 293552993314849939}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 3199376710
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 0
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
 --- !u!33 &2948581935166483824
 MeshFilter:
   m_ObjectHideFlags: 0
