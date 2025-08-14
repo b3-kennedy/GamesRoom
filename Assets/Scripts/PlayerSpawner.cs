@@ -39,5 +39,5 @@ public class PlayerSpawner : NetworkBehaviour
             }
         }
     }
-    
+
 }

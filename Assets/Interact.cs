@@ -29,11 +29,20 @@ public class Interact : NetworkBehaviour
                 {
                     machine.arcadeGame.BeginServerRpc(NetworkManager.Singleton.LocalClientId);
                 }
-                else if (hit.collider.CompareTag("Player"))
+
+            }
+        }
+        if (Input.GetKey(KeyCode.E))
+        {
+            if (Physics.Raycast(cam.transform.position, cam.transform.forward, out RaycastHit hit, range))
+            {
+                if (hit.collider.CompareTag("Player"))
                 {
                     Debug.Log("Open menu");
                 }
+
             }
+
         }
 
     }
