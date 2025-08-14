@@ -10,11 +10,26 @@ public class FlappyBirdLevel : NetworkBehaviour
 
     public Transform spawnPoint;
 
+    FlappyBird flappyBird;
+
     public List<GameObject> spawnedPipes;
 
     public float distanceBetweenPipes = 3f;
 
-    public float speed = 3f;
+    public float baseSpeed = 3f;
+    public float maxSpeed = 5f;
+
+    public NetworkVariable<float> speed;
+
+    float gameTimer;
+
+    int lastSecond = -1;
+
+    void Start()
+    {
+        flappyBird = transform.parent.parent.GetComponent<FlappyBird>();
+        speed.Value = baseSpeed;
+    }
 
     [ServerRpc(RequireOwnership = false)]
     public void SpawnPipesServerRpc()
@@ -33,8 +48,15 @@ public class FlappyBirdLevel : NetworkBehaviour
         spawnedPipes.Add(pipe);
     }
 
+    public float GetSpeed()
+    {
+        return speed.Value;
+    }
+
     public void ClearPipes()
     {
+        gameTimer = 0;
+        speed.Value = baseSpeed;
         for (int i = spawnedPipes.Count - 1; i >= 0; i--)
         {
             if (spawnedPipes[i] != null)
@@ -52,11 +74,12 @@ public class FlappyBirdLevel : NetworkBehaviour
 
         if (!gameObject.activeSelf) return;
 
-        // Move all pipes
+
+
         for (int i = spawnedPipes.Count - 1; i >= 0; i--)
         {
             GameObject pipe = spawnedPipes[i];
-            pipe.transform.position -= new Vector3(speed * Time.deltaTime, 0, 0);
+            pipe.transform.position -= new Vector3(speed.Value * Time.deltaTime, 0, 0);
 
             if (pipe.transform.position.x < spawnPoint.position.x - 25f)
             {
@@ -66,6 +89,16 @@ public class FlappyBirdLevel : NetworkBehaviour
         }
 
         if (!IsServer) return;
+
+        gameTimer += Time.deltaTime;
+
+        int currentSecond = Mathf.FloorToInt(gameTimer);
+        if (currentSecond % 2 == 0 && currentSecond != lastSecond && speed.Value < maxSpeed)
+        {
+            speed.Value += 0.01f;
+            flappyBird.UpdateSpeedTextServerRpc();
+        }
+        lastSecond = currentSecond;
 
         // Spawn a new pipe if needed
         if (spawnedPipes.Count == 0 ||

@@ -30,6 +30,8 @@ public class FlappyBird : ArcadeGame
     public TextMeshPro scoreText;
     public TextMeshPro gameOverScoreText;
 
+    public TextMeshPro speedText;
+
     Vector3 birdPosition;
 
     void Start()
@@ -42,11 +44,30 @@ public class FlappyBird : ArcadeGame
 
         scoreText.text = "SCORE: 0";
 
+        speedText.text = "SPEED x1";
+
         score.OnValueChanged += OnScoreChanged;
 
         birdPosition = new Vector3(-97.4796448f, -120f, 143.583679f);
         
 
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void UpdateSpeedTextServerRpc()
+    {
+        UpdateSpeedTextClientRpc();
+    }
+
+    [ClientRpc]
+    void UpdateSpeedTextClientRpc()
+    {
+        float baseSpeed = level.baseSpeed;
+        float currentSpeed = level.GetSpeed();
+
+        float multiplier = currentSpeed / baseSpeed;
+
+        speedText.text = $"SPEED x{multiplier:F2}";
     }
 
     [ServerRpc(RequireOwnership = false)]

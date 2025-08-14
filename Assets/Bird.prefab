@@ -151,7 +151,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  force: 10
+  force: 25
+  flappyBird: {fileID: 0}
+  hitPipe:
+    m_PersistentCalls:
+      m_Calls: []
+  increaseScore:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!54 &5947323115367201946
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -160,7 +167,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3687237387219355305}
   serializedVersion: 4
-  m_Mass: 2
+  m_Mass: 5
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
