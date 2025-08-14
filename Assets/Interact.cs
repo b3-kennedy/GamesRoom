@@ -9,7 +9,7 @@ public class Interact : NetworkBehaviour
 
     public KeyCode interactKey = KeyCode.E;
 
-    public GameObject playerInteractMenu;
+    public PlayerInteractPanel playerInteractMenu;
 
     void Start()
     {
@@ -41,17 +41,18 @@ public class Interact : NetworkBehaviour
                 if (hit.collider.CompareTag("Player"))
                 {
                     SteamPlayer steamPlayer = hit.collider.GetComponent<SteamPlayer>();
-                    if (!playerInteractMenu.activeSelf)
+                    if (!playerInteractMenu.gameObject.activeSelf)
                     {
-                        playerInteractMenu.SetActive(true);
+                        playerInteractMenu.title.text = $"Interact With {steamPlayer.playerName}";
+                        playerInteractMenu.gameObject.SetActive(true);
                     }
                 }
 
             }
         }
-        else if (Input.GetKeyUp(interactKey) && playerInteractMenu.activeSelf)
+        else if (Input.GetKeyUp(interactKey) && playerInteractMenu.gameObject.activeSelf)
         {
-            playerInteractMenu.SetActive(false);
+            playerInteractMenu.gameObject.SetActive(false);
         }
 
     }

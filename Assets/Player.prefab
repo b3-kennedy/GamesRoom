@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2828942274974444413}
   - component: {fileID: 3939235607206438422}
   - component: {fileID: 6524138797880105348}
+  - component: {fileID: 7357702672847081605}
   m_Layer: 0
   m_Name: PlayerInteractPanel
   m_TagString: Untagged
@@ -76,6 +77,19 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &7357702672847081605
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 365314809753919389}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2380cb2a6daf24247a8e267c428c9d24, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  title: {fileID: 52266655471463495}
 --- !u!1 &1067593852584210044
 GameObject:
   m_ObjectHideFlags: 0
@@ -508,6 +522,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   range: 5
   interactKey: 101
+  playerInteractMenu: {fileID: 365314809753919389}
 --- !u!114 &-8399362392592308065
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -521,8 +536,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  playerName:
-    m_InternalValue: 
+  playerName: 
 --- !u!1 &3672231381911580843
 GameObject:
   m_ObjectHideFlags: 0
