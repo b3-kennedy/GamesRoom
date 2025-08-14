@@ -1,4 +1,5 @@
 using TMPro;
+using Unity.Burst;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem.LowLevel;
@@ -7,6 +8,9 @@ public class FlappyBird : ArcadeGame
 {
     public GameObject mainMenu;
     public GameObject gameScene;
+
+    public GameObject gameOverScene;
+
     public FlappyBirdLevel level;
 
     public GameObject bird;
@@ -23,6 +27,7 @@ public class FlappyBird : ArcadeGame
     );
 
     public TextMeshPro scoreText;
+    public TextMeshPro gameOverScoreText;
 
     void Start()
     {
@@ -43,6 +48,7 @@ public class FlappyBird : ArcadeGame
     {
         netGameState.Value = GameState.GAME;
         bird.GetComponent<NetworkObject>().ChangeOwnership(clientID);
+        bird.GetComponent<NetworkObject>().DontDestroyWithOwner = true;
     }
 
 
@@ -75,6 +81,17 @@ public class FlappyBird : ArcadeGame
         {
             level.Move();
         }
+        else if (Input.GetKeyDown(KeyCode.E) && netGameState.Value == GameState.GAME_OVER)
+        {
+            ResetServerRpc();
+            ChangeStateServerRpc(GameState.MAIN_MENU);
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void ChangeStateServerRpc(GameState newState)
+    {
+        netGameState.Value = newState;
     }
 
     private void OnNetworkGameStateChanged(GameState oldState, GameState newState)
@@ -96,6 +113,12 @@ public class FlappyBird : ArcadeGame
         score.Value++;
     }
 
+    [ServerRpc(RequireOwnership = false)]
+    public void GameOverServerRpc()
+    {
+        netGameState.Value = GameState.GAME_OVER;
+    }
+
     // Called automatically on all clients when score changes
     private void OnScoreChanged(int oldValue, int newValue)
     {
@@ -109,17 +132,21 @@ public class FlappyBird : ArcadeGame
             case GameState.MAIN_MENU:
                 mainMenu.SetActive(true);
                 gameScene.SetActive(false);
+                gameOverScene.SetActive(false);
                 break;
 
             case GameState.GAME:
+                gameOverScene.SetActive(false);
                 mainMenu.SetActive(false);
                 gameScene.SetActive(true);
                 break;
 
             case GameState.GAME_OVER:
-                mainMenu.SetActive(true);
+                
+                gameOverScene.SetActive(true);
+                mainMenu.SetActive(false);
                 gameScene.SetActive(false);
-                // TODO: Add game over UI logic here
+                gameOverScoreText.text = $"SCORE: {score.Value}";
                 break;
         }
     }

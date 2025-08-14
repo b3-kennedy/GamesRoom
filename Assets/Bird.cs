@@ -42,6 +42,9 @@ public class Bird : NetworkBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        flappyBird.ResetServerRpc();
+        flappyBird.GameOverServerRpc();
     }
+
+
+
 }
