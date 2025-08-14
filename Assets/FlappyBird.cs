@@ -13,6 +13,7 @@ public class FlappyBird : ArcadeGame
 
     public FlappyBirdLevel level;
 
+    public GameObject birdPrefab;
     public GameObject bird;
 
     public NetworkVariable<int> score = new NetworkVariable<int>();
@@ -29,6 +30,8 @@ public class FlappyBird : ArcadeGame
     public TextMeshPro scoreText;
     public TextMeshPro gameOverScoreText;
 
+    Vector3 birdPosition;
+
     void Start()
     {
         // Listen for state changes
@@ -41,14 +44,27 @@ public class FlappyBird : ArcadeGame
 
         score.OnValueChanged += OnScoreChanged;
 
+        birdPosition = new Vector3(-97.4796448f, -120f, 143.583679f);
+        
+
     }
 
     [ServerRpc(RequireOwnership = false)]
     public override void BeginServerRpc(ulong clientID)
     {
+
         netGameState.Value = GameState.GAME;
-        bird.GetComponent<NetworkObject>().ChangeOwnership(clientID);
-        bird.GetComponent<NetworkObject>().DontDestroyWithOwner = true;
+        if (bird != null)
+        {
+            Destroy(bird);
+        }
+        bird = Instantiate(birdPrefab);
+        bird.GetComponent<Bird>().flappyBird = this;
+        bird.transform.position = birdPosition;
+        var netObj = bird.GetComponent<NetworkObject>();
+        netObj.TrySetParent(gameScene.GetComponent<NetworkObject>(), false);
+        netObj.SpawnWithOwnership(clientID);
+
     }
 
 
@@ -63,8 +79,12 @@ public class FlappyBird : ArcadeGame
     [ClientRpc]
     void ResetClientRpc()
     {
-        bird.transform.localPosition = new Vector3(0f, 0f, 1.59f);
-        bird.GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
+        if (bird)
+        {
+            bird.transform.localPosition = birdPosition;
+            bird.GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
+        }
+
         scoreText.text = "SCORE: 0";
         level.ClearPipes();
 

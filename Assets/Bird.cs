@@ -7,12 +7,11 @@ public class Bird : NetworkBehaviour
     Rigidbody rb;
     public float force;
 
-    FlappyBird flappyBird;
+    [HideInInspector] public FlappyBird flappyBird;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        flappyBird = transform.parent.parent.GetComponent<FlappyBird>();
         rb = GetComponent<Rigidbody>();
     }
 
