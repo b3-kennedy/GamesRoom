@@ -28,7 +28,11 @@ public class FlappyBirdLevel : NetworkBehaviour
     void Start()
     {
         flappyBird = transform.parent.parent.GetComponent<FlappyBird>();
-        speed.Value = baseSpeed;
+        if (IsServer)
+        {
+            speed.Value = baseSpeed;
+        }
+        
     }
 
     [ServerRpc(RequireOwnership = false)]

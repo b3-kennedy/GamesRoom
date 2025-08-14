@@ -38,7 +38,8 @@ public class Interact : NetworkBehaviour
             {
                 if (hit.collider.CompareTag("Player"))
                 {
-                    Debug.Log("Open menu");
+                    SteamPlayer steamPlayer = hit.collider.GetComponent<SteamPlayer>();
+                    Debug.Log($"Interacting with {steamPlayer.playerName}");
                 }
 
             }
