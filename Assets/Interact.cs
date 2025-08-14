@@ -9,6 +9,8 @@ public class Interact : NetworkBehaviour
 
     public KeyCode interactKey = KeyCode.E;
 
+    public GameObject playerInteractMenu;
+
     void Start()
     {
         cam = GetComponent<PlayerLook>().cam;
@@ -32,18 +34,24 @@ public class Interact : NetworkBehaviour
 
             }
         }
-        if (Input.GetKey(KeyCode.E))
+        if (Input.GetKey(interactKey))
         {
             if (Physics.Raycast(cam.transform.position, cam.transform.forward, out RaycastHit hit, range))
             {
                 if (hit.collider.CompareTag("Player"))
                 {
                     SteamPlayer steamPlayer = hit.collider.GetComponent<SteamPlayer>();
-                    Debug.Log($"Interacting with {steamPlayer.playerName}");
+                    if (!playerInteractMenu.activeSelf)
+                    {
+                        playerInteractMenu.SetActive(true);
+                    }
                 }
 
             }
-
+        }
+        else if (Input.GetKeyUp(interactKey) && playerInteractMenu.activeSelf)
+        {
+            playerInteractMenu.SetActive(false);
         }
 
     }
