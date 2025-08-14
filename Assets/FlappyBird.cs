@@ -83,7 +83,7 @@ public class FlappyBird : ArcadeGame
         }
         else if (Input.GetKeyDown(KeyCode.E) && netGameState.Value == GameState.GAME_OVER)
         {
-            ResetServerRpc();
+            
             ChangeStateServerRpc(GameState.MAIN_MENU);
         }
     }
@@ -130,6 +130,7 @@ public class FlappyBird : ArcadeGame
         switch (state)
         {
             case GameState.MAIN_MENU:
+                ResetServerRpc();
                 mainMenu.SetActive(true);
                 gameScene.SetActive(false);
                 gameOverScene.SetActive(false);
