@@ -56,7 +56,11 @@ public class FlappyBirdLevel : NetworkBehaviour
     public void ClearPipes()
     {
         gameTimer = 0;
-        speed.Value = baseSpeed;
+        if (IsServer)
+        {
+            speed.Value = baseSpeed;
+        }
+        
         for (int i = spawnedPipes.Count - 1; i >= 0; i--)
         {
             if (spawnedPipes[i] != null)

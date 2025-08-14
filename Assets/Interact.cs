@@ -29,6 +29,10 @@ public class Interact : NetworkBehaviour
                 {
                     machine.arcadeGame.BeginServerRpc(NetworkManager.Singleton.LocalClientId);
                 }
+                else if (hit.collider.CompareTag("Player"))
+                {
+                    Debug.Log("Open menu");
+                }
             }
         }
 

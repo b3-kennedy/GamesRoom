@@ -29,11 +29,17 @@ public class ArcadeMachine : NetworkBehaviour
     void Update()
     {
         if (!IsServer) return;
-        
+
         if (nearPlayers.Count == 0)
         {
-            screen.SetActive(false);
-            arcadeGame.ResetServerRpc();
+            TurnOffScreenClientRpc();
         }
+    }
+
+    [ClientRpc]
+    void TurnOffScreenClientRpc()
+    {
+        screen.SetActive(false);
+        arcadeGame.ResetServerRpc();
     }
 }

@@ -16,6 +16,8 @@ public class FlappyBird : ArcadeGame
     public GameObject birdPrefab;
     public GameObject bird;
 
+    public AudioSource musicAudioSource;
+
     public NetworkVariable<int> score = new NetworkVariable<int>();
 
     public enum GameState { MAIN_MENU, GAME, GAME_OVER }
@@ -191,6 +193,7 @@ public class FlappyBird : ArcadeGame
         switch (state)
         {
             case GameState.MAIN_MENU:
+                musicAudioSource.Stop();
                 ResetServerRpc();
                 mainMenu.SetActive(true);
                 gameScene.SetActive(false);
@@ -199,12 +202,13 @@ public class FlappyBird : ArcadeGame
 
             case GameState.GAME:
                 gameOverScene.SetActive(false);
+                musicAudioSource.Play();
                 mainMenu.SetActive(false);
                 gameScene.SetActive(true);
                 break;
 
             case GameState.GAME_OVER:
-                
+                musicAudioSource.Stop();
                 gameOverScene.SetActive(true);
                 mainMenu.SetActive(false);
                 gameScene.SetActive(false);
