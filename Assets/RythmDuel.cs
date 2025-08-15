@@ -14,6 +14,7 @@ public class RythmDuel : ArcadeGame
 
     public NetworkVariable<int> connectedPlayersCount = new NetworkVariable<int>();
     public TextMeshPro connectedPlayersText;
+    public TextMeshPro joinText;
 
 
     // Network variable for syncing game state across clients
@@ -67,6 +68,10 @@ public class RythmDuel : ArcadeGame
         if (netGameState.Value == GameState.MAIN_MENU)
         {
             connectedPlayersText.text = $"{connectedPlayersCount.Value}/2";
+            if (connectedPlayersCount.Value == 2)
+            {
+                ChangeStateServerRpc(GameState.GAME);
+            }
         }
     }
 
