@@ -9,10 +9,16 @@ public class ArcadeMachine : NetworkBehaviour
 
     public List<GameObject> nearPlayers = new List<GameObject>();
 
+
+    void Start()
+    {
+    }
+
     public void StartGame()
     {
         arcadeGame.BeginServerRpc(NetworkManager.Singleton.LocalClientId);
     }
+
 
     [ServerRpc(RequireOwnership = false)]
     public void TurnOnServerRpc()
