@@ -12,6 +12,7 @@ public class RythmDuel : ArcadeGame
     public GameObject gameScene;
     public List<NetworkObject> connectedPlayers = new List<NetworkObject>();
 
+    public NetworkVariable<int> connectedPlayersCount = new NetworkVariable<int>();
     public TextMeshPro connectedPlayersText;
 
 
@@ -39,8 +40,9 @@ public class RythmDuel : ArcadeGame
         if (connectedPlayers.Count < 2)
         {
             if (connectedPlayers.Contains(NetworkManager.Singleton.ConnectedClients[clientID].PlayerObject)) return;
-            
+
             connectedPlayers.Add(NetworkManager.Singleton.ConnectedClients[clientID].PlayerObject);
+            connectedPlayersCount.Value = connectedPlayers.Count;
         }
     }
 
@@ -64,7 +66,7 @@ public class RythmDuel : ArcadeGame
     {
         if (netGameState.Value == GameState.MAIN_MENU)
         {
-            connectedPlayersText.text = $"{connectedPlayers.Count}/2";
+            connectedPlayersText.text = $"{connectedPlayersCount.Value}/2";
         }
     }
 
