@@ -194,16 +194,19 @@ public class RythmDuel : ArcadeGame
     [ClientRpc]
     void RemoveLifeClientRpc(bool isLeft)
     {
-
-        if (leftLivesCount <= 0)
+        if (isLeft)
         {
-            ChangeStateServerRpc(GameState.GAME_OVER);
-            var playerObject = NetworkManager.Singleton.ConnectedClients[leftPlayer.GetComponent<NetworkObject>().OwnerClientId].PlayerObject;
-            winner = playerObject.GetComponent<SteamPlayer>().playerName;
-            return;
+            leftLives.GetChild(3 - leftLivesCount).gameObject.SetActive(false);
+            leftLivesCount--;
+
+        }
+        else
+        {
+            rightLives.GetChild(3 - rightLivesCount).gameObject.SetActive(false);
+            rightLivesCount--;
         }
 
-        if (rightLivesCount <= 0)
+        if (leftLivesCount <= 0)
         {
             ChangeStateServerRpc(GameState.GAME_OVER);
             var playerObject = NetworkManager.Singleton.ConnectedClients[rightPlayer.GetComponent<NetworkObject>().OwnerClientId].PlayerObject;
@@ -211,16 +214,12 @@ public class RythmDuel : ArcadeGame
             return;
         }
 
-        if (isLeft)
+        if (rightLivesCount <= 0)
         {
-            leftLives.GetChild(3 - leftLivesCount).gameObject.SetActive(false);
-            leftLivesCount--;
-            
-        }
-        else
-        {
-            rightLives.GetChild(3 - rightLivesCount).gameObject.SetActive(false);
-            rightLivesCount--;
+            ChangeStateServerRpc(GameState.GAME_OVER);
+            var playerObject = NetworkManager.Singleton.ConnectedClients[leftPlayer.GetComponent<NetworkObject>().OwnerClientId].PlayerObject;
+            winner = playerObject.GetComponent<SteamPlayer>().playerName;
+            return;
         }
     }
 
