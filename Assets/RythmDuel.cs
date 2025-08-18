@@ -93,6 +93,7 @@ public class RythmDuel : ArcadeGame
         connectedPlayersText.text = $"{connectedPlayersCount.Value}/2";
         if (connectedPlayersCount.Value == 2 && netGameState.Value != GameState.GAME)
         {
+            ChangeStateServerRpc(GameState.GAME);
             if (IsServer)
             {
                 leftPlayer.GetComponent<NetworkObject>().ChangeOwnership(connectedPlayers[0].OwnerClientId);
@@ -100,7 +101,7 @@ public class RythmDuel : ArcadeGame
 
             }
             
-            ChangeStateServerRpc(GameState.GAME);
+            
         }
     }
 
