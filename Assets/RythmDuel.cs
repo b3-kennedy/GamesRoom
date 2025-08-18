@@ -198,14 +198,16 @@ public class RythmDuel : ArcadeGame
         if (leftLivesCount <= 0)
         {
             ChangeStateServerRpc(GameState.GAME_OVER);
-            winner = connectedPlayers[0].GetComponent<SteamPlayer>().playerName;
+            var playerObject = NetworkManager.Singleton.ConnectedClients[leftPlayer.GetComponent<NetworkObject>().OwnerClientId].PlayerObject;
+            winner = playerObject.GetComponent<SteamPlayer>().playerName;
             return;
         }
 
         if (rightLivesCount <= 0)
         {
             ChangeStateServerRpc(GameState.GAME_OVER);
-            winner = connectedPlayers[1].GetComponent<SteamPlayer>().playerName;
+            var playerObject = NetworkManager.Singleton.ConnectedClients[rightPlayer.GetComponent<NetworkObject>().OwnerClientId].PlayerObject;
+            winner = playerObject.GetComponent<SteamPlayer>().playerName;
             return;
         }
 
