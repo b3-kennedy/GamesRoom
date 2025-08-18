@@ -2,6 +2,15 @@ using UnityEngine;
 using Unity.Netcode;
 using TMPro;
 using System.Collections.Generic;
+using System.Collections;
+using Unity.VisualScripting;
+
+[System.Serializable]
+public class RythmSpawn
+{
+    public GameObject leftPlayerSpawn;
+    public GameObject rightPlayerSpawn;
+}
 
 public class RythmDuel : ArcadeGame
 {
@@ -15,6 +24,21 @@ public class RythmDuel : ArcadeGame
     public NetworkVariable<int> connectedPlayersCount = new NetworkVariable<int>();
     public TextMeshPro connectedPlayersText;
     public TextMeshPro joinText;
+
+    public List<RythmSpawn> spawnZones;
+
+    public float baseSpawnInterval = 1f;
+    float spawnInterval;
+
+    float timer;
+    float pingTimer;
+
+    public GameObject target;
+    GameObject spawnedTargetLeft;
+    GameObject spawnedTargetRight;
+
+
+
 
 
     // Network variable for syncing game state across clients
@@ -32,12 +56,15 @@ public class RythmDuel : ArcadeGame
         // Apply initial state locally
         ApplyState(netGameState.Value);
 
+        
+
 
     }
 
     [ServerRpc(RequireOwnership = false)]
     public override void BeginServerRpc(ulong clientID)
     {
+        spawnInterval = baseSpawnInterval;
         if (connectedPlayers.Count < 2)
         {
             if (connectedPlayers.Contains(NetworkManager.Singleton.ConnectedClients[clientID].PlayerObject)) return;
@@ -68,11 +95,59 @@ public class RythmDuel : ArcadeGame
         if (netGameState.Value == GameState.MAIN_MENU)
         {
             connectedPlayersText.text = $"{connectedPlayersCount.Value}/2";
-            if (connectedPlayersCount.Value == 2)
+            if (connectedPlayersCount.Value == 2 && netGameState.Value != GameState.GAME)
             {
                 ChangeStateServerRpc(GameState.GAME);
             }
         }
+        else if (netGameState.Value == GameState.GAME)
+        {
+
+            if (!IsServer) return;
+
+            float ping = GetClientWithHighestRTT();
+
+            timer += Time.deltaTime;
+            if (timer >= spawnInterval)
+            {
+                int spawnIndex = Random.Range(0, 3);
+                spawnedTargetLeft = Instantiate(target, spawnZones[spawnIndex].leftPlayerSpawn.transform.position, Quaternion.identity);
+                spawnedTargetRight = Instantiate(target, spawnZones[spawnIndex].rightPlayerSpawn.transform.position, Quaternion.identity);
+                spawnedTargetLeft.GetComponent<MeshRenderer>().enabled = false;
+                spawnedTargetRight.GetComponent<MeshRenderer>().enabled = false;
+                spawnedTargetLeft.GetComponent<NetworkObject>().Spawn();
+                spawnedTargetRight.GetComponent<NetworkObject>().Spawn();
+                StartCoroutine(EnableOnServer(ping, spawnedTargetLeft, spawnedTargetRight));
+                timer = 0;
+            }
+        }
+    }
+
+    IEnumerator EnableOnServer(float time, GameObject leftTarget, GameObject rightTarget)
+    {
+        yield return new WaitForSeconds(time);
+        leftTarget.GetComponent<MeshRenderer>().enabled = true;
+        rightTarget.GetComponent<MeshRenderer>().enabled = true;
+    }
+
+    float GetClientWithHighestRTT()
+    {
+        var transport = NetworkManager.Singleton.NetworkConfig.NetworkTransport;
+
+        float maxRTT = 0f;
+        ulong clientIdWithMaxRTT = 0;
+
+        foreach (var client in connectedPlayers)
+        {
+            float rtt = transport.GetCurrentRtt(client.OwnerClientId) / 1000f; // Convert ms to seconds
+            if (rtt > maxRTT)
+            {
+                maxRTT = rtt;
+                clientIdWithMaxRTT = client.OwnerClientId;
+            }
+        }
+
+        return maxRTT/2f;
     }
 
     [ServerRpc(RequireOwnership = false)]
