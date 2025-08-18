@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.LowLevelPhysics;
 
@@ -8,5 +9,17 @@ public class Move : MonoBehaviour
     void Update()
     {
         transform.position += Vector3.down * speed * Time.deltaTime;
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Zone1") || other.CompareTag("Zone2") || other.CompareTag("Zone3"))
+        {
+            RhythmGameZone zone = other.GetComponent<RhythmGameZone>();
+            if (zone)
+            {
+                zone.target = gameObject;
+            }
+        }
     }
 }

@@ -37,6 +37,9 @@ public class RythmDuel : ArcadeGame
     GameObject spawnedTargetLeft;
     GameObject spawnedTargetRight;
 
+    public GameObject leftPlayer;
+    public GameObject rightPlayer;
+
 
 
 
@@ -90,6 +93,13 @@ public class RythmDuel : ArcadeGame
         connectedPlayersText.text = $"{connectedPlayersCount.Value}/2";
         if (connectedPlayersCount.Value == 2 && netGameState.Value != GameState.GAME)
         {
+            if (IsServer)
+            {
+                leftPlayer.GetComponent<NetworkObject>().ChangeOwnership(connectedPlayers[0].OwnerClientId);
+                rightPlayer.GetComponent<NetworkObject>().ChangeOwnership(connectedPlayers[1].OwnerClientId);
+
+            }
+            
             ChangeStateServerRpc(GameState.GAME);
         }
     }
@@ -116,6 +126,12 @@ public class RythmDuel : ArcadeGame
         }
     }
 
+    void PlayerInput()
+    {
+        if (!IsOwner) return;
+
+    }
+
 
 
     void Update()
@@ -126,7 +142,7 @@ public class RythmDuel : ArcadeGame
         }
         else if (netGameState.Value == GameState.GAME)
         {
-
+            PlayerInput();
             Game();
         }
     }

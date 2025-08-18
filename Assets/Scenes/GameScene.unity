@@ -862,6 +862,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 379134032}
+  - component: {fileID: 379134033}
   m_Layer: 0
   m_Name: RightPlayer
   m_TagString: Untagged
@@ -890,6 +891,19 @@ Transform:
   - {fileID: 529136812}
   m_Father: {fileID: 909555069}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &379134033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 379134031}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 495c4d2ce19f15445bc15b7aa3fa9f7d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
 --- !u!1001 &393996311
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1601,7 +1615,7 @@ GameObject:
   - component: {fileID: 569489819}
   m_Layer: 0
   m_Name: Zone3
-  m_TagString: Untagged
+  m_TagString: Zone3
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1739,9 +1753,10 @@ GameObject:
   - component: {fileID: 695212504}
   - component: {fileID: 695212503}
   - component: {fileID: 695212502}
+  - component: {fileID: 695212505}
   m_Layer: 0
   m_Name: Zone2
-  m_TagString: Untagged
+  m_TagString: Zone2
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1836,6 +1851,19 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 695212500}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &695212505
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 695212500}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: facb415b1fa319d4db6897f894eb4322, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 0}
 --- !u!1 &725932189
 GameObject:
   m_ObjectHideFlags: 0
@@ -1985,7 +2013,7 @@ GameObject:
   - component: {fileID: 807671169}
   m_Layer: 0
   m_Name: Zone2
-  m_TagString: Untagged
+  m_TagString: Zone2
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2172,6 +2200,8 @@ MonoBehaviour:
     rightPlayerSpawn: {fileID: 529136811}
   baseSpawnInterval: 1
   target: {fileID: 1366594395815657426, guid: 6ad771aa3603a7f4faae9cd17a026510, type: 3}
+  leftPlayer: {fileID: 1745347397}
+  rightPlayer: {fileID: 379134031}
   netGameState:
     m_InternalValue: 0
 --- !u!1 &909555068
@@ -2424,7 +2454,7 @@ GameObject:
   - component: {fileID: 1003939377}
   m_Layer: 0
   m_Name: Zone1
-  m_TagString: Untagged
+  m_TagString: Zone1
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2642,7 +2672,7 @@ GameObject:
   - component: {fileID: 1139922729}
   m_Layer: 0
   m_Name: Zone3
-  m_TagString: Untagged
+  m_TagString: Zone3
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3941,6 +3971,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1745347398}
+  - component: {fileID: 1745347399}
   m_Layer: 0
   m_Name: LeftPlayer
   m_TagString: Untagged
@@ -3969,6 +4000,19 @@ Transform:
   - {fileID: 109461519}
   m_Father: {fileID: 909555069}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1745347399
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1745347397}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 495c4d2ce19f15445bc15b7aa3fa9f7d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
 --- !u!1 &1901820973
 GameObject:
   m_ObjectHideFlags: 0
@@ -4321,7 +4365,7 @@ GameObject:
   - component: {fileID: 1998817439}
   m_Layer: 0
   m_Name: Zone1
-  m_TagString: Untagged
+  m_TagString: Zone1
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

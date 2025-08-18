@@ -6,6 +6,9 @@ TagManager:
   tags:
   - FlappyBirdScore
   - ArcadeMachine
+  - Zone1
+  - Zone2
+  - Zone3
   layers:
   - Default
   - TransparentFX
