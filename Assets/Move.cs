@@ -1,10 +1,14 @@
+using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.LowLevelPhysics;
 
-public class Move : MonoBehaviour
+public class Move : NetworkBehaviour
 {
     public float speed = 1f;
+
+    public bool isLeft;
+    [HideInInspector] public RythmDuel duel;
 
     void Update()
     {
@@ -35,5 +39,17 @@ public class Move : MonoBehaviour
                 zone.target = null;
             }
         }
+        else if (other.CompareTag("KillZone"))
+        {
+            gameObject.SetActive(false);
+            DestroyTargetServerRpc();
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    void DestroyTargetServerRpc()
+    {
+
+        GetComponent<NetworkObject>().Despawn(true);
     }
 }

@@ -44,6 +44,9 @@ public class RythmDuel : ArcadeGame
     public TextMeshPro leftPlayerName;
     public TextMeshPro rightPlayerName;
 
+    public Transform leftLives;
+    public Transform rightLives;
+
 
 
 
@@ -121,6 +124,37 @@ public class RythmDuel : ArcadeGame
         rightPlayerName.text = player2Name;
     }
 
+    [ServerRpc(RequireOwnership = false)]
+    public void RemoveLifeServerRpc(bool isLeft)
+    {
+        RemoveLifeClientRpc(isLeft);
+    }
+
+    [ClientRpc]
+    void RemoveLifeClientRpc(bool isLeft)
+    {
+        if (leftLives.childCount <= 0)
+        {
+            Debug.Log("left dead");
+            return;
+        }
+
+        if (rightLives.childCount <= 0)
+        {
+            Debug.Log("right dead");
+            return;
+        }
+
+        if (isLeft)
+        {
+            Destroy(leftLives.GetChild(0).gameObject);
+        }
+        else
+        {
+            Destroy(rightLives.GetChild(0).gameObject);
+        }
+    }
+
 
     void Game()
     {
@@ -134,6 +168,10 @@ public class RythmDuel : ArcadeGame
             int spawnIndex = Random.Range(0, 3);
             spawnedTargetLeft = Instantiate(target, spawnZones[spawnIndex].leftPlayerSpawn.transform.position, Quaternion.identity);
             spawnedTargetRight = Instantiate(target, spawnZones[spawnIndex].rightPlayerSpawn.transform.position, Quaternion.identity);
+            spawnedTargetLeft.GetComponent<Move>().duel = this;
+            spawnedTargetLeft.GetComponent<Move>().isLeft = true;
+            spawnedTargetRight.GetComponent<Move>().duel = this;
+            spawnedTargetRight.GetComponent<Move>().isLeft = false;
             spawnedTargetLeft.GetComponent<MeshRenderer>().enabled = false;
             spawnedTargetRight.GetComponent<MeshRenderer>().enabled = false;
             spawnedTargetLeft.GetComponent<NetworkObject>().Spawn();
