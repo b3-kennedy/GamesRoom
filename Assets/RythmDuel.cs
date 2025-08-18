@@ -151,12 +151,13 @@ public class RythmDuel : ArcadeGame
 
         if (isLeft)
         {
-            leftLives.GetChild(0).gameObject.SetActive(false);
+            leftLives.GetChild(3 - leftLivesCount).gameObject.SetActive(false);
             leftLivesCount--;
+            
         }
         else
         {
-            rightLives.GetChild(0).gameObject.SetActive(false);
+            rightLives.GetChild(3 - rightLivesCount).gameObject.SetActive(false);
             rightLivesCount--;
         }
     }

@@ -102,21 +102,21 @@ public class RhythmPlayer : NetworkBehaviour
         {
             if (laneNumber == 0)
             {
-                leftCooldown = true; // start cooldown
+                leftCooldown = true;
                 MeshRenderer rend = leftLane.GetComponent<MeshRenderer>();
                 rend.material.color = Color.red;
                 StartCoroutine(LerpColorWithCooldown(rend, Color.black, 0.5f, () => leftCooldown = false));
             }
             else if (laneNumber == 1)
             {
-                middleCooldown = true; // start cooldown
+                middleCooldown = true;
                 MeshRenderer rend = middleLane.GetComponent<MeshRenderer>();
                 rend.material.color = Color.red;
                 StartCoroutine(LerpColorWithCooldown(rend, Color.black, 0.5f, () => middleCooldown = false));
             }
             else
             {
-                rightCooldown = true; // start cooldown
+                rightCooldown = true;
                 MeshRenderer rend = rightLane.GetComponent<MeshRenderer>();
                 rend.material.color = Color.red;
                 StartCoroutine(LerpColorWithCooldown(rend, Color.black, 0.5f, () => rightCooldown = false));
