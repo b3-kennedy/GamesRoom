@@ -183,7 +183,7 @@ public class RythmDuel : ArcadeGame
     void  MainMenu()
     {
         connectedPlayersText.text = $"{connectedPlayersCount.Value}/2";
-        if (connectedPlayersCount.Value == 2 && netGameState.Value != GameState.GAME)
+        if (connectedPlayersCount.Value == 1 && netGameState.Value != GameState.GAME)
         {
             ChangeStateServerRpc(GameState.GAME);
             if (IsServer)
@@ -218,15 +218,22 @@ public class RythmDuel : ArcadeGame
     [ClientRpc]
     void RemoveLifeClientRpc(bool isLeft)
     {
-        if (isLeft)
+        var lPlayer = leftPlayer.GetComponent<RhythmPlayer>();
+        var rPlayer = rightPlayer.GetComponent<RhythmPlayer>();
+
+        if (isLeft && lPlayer.canLoseLife)
         {
             leftLives.GetChild(3 - leftLivesCount).gameObject.SetActive(false);
+            lPlayer.canLoseLife = false;
+            lPlayer.LostLife();
             leftLivesCount--;
 
         }
-        else
+        else if (!isLeft && rPlayer.canLoseLife)
         {
             rightLives.GetChild(3 - rightLivesCount).gameObject.SetActive(false);
+            rPlayer.canLoseLife = false;
+            rPlayer.LostLife();
             rightLivesCount--;
         }
 

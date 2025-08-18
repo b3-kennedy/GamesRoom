@@ -21,6 +21,8 @@ public class RhythmPlayer : NetworkBehaviour
     bool middleCooldown;
     bool rightCooldown;
 
+    public bool canLoseLife = true;
+
     public RythmDuel duel;
 
     public override void OnGainedOwnership()
@@ -98,6 +100,16 @@ public class RhythmPlayer : NetworkBehaviour
             }
         }
 
+    }
+
+    public void LostLife()
+    {
+        leftLane.GetComponent<MeshRenderer>().material.color = Color.white;
+        middleLane.GetComponent<MeshRenderer>().material.color = Color.white;
+        rightLane.GetComponent<MeshRenderer>().material.color = Color.white;
+        StartCoroutine(LerpColorWithCooldown(leftLane.GetComponent<MeshRenderer>(), Color.black, 1f, () => canLoseLife = true));
+        StartCoroutine(LerpColorWithCooldown(middleLane.GetComponent<MeshRenderer>(), Color.black, 1f, () => canLoseLife = true));
+        StartCoroutine(LerpColorWithCooldown(rightLane.GetComponent<MeshRenderer>(), Color.black, 1f, () => canLoseLife = true));
     }
 
     [ServerRpc(RequireOwnership = false)]
