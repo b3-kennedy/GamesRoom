@@ -90,8 +90,10 @@ public class RhythmPlayer : NetworkBehaviour
 
         if (duel.netGameState.Value == RythmDuel.GameState.GAME_OVER)
         {
-            if (Input.GetKeyDown(KeyCode.E))
+            
+            if (Input.GetKeyDown(KeyCode.R))
             {
+                Debug.Log("reset");
                 duel.ResetServerRpc();
             }
         }

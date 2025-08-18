@@ -2,15 +2,14 @@ using UnityEngine;
 
 public class RhythmGameZone : MonoBehaviour
 {
-    public GameObject target;
+    [HideInInspector] public GameObject target;
 
     public int zoneNumber;
 
-    RhythmPlayer player;
+    public RhythmPlayer player;
 
     void Start()
     {
-        player = transform.parent.GetComponent<RhythmPlayer>();
     }
 
     void Update()

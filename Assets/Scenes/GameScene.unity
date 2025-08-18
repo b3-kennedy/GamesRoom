@@ -1035,10 +1035,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 379134032}
-  - component: {fileID: 379134033}
-  - component: {fileID: 379134034}
   m_Layer: 0
-  m_Name: RightPlayer
+  m_Name: RightPlayerInterface
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1069,54 +1067,6 @@ Transform:
   - {fileID: 1726542526}
   m_Father: {fileID: 909555069}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &379134033
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 379134031}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 495c4d2ce19f15445bc15b7aa3fa9f7d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  inZone1: 0
-  inZone2: 0
-  inZone3: 0
-  leftTarget: {fileID: 0}
-  middleTarget: {fileID: 0}
-  rightTarget: {fileID: 0}
-  leftLane: {fileID: 206055986}
-  middleLane: {fileID: 1164824514}
-  rightLane: {fileID: 1668715017}
-  duel: {fileID: 880403573}
---- !u!114 &379134034
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 379134031}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3316826071
-  InScenePlacedSourceGlobalObjectIdHash: 0
-  DeferredDespawnTick: 0
-  Ownership: 1
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 0
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
-  SyncOwnerTransformWhenParented: 1
-  AllowOwnerToParent: 0
 --- !u!1001 &393996311
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1991,6 +1941,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 0}
   zoneNumber: 3
+  player: {fileID: 1919788089}
 --- !u!1 &650556361
 GameObject:
   m_ObjectHideFlags: 0
@@ -2235,6 +2186,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 0}
   zoneNumber: 2
+  player: {fileID: 1218938308}
 --- !u!1 &711966140
 GameObject:
   m_ObjectHideFlags: 0
@@ -2580,6 +2532,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 0}
   zoneNumber: 2
+  player: {fileID: 1919788089}
 --- !u!1 &880403569
 GameObject:
   m_ObjectHideFlags: 0
@@ -2642,6 +2595,8 @@ Transform:
   - {fileID: 2007060123}
   - {fileID: 670922381}
   - {fileID: 909555069}
+  - {fileID: 1218938309}
+  - {fileID: 1919788090}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &880403573
@@ -2685,8 +2640,8 @@ MonoBehaviour:
   - leftPlayerSpawn: {fileID: 109461518}
     rightPlayerSpawn: {fileID: 529136811}
   target: {fileID: 1366594395815657426, guid: 6ad771aa3603a7f4faae9cd17a026510, type: 3}
-  leftPlayer: {fileID: 1745347397}
-  rightPlayer: {fileID: 379134031}
+  leftPlayer: {fileID: 1218938307}
+  rightPlayer: {fileID: 1919788088}
   leftLives: {fileID: 273611684}
   rightLives: {fileID: 1650133003}
   waveNumber: 1
@@ -3230,6 +3185,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 0}
   zoneNumber: 1
+  player: {fileID: 1919788089}
 --- !u!1 &1022040361
 GameObject:
   m_ObjectHideFlags: 0
@@ -3242,7 +3198,7 @@ GameObject:
   - component: {fileID: 1022040364}
   - component: {fileID: 1022040363}
   m_Layer: 0
-  m_Name: Press 'E' to Restart
+  m_Name: Press 'R' to Restart
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3287,7 +3243,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Press 'E' to Restart
+  m_text: Press 'R' to Restart
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -3901,6 +3857,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 0}
   zoneNumber: 3
+  player: {fileID: 1218938308}
 --- !u!1 &1164824514
 GameObject:
   m_ObjectHideFlags: 0
@@ -3987,6 +3944,87 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1164824514}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1218938307
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1218938309}
+  - component: {fileID: 1218938308}
+  - component: {fileID: 1218938310}
+  m_Layer: 0
+  m_Name: LeftPlayer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1218938308
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1218938307}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 495c4d2ce19f15445bc15b7aa3fa9f7d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  inZone1: 0
+  inZone2: 0
+  inZone3: 0
+  leftTarget: {fileID: 0}
+  middleTarget: {fileID: 0}
+  rightTarget: {fileID: 0}
+  leftLane: {fileID: 2053534028}
+  middleLane: {fileID: 1537188937}
+  rightLane: {fileID: 1451839024}
+  duel: {fileID: 880403573}
+--- !u!4 &1218938309
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1218938307}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 880403572}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1218938310
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1218938307}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 819291194
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 0
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
 --- !u!1 &1258137403
 GameObject:
   m_ObjectHideFlags: 0
@@ -5955,10 +5993,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1745347398}
-  - component: {fileID: 1745347399}
-  - component: {fileID: 1745347400}
   m_Layer: 0
-  m_Name: LeftPlayer
+  m_Name: LeftPlayerInterface
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5989,54 +6025,6 @@ Transform:
   - {fileID: 2131933974}
   m_Father: {fileID: 909555069}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1745347399
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1745347397}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 495c4d2ce19f15445bc15b7aa3fa9f7d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  inZone1: 0
-  inZone2: 0
-  inZone3: 0
-  leftTarget: {fileID: 0}
-  middleTarget: {fileID: 0}
-  rightTarget: {fileID: 0}
-  leftLane: {fileID: 2053534028}
-  middleLane: {fileID: 1537188937}
-  rightLane: {fileID: 1451839024}
-  duel: {fileID: 880403573}
---- !u!114 &1745347400
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1745347397}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 2439348308
-  InScenePlacedSourceGlobalObjectIdHash: 0
-  DeferredDespawnTick: 0
-  Ownership: 1
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 0
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
-  SyncOwnerTransformWhenParented: 1
-  AllowOwnerToParent: 0
 --- !u!1 &1810650394
 GameObject:
   m_ObjectHideFlags: 0
@@ -6551,6 +6539,87 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &1919788088
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1919788090}
+  - component: {fileID: 1919788089}
+  - component: {fileID: 1919788091}
+  m_Layer: 0
+  m_Name: RightPlayer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1919788089
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1919788088}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 495c4d2ce19f15445bc15b7aa3fa9f7d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  inZone1: 0
+  inZone2: 0
+  inZone3: 0
+  leftTarget: {fileID: 0}
+  middleTarget: {fileID: 0}
+  rightTarget: {fileID: 0}
+  leftLane: {fileID: 206055986}
+  middleLane: {fileID: 1164824514}
+  rightLane: {fileID: 1668715017}
+  duel: {fileID: 880403573}
+--- !u!4 &1919788090
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1919788088}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 880403572}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1919788091
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1919788088}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 1999597368
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 0
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
 --- !u!1 &1937375716
 GameObject:
   m_ObjectHideFlags: 0
@@ -6937,6 +7006,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 0}
   zoneNumber: 1
+  player: {fileID: 1218938308}
 --- !u!1 &2007060122
 GameObject:
   m_ObjectHideFlags: 0

@@ -148,24 +148,42 @@ public class RythmDuel : ArcadeGame
     [ServerRpc(RequireOwnership = false)]
     public override void ResetServerRpc()
     {
+        connectedPlayersCount.Value = 0;
         ResetClientRpc();
     }
 
     [ClientRpc]
     void ResetClientRpc()
     {
+        
+        rightLivesCount = 3;
+        leftLivesCount = 3;
         connectedPlayers.Clear();
+        for (int i = targetSpawnedList.Count - 1; i >= 0; i--)
+        {
+            Destroy(targetSpawnedList[i].gameObject);
+
+        }
+        for (int i = 0; i < leftLives.childCount; i++)
+        {
+            leftLives.GetChild(i).gameObject.SetActive(true);
+            rightLives.GetChild(i).gameObject.SetActive(true);
+        }
+
+
+        targetSpawnedList.Clear();
         targetSpeed = baseTargetSpeed;
         spawnInterval = baseSpawnInterval;
         waveTarget = startingWaveTarget;
+        Debug.Log(connectedPlayersCount.Value);
         ChangeStateServerRpc(GameState.MAIN_MENU);
 
     }
 
-    void MainMenu()
+    void  MainMenu()
     {
         connectedPlayersText.text = $"{connectedPlayersCount.Value}/2";
-        if (connectedPlayersCount.Value == 2 && netGameState.Value != GameState.GAME)
+        if (connectedPlayersCount.Value == 1 && netGameState.Value != GameState.GAME)
         {
             ChangeStateServerRpc(GameState.GAME);
             if (IsServer)
@@ -480,7 +498,6 @@ public class RythmDuel : ArcadeGame
         switch (state)
         {
             case GameState.MAIN_MENU:
-                ResetServerRpc();
                 mainMenu.SetActive(true);
                 gameScene.SetActive(false);
                 waveScene.SetActive(false);

@@ -36,7 +36,7 @@ public class ArcadeMachine : NetworkBehaviour
     {
         if (!IsServer) return;
 
-        if (nearPlayers.Count == 0)
+        if (nearPlayers.Count == 0 && screen.activeSelf)
         {
             TurnOffScreenClientRpc();
         }
