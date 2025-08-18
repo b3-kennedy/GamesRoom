@@ -42,6 +42,7 @@ public class Move : NetworkBehaviour
         else if (other.CompareTag("KillZone"))
         {
             gameObject.SetActive(false);
+            duel.RemoveLifeServerRpc(isLeft);
             DestroyTargetServerRpc();
         }
     }
