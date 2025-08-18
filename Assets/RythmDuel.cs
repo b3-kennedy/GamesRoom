@@ -85,8 +85,36 @@ public class RythmDuel : ArcadeGame
 
     }
 
+    void MainMenu()
+    {
+        connectedPlayersText.text = $"{connectedPlayersCount.Value}/2";
+        if (connectedPlayersCount.Value == 2 && netGameState.Value != GameState.GAME)
+        {
+            ChangeStateServerRpc(GameState.GAME);
+        }
+    }
 
 
+    void Game()
+    {
+        if (!IsServer) return;
+
+        float ping = GetClientWithHighestRTT();
+
+        timer += Time.deltaTime;
+        if (timer >= spawnInterval)
+        {
+            int spawnIndex = Random.Range(0, 3);
+            spawnedTargetLeft = Instantiate(target, spawnZones[spawnIndex].leftPlayerSpawn.transform.position, Quaternion.identity);
+            spawnedTargetRight = Instantiate(target, spawnZones[spawnIndex].rightPlayerSpawn.transform.position, Quaternion.identity);
+            spawnedTargetLeft.GetComponent<MeshRenderer>().enabled = false;
+            spawnedTargetRight.GetComponent<MeshRenderer>().enabled = false;
+            spawnedTargetLeft.GetComponent<NetworkObject>().Spawn();
+            spawnedTargetRight.GetComponent<NetworkObject>().Spawn();
+            StartCoroutine(EnableOnServer(ping, spawnedTargetLeft, spawnedTargetRight));
+            timer = 0;
+        }
+    }
 
 
 
@@ -94,32 +122,12 @@ public class RythmDuel : ArcadeGame
     {
         if (netGameState.Value == GameState.MAIN_MENU)
         {
-            connectedPlayersText.text = $"{connectedPlayersCount.Value}/2";
-            if (connectedPlayersCount.Value == 2 && netGameState.Value != GameState.GAME)
-            {
-                ChangeStateServerRpc(GameState.GAME);
-            }
+            MainMenu();
         }
         else if (netGameState.Value == GameState.GAME)
         {
 
-            if (!IsServer) return;
-
-            float ping = GetClientWithHighestRTT();
-
-            timer += Time.deltaTime;
-            if (timer >= spawnInterval)
-            {
-                int spawnIndex = Random.Range(0, 3);
-                spawnedTargetLeft = Instantiate(target, spawnZones[spawnIndex].leftPlayerSpawn.transform.position, Quaternion.identity);
-                spawnedTargetRight = Instantiate(target, spawnZones[spawnIndex].rightPlayerSpawn.transform.position, Quaternion.identity);
-                spawnedTargetLeft.GetComponent<MeshRenderer>().enabled = false;
-                spawnedTargetRight.GetComponent<MeshRenderer>().enabled = false;
-                spawnedTargetLeft.GetComponent<NetworkObject>().Spawn();
-                spawnedTargetRight.GetComponent<NetworkObject>().Spawn();
-                StartCoroutine(EnableOnServer(ping, spawnedTargetLeft, spawnedTargetRight));
-                timer = 0;
-            }
+            Game();
         }
     }
 
@@ -175,6 +183,8 @@ public class RythmDuel : ArcadeGame
         {
             case GameState.MAIN_MENU:
                 ResetServerRpc();
+                mainMenu.SetActive(true);
+                gameScene.SetActive(false);
                 break;
 
             case GameState.GAME:
