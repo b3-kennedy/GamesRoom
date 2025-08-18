@@ -1091,6 +1091,7 @@ MonoBehaviour:
   leftLane: {fileID: 206055986}
   middleLane: {fileID: 1164824514}
   rightLane: {fileID: 1668715017}
+  duel: {fileID: 880403573}
 --- !u!114 &379134034
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6010,6 +6011,7 @@ MonoBehaviour:
   leftLane: {fileID: 2053534028}
   middleLane: {fileID: 1537188937}
   rightLane: {fileID: 1451839024}
+  duel: {fileID: 880403573}
 --- !u!114 &1745347400
 MonoBehaviour:
   m_ObjectHideFlags: 0
