@@ -158,6 +158,7 @@ public class RythmDuel : ArcadeGame
         targetSpeed = baseTargetSpeed;
         spawnInterval = baseSpawnInterval;
         waveTarget = startingWaveTarget;
+        ChangeStateServerRpc(GameState.MAIN_MENU);
 
     }
 
