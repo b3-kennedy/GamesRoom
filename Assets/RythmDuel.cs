@@ -3,8 +3,7 @@ using Unity.Netcode;
 using TMPro;
 using System.Collections.Generic;
 using System.Collections;
-using Unity.VisualScripting;
-using UnityEditor.Rendering;
+using System.Linq;
 
 [System.Serializable]
 public class RythmSpawn
@@ -15,20 +14,58 @@ public class RythmSpawn
 
 public class RythmDuel : ArcadeGame
 {
-    public enum GameState { MAIN_MENU, GAME, GAME_OVER }
+    public enum GameState { MAIN_MENU, GAME, GAME_OVER, WAVE_CLEARED}
 
+    [Header("Scenes")]
     public GameObject mainMenu;
-
     public GameObject gameScene;
-    public List<NetworkObject> connectedPlayers = new List<NetworkObject>();
+    public GameObject waveScene;
 
-    public NetworkVariable<int> connectedPlayersCount = new NetworkVariable<int>();
+    public GameObject gameOverScene;
+
+    [Header("Game Settings")]
+    public float timeBetweenWaves = 5f;
+    float waveTimer;
+
+    public int startingWaveTarget = 15;
+
+    public float waveIncreaseTargetMultiplier = 1.5f;
+
+
+
+    public float baseTargetSpeed = 2f;
+
+    public float targetSpeedIncreaseMultiplier = 1.25f;
+
+    public float baseSpawnInterval = 1f;
+
+    public float spawnIntervalDecreaseMultiplier = 1.25f;
+
+    public float maxTargets = 50f;
+
+    public float maxSpeed = 10f;
+
+    public float minSpawnInterval = 0.2f;
+
+
+    List<NetworkObject> connectedPlayers = new List<NetworkObject>();
+
+    NetworkVariable<int> connectedPlayersCount = new NetworkVariable<int>();
+
+    [Header("Other")]
     public TextMeshPro connectedPlayersText;
     public TextMeshPro joinText;
 
+    public TextMeshPro leftPlayerName;
+    public TextMeshPro rightPlayerName;
+
+    public TextMeshPro waveClearedText;
+
+    public TextMeshPro winnerText;
+
     public List<RythmSpawn> spawnZones;
 
-    public float baseSpawnInterval = 1f;
+    
     float spawnInterval;
 
     float timer;
@@ -41,14 +78,32 @@ public class RythmDuel : ArcadeGame
     public GameObject leftPlayer;
     public GameObject rightPlayer;
 
-    public TextMeshPro leftPlayerName;
-    public TextMeshPro rightPlayerName;
+
 
     public Transform leftLives;
     public Transform rightLives;
 
     int leftLivesCount = 3;
     int rightLivesCount = 3;
+
+
+
+
+    float targetSpeed;
+
+    int waveTarget;
+
+    bool waveCleared = false;
+
+    public int waveNumber = 1;
+
+    public string winner;
+
+
+
+
+
+    public List<GameObject> targetSpawnedList = new List<GameObject>();
 
 
 
@@ -63,6 +118,7 @@ public class RythmDuel : ArcadeGame
 
     void Start()
     {
+
         // Listen for state changes
         netGameState.OnValueChanged += OnNetworkGameStateChanged;
 
@@ -77,7 +133,9 @@ public class RythmDuel : ArcadeGame
     [ServerRpc(RequireOwnership = false)]
     public override void BeginServerRpc(ulong clientID)
     {
+        waveTarget = startingWaveTarget;
         spawnInterval = baseSpawnInterval;
+        targetSpeed = baseTargetSpeed;
         if (connectedPlayers.Count < 2)
         {
             if (connectedPlayers.Contains(NetworkManager.Singleton.ConnectedClients[clientID].PlayerObject)) return;
@@ -139,13 +197,15 @@ public class RythmDuel : ArcadeGame
 
         if (leftLivesCount <= 0)
         {
-            Debug.Log("left dead");
+            ChangeStateServerRpc(GameState.GAME_OVER);
+            winner = connectedPlayers[0].GetComponent<SteamPlayer>().playerName;
             return;
         }
 
         if (rightLivesCount <= 0)
         {
-            Debug.Log("right dead");
+            ChangeStateServerRpc(GameState.GAME_OVER);
+            winner = connectedPlayers[1].GetComponent<SteamPlayer>().playerName;
             return;
         }
 
@@ -169,26 +229,84 @@ public class RythmDuel : ArcadeGame
 
         float ping = GetClientWithHighestRTT();
 
-        timer += Time.deltaTime;
-        if (timer >= spawnInterval)
+        if (!waveCleared)
         {
-            int spawnType = Random.Range(0, 3);
-            if (spawnType == 0)
+            if (targetSpawnedList.Count < waveTarget)
             {
-                SpawnSingle(ping);
+                timer += Time.deltaTime;
+                if (timer >= spawnInterval)
+                {
+                    int spawnType = Random.Range(0, 3);
+                    if (spawnType == 0) SpawnSingle(ping);
+                    else if (spawnType == 1) SpawnDouble(ping);
+                    else SpawnTriple(ping);
+
+                    timer = 0;
+                }
             }
-            else if (spawnType == 1)
+
+            if (targetSpawnedList.Count >= waveTarget && targetSpawnedList.All(t => t == null))
             {
-                SpawnDouble(ping);
+                waveCleared = true;
+                StartCoroutine(EndOfRoundBuffer());
+                
+            }
+        }
+    }
+
+    IEnumerator EndOfRoundBuffer()
+    {
+        yield return new WaitForSeconds(1f);
+        ChangeStateServerRpc(GameState.WAVE_CLEARED);
+    }
+
+    void WaveCleared()
+    {
+        waveTimer += Time.deltaTime;
+        if (waveTimer >= timeBetweenWaves)
+        {
+            waveNumber++;
+
+            waveClearedText.text = $"WAVE {waveNumber} COMPLETE";
+
+            targetSpawnedList.Clear();
+            waveCleared = false;
+            if (targetSpeed < maxSpeed)
+            {
+                targetSpeed *= targetSpeedIncreaseMultiplier;
             }
             else
             {
-                SpawnTriple(ping);
+                targetSpeed = maxSpeed;
+            }
+
+            if (spawnInterval > minSpawnInterval)
+            {
+                spawnInterval /= spawnIntervalDecreaseMultiplier;
+            }
+            else
+            {
+                spawnInterval = minSpawnInterval;
+            }
+
+            if (waveTarget < maxTargets)
+            {
+                waveTarget = Mathf.RoundToInt(waveTarget * waveIncreaseTargetMultiplier);
+            }
+            else
+            {
+                waveTarget = Mathf.RoundToInt(maxTargets);
             }
             
 
-            timer = 0;
+            ChangeStateServerRpc(GameState.GAME);
+            waveTimer = 0;
         }
+    }
+
+    void GameOver()
+    {
+        winnerText.text = $"{winner} Wins!";
     }
 
     void SpawnTriple(float ping)
@@ -197,7 +315,10 @@ public class RythmDuel : ArcadeGame
         {
             spawnedTargetLeft = SpawnTarget(spawnZones[i].leftPlayerSpawn.transform.position, true);
             spawnedTargetRight = SpawnTarget(spawnZones[i].rightPlayerSpawn.transform.position, false);
+            targetSpawnedList.Add(spawnedTargetLeft);
+            targetSpawnedList.Add(spawnedTargetRight);
             StartCoroutine(EnableOnServer(ping, spawnedTargetLeft, spawnedTargetRight));
+
         }
     }
 
@@ -214,10 +335,14 @@ public class RythmDuel : ArcadeGame
 
         spawnedTargetLeft = SpawnTarget(spawnZones[firstLane].leftPlayerSpawn.transform.position, true);
         spawnedTargetRight = SpawnTarget(spawnZones[firstLane].rightPlayerSpawn.transform.position, false);
+        targetSpawnedList.Add(spawnedTargetLeft);
+        targetSpawnedList.Add(spawnedTargetRight);
         StartCoroutine(EnableOnServer(ping, spawnedTargetLeft, spawnedTargetRight));
 
         spawnedTargetLeft = SpawnTarget(spawnZones[secondLane].leftPlayerSpawn.transform.position, true);
         spawnedTargetRight = SpawnTarget(spawnZones[secondLane].rightPlayerSpawn.transform.position, false);
+        targetSpawnedList.Add(spawnedTargetLeft);
+        targetSpawnedList.Add(spawnedTargetRight);
         StartCoroutine(EnableOnServer(ping, spawnedTargetLeft, spawnedTargetRight));
 
     }
@@ -230,6 +355,9 @@ public class RythmDuel : ArcadeGame
         // Spawn both sides
         spawnedTargetLeft = SpawnTarget(spawnZones[spawnIndex].leftPlayerSpawn.transform.position, true);
         spawnedTargetRight = SpawnTarget(spawnZones[spawnIndex].rightPlayerSpawn.transform.position, false);
+        targetSpawnedList.Add(spawnedTargetLeft);
+        targetSpawnedList.Add(spawnedTargetRight);
+
 
         // Delay showing them until ping-adjusted time
         StartCoroutine(EnableOnServer(ping, spawnedTargetLeft, spawnedTargetRight));
@@ -239,6 +367,10 @@ public class RythmDuel : ArcadeGame
     {
         // Instantiate prefab
         var obj = Instantiate(target, position, Quaternion.identity);
+
+        obj.GetComponent<Move>().speed = targetSpeed;
+
+        
 
         // Assign Move component if present
         if (obj.TryGetComponent<Move>(out var move))
@@ -286,6 +418,14 @@ public class RythmDuel : ArcadeGame
             PlayerInput();
             Game();
         }
+        else if (netGameState.Value == GameState.WAVE_CLEARED)
+        {
+            WaveCleared();
+        }
+        else if (netGameState.Value == GameState.GAME_OVER)
+        {
+            GameOver();
+        }
     }
 
     IEnumerator EnableOnServer(float time, GameObject leftTarget, GameObject rightTarget)
@@ -328,12 +468,6 @@ public class RythmDuel : ArcadeGame
     }
 
 
-    [ServerRpc(RequireOwnership = false)]
-    public void GameOverServerRpc()
-    {
-        netGameState.Value = GameState.GAME_OVER;
-    }
-
     private void ApplyState(GameState state)
     {
         switch (state)
@@ -342,16 +476,28 @@ public class RythmDuel : ArcadeGame
                 ResetServerRpc();
                 mainMenu.SetActive(true);
                 gameScene.SetActive(false);
+                waveScene.SetActive(false);
+                gameOverScene.SetActive(false);
                 break;
 
             case GameState.GAME:
                 mainMenu.SetActive(false);
                 gameScene.SetActive(true);
+                waveScene.SetActive(false);
+                gameOverScene.SetActive(false);
+                break;
+            case GameState.WAVE_CLEARED:
+                mainMenu.SetActive(false);
+                gameScene.SetActive(false);
+                waveScene.SetActive(true);
+                gameOverScene.SetActive(false);
                 break;
 
             case GameState.GAME_OVER:
                 mainMenu.SetActive(false);
                 gameScene.SetActive(false);
+                waveScene.SetActive(false);
+                gameOverScene.SetActive(true);
                 break;
         }
     }

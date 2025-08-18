@@ -142,6 +142,13 @@ public class RhythmPlayer : NetworkBehaviour
         onComplete?.Invoke(); // reset cooldown
     }
 
+    void OnEnable()
+    {
+        StartCoroutine(LerpColorWithCooldown(middleLane.GetComponent<MeshRenderer>(), Color.black, 0.5f, () => middleCooldown = false));
+        StartCoroutine(LerpColorWithCooldown(leftLane.GetComponent<MeshRenderer>(), Color.black, 0.5f, () => middleCooldown = false));
+        StartCoroutine(LerpColorWithCooldown(rightLane.GetComponent<MeshRenderer>(), Color.black, 0.5f, () => middleCooldown = false));
+    }
+
     [ServerRpc(RequireOwnership = false)]
     void DestroyTargetServerRpc(ulong netObjID)
     {
