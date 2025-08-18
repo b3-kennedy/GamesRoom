@@ -21,6 +21,8 @@ public class RhythmPlayer : NetworkBehaviour
     bool middleCooldown;
     bool rightCooldown;
 
+    public RythmDuel duel;
+
     public override void OnGainedOwnership()
     {
         Debug.Log($"{OwnerClientId} gained ownership of this object");
@@ -86,6 +88,13 @@ public class RhythmPlayer : NetworkBehaviour
             }
         }
 
+        if (duel.netGameState.Value == RythmDuel.GameState.GAME_OVER)
+        {
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                duel.ResetServerRpc();
+            }
+        }
 
     }
 

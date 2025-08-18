@@ -148,11 +148,16 @@ public class RythmDuel : ArcadeGame
     [ServerRpc(RequireOwnership = false)]
     public override void ResetServerRpc()
     {
+        ResetClientRpc();
     }
 
     [ClientRpc]
     void ResetClientRpc()
     {
+        connectedPlayers.Clear();
+        targetSpeed = baseTargetSpeed;
+        spawnInterval = baseSpawnInterval;
+        waveTarget = startingWaveTarget;
 
     }
 
@@ -495,6 +500,12 @@ public class RythmDuel : ArcadeGame
                 break;
 
             case GameState.GAME_OVER:
+                for (int i = targetSpawnedList.Count - 1; i >= 0; i--)
+                {
+                    Destroy(targetSpawnedList[i].gameObject);
+                    
+                }
+                targetSpawnedList.Clear();
                 mainMenu.SetActive(false);
                 gameScene.SetActive(false);
                 waveScene.SetActive(false);
