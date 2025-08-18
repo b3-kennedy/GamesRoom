@@ -905,6 +905,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  inZone1: 0
+  inZone2: 0
+  inZone3: 0
 --- !u!114 &379134034
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1639,6 +1642,7 @@ GameObject:
   - component: {fileID: 569489821}
   - component: {fileID: 569489820}
   - component: {fileID: 569489819}
+  - component: {fileID: 569489822}
   m_Layer: 0
   m_Name: Zone3
   m_TagString: Zone3
@@ -1736,6 +1740,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 569489817}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &569489822
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 569489817}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: facb415b1fa319d4db6897f894eb4322, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 0}
+  zoneNumber: 3
 --- !u!1 &670922380
 GameObject:
   m_ObjectHideFlags: 0
@@ -1890,6 +1908,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
+  zoneNumber: 2
 --- !u!1 &725932189
 GameObject:
   m_ObjectHideFlags: 0
@@ -2037,6 +2056,7 @@ GameObject:
   - component: {fileID: 807671171}
   - component: {fileID: 807671170}
   - component: {fileID: 807671169}
+  - component: {fileID: 807671172}
   m_Layer: 0
   m_Name: Zone2
   m_TagString: Zone2
@@ -2134,6 +2154,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 807671167}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &807671172
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 807671167}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: facb415b1fa319d4db6897f894eb4322, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 0}
+  zoneNumber: 2
 --- !u!1 &880403569
 GameObject:
   m_ObjectHideFlags: 0
@@ -2224,7 +2258,7 @@ MonoBehaviour:
     rightPlayerSpawn: {fileID: 740955809}
   - leftPlayerSpawn: {fileID: 109461518}
     rightPlayerSpawn: {fileID: 529136811}
-  baseSpawnInterval: 1
+  baseSpawnInterval: 1.5
   target: {fileID: 1366594395815657426, guid: 6ad771aa3603a7f4faae9cd17a026510, type: 3}
   leftPlayer: {fileID: 1745347397}
   rightPlayer: {fileID: 379134031}
@@ -2478,6 +2512,7 @@ GameObject:
   - component: {fileID: 1003939379}
   - component: {fileID: 1003939378}
   - component: {fileID: 1003939377}
+  - component: {fileID: 1003939380}
   m_Layer: 0
   m_Name: Zone1
   m_TagString: Zone1
@@ -2575,6 +2610,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1003939375}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1003939380
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1003939375}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: facb415b1fa319d4db6897f894eb4322, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 0}
+  zoneNumber: 1
 --- !u!1 &1091631400
 GameObject:
   m_ObjectHideFlags: 0
@@ -2696,6 +2745,7 @@ GameObject:
   - component: {fileID: 1139922731}
   - component: {fileID: 1139922730}
   - component: {fileID: 1139922729}
+  - component: {fileID: 1139922732}
   m_Layer: 0
   m_Name: Zone3
   m_TagString: Zone3
@@ -2793,6 +2843,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1139922727}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1139922732
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1139922727}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: facb415b1fa319d4db6897f894eb4322, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 0}
+  zoneNumber: 3
 --- !u!1 &1258137403
 GameObject:
   m_ObjectHideFlags: 0
@@ -4040,6 +4104,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  inZone1: 0
+  inZone2: 0
+  inZone3: 0
 --- !u!114 &1745347400
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4415,6 +4482,7 @@ GameObject:
   - component: {fileID: 1998817441}
   - component: {fileID: 1998817440}
   - component: {fileID: 1998817439}
+  - component: {fileID: 1998817442}
   m_Layer: 0
   m_Name: Zone1
   m_TagString: Zone1
@@ -4512,6 +4580,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1998817437}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1998817442
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1998817437}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: facb415b1fa319d4db6897f894eb4322, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 0}
+  zoneNumber: 1
 --- !u!1 &2043465442
 GameObject:
   m_ObjectHideFlags: 0
