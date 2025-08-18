@@ -4,6 +4,7 @@ using TMPro;
 using System.Collections.Generic;
 using System.Collections;
 using Unity.VisualScripting;
+using UnityEditor.Rendering;
 
 [System.Serializable]
 public class RythmSpawn
@@ -39,6 +40,9 @@ public class RythmDuel : ArcadeGame
 
     public GameObject leftPlayer;
     public GameObject rightPlayer;
+
+    public TextMeshPro leftPlayerName;
+    public TextMeshPro rightPlayerName;
 
 
 
@@ -91,18 +95,30 @@ public class RythmDuel : ArcadeGame
     void MainMenu()
     {
         connectedPlayersText.text = $"{connectedPlayersCount.Value}/2";
-        if (connectedPlayersCount.Value == 2 && netGameState.Value != GameState.GAME)
+        if (connectedPlayersCount.Value == 1 && netGameState.Value != GameState.GAME)
         {
             ChangeStateServerRpc(GameState.GAME);
             if (IsServer)
             {
                 leftPlayer.GetComponent<NetworkObject>().ChangeOwnership(connectedPlayers[0].OwnerClientId);
                 rightPlayer.GetComponent<NetworkObject>().ChangeOwnership(connectedPlayers[1].OwnerClientId);
+                var leftPlayerObject = NetworkManager.Singleton.ConnectedClients[connectedPlayers[0].OwnerClientId].PlayerObject;
+                var rightPlayerObject = NetworkManager.Singleton.ConnectedClients[connectedPlayers[1].OwnerClientId].PlayerObject;
+                string leftPlayerName = leftPlayerObject.GetComponent<SteamPlayer>().playerName;
+                string rightPlayerName = rightPlayerObject.GetComponent<SteamPlayer>().playerName;
+                SetPlayerNamesClientRpc(leftPlayerName, rightPlayerName);
 
             }
             
             
         }
+    }
+
+    [ClientRpc]
+    void SetPlayerNamesClientRpc(string player1Name, string player2Name)
+    {
+        leftPlayerName.text = player1Name;
+        rightPlayerName.text = player2Name;
     }
 
 
