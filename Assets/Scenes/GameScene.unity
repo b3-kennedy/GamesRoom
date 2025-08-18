@@ -2266,8 +2266,8 @@ MonoBehaviour:
   target: {fileID: 1366594395815657426, guid: 6ad771aa3603a7f4faae9cd17a026510, type: 3}
   leftPlayer: {fileID: 1745347397}
   rightPlayer: {fileID: 379134031}
-  leftPlayerName: {fileID: 0}
-  rightPlayerName: {fileID: 0}
+  leftPlayerName: {fileID: 1106632049}
+  rightPlayerName: {fileID: 1916840513}
   netGameState:
     m_InternalValue: 0
 --- !u!1 &909555068
