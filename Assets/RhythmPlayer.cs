@@ -54,7 +54,7 @@ public class RhythmPlayer : NetworkBehaviour
     {
         if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(netObjID, out var target))
         {
-            Destroy(target);
+            target.Despawn(true);
         }
     }
 }
