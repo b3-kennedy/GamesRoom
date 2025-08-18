@@ -165,20 +165,50 @@ public class RythmDuel : ArcadeGame
         timer += Time.deltaTime;
         if (timer >= spawnInterval)
         {
-            int spawnIndex = Random.Range(0, 3);
-            spawnedTargetLeft = Instantiate(target, spawnZones[spawnIndex].leftPlayerSpawn.transform.position, Quaternion.identity);
-            spawnedTargetRight = Instantiate(target, spawnZones[spawnIndex].rightPlayerSpawn.transform.position, Quaternion.identity);
-            spawnedTargetLeft.GetComponent<Move>().duel = this;
-            spawnedTargetLeft.GetComponent<Move>().isLeft = true;
-            spawnedTargetRight.GetComponent<Move>().duel = this;
-            spawnedTargetRight.GetComponent<Move>().isLeft = false;
-            spawnedTargetLeft.GetComponent<MeshRenderer>().enabled = false;
-            spawnedTargetRight.GetComponent<MeshRenderer>().enabled = false;
-            spawnedTargetLeft.GetComponent<NetworkObject>().Spawn();
-            spawnedTargetRight.GetComponent<NetworkObject>().Spawn();
+            // Choose random spawn zone safely
+            int spawnIndex = Random.Range(0, spawnZones.Count);
+
+            // Spawn both sides
+            spawnedTargetLeft = SpawnTarget(spawnZones[spawnIndex].leftPlayerSpawn.transform.position, true);
+            spawnedTargetRight = SpawnTarget(spawnZones[spawnIndex].rightPlayerSpawn.transform.position, false);
+
+            // Delay showing them until ping-adjusted time
             StartCoroutine(EnableOnServer(ping, spawnedTargetLeft, spawnedTargetRight));
+
             timer = 0;
         }
+    }
+
+    private GameObject SpawnTarget(Vector3 position, bool isLeft)
+    {
+        // Instantiate prefab
+        var obj = Instantiate(target, position, Quaternion.identity);
+
+        // Assign Move component if present
+        if (obj.TryGetComponent<Move>(out var move))
+        {
+            move.duel = this;
+            move.isLeft = isLeft;
+        }
+
+        // Disable visuals until reveal
+        if (obj.TryGetComponent<MeshRenderer>(out var renderer))
+        {
+            renderer.enabled = false;
+        }
+
+        // Network spawn
+        var netObj = obj.GetComponent<NetworkObject>();
+        if (netObj != null)
+        {
+            netObj.Spawn();
+        }
+        else
+        {
+            Debug.LogError("[RythmDuel] Target prefab missing NetworkObject!");
+        }
+
+        return obj;
     }
 
     void PlayerInput()
