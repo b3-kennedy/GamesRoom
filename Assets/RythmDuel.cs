@@ -47,6 +47,9 @@ public class RythmDuel : ArcadeGame
     public Transform leftLives;
     public Transform rightLives;
 
+    int leftLivesCount = 3;
+    int rightLivesCount = 3;
+
 
 
 
@@ -98,7 +101,7 @@ public class RythmDuel : ArcadeGame
     void MainMenu()
     {
         connectedPlayersText.text = $"{connectedPlayersCount.Value}/2";
-        if (connectedPlayersCount.Value == 2 && netGameState.Value != GameState.GAME)
+        if (connectedPlayersCount.Value == 1 && netGameState.Value != GameState.GAME)
         {
             ChangeStateServerRpc(GameState.GAME);
             if (IsServer)
@@ -133,13 +136,14 @@ public class RythmDuel : ArcadeGame
     [ClientRpc]
     void RemoveLifeClientRpc(bool isLeft)
     {
-        if (leftLives.childCount <= 0)
+
+        if (leftLivesCount <= 0)
         {
             Debug.Log("left dead");
             return;
         }
 
-        if (rightLives.childCount <= 0)
+        if (rightLivesCount <= 0)
         {
             Debug.Log("right dead");
             return;
@@ -147,11 +151,13 @@ public class RythmDuel : ArcadeGame
 
         if (isLeft)
         {
-            Destroy(leftLives.GetChild(0).gameObject);
+            leftLives.GetChild(0).gameObject.SetActive(false);
+            leftLivesCount--;
         }
         else
         {
-            Destroy(rightLives.GetChild(0).gameObject);
+            rightLives.GetChild(0).gameObject.SetActive(false);
+            rightLivesCount--;
         }
     }
 
@@ -165,18 +171,67 @@ public class RythmDuel : ArcadeGame
         timer += Time.deltaTime;
         if (timer >= spawnInterval)
         {
-            // Choose random spawn zone safely
-            int spawnIndex = Random.Range(0, spawnZones.Count);
-
-            // Spawn both sides
-            spawnedTargetLeft = SpawnTarget(spawnZones[spawnIndex].leftPlayerSpawn.transform.position, true);
-            spawnedTargetRight = SpawnTarget(spawnZones[spawnIndex].rightPlayerSpawn.transform.position, false);
-
-            // Delay showing them until ping-adjusted time
-            StartCoroutine(EnableOnServer(ping, spawnedTargetLeft, spawnedTargetRight));
+            int spawnType = Random.Range(0, 3);
+            if (spawnType == 0)
+            {
+                SpawnSingle(ping);
+            }
+            else if (spawnType == 1)
+            {
+                SpawnDouble(ping);
+            }
+            else
+            {
+                SpawnTriple(ping);
+            }
+            
 
             timer = 0;
         }
+    }
+
+    void SpawnTriple(float ping)
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            spawnedTargetLeft = SpawnTarget(spawnZones[i].leftPlayerSpawn.transform.position, true);
+            spawnedTargetRight = SpawnTarget(spawnZones[i].rightPlayerSpawn.transform.position, false);
+            StartCoroutine(EnableOnServer(ping, spawnedTargetLeft, spawnedTargetRight));
+        }
+    }
+
+    void SpawnDouble(float ping)
+    {
+        // Pick two unique lanes
+        int firstLane = Random.Range(0, spawnZones.Count);
+        int secondLane;
+
+        do
+        {
+            secondLane = Random.Range(0, spawnZones.Count);
+        } while (secondLane == firstLane);
+
+        spawnedTargetLeft = SpawnTarget(spawnZones[firstLane].leftPlayerSpawn.transform.position, true);
+        spawnedTargetRight = SpawnTarget(spawnZones[firstLane].rightPlayerSpawn.transform.position, false);
+        StartCoroutine(EnableOnServer(ping, spawnedTargetLeft, spawnedTargetRight));
+
+        spawnedTargetLeft = SpawnTarget(spawnZones[secondLane].leftPlayerSpawn.transform.position, true);
+        spawnedTargetRight = SpawnTarget(spawnZones[secondLane].rightPlayerSpawn.transform.position, false);
+        StartCoroutine(EnableOnServer(ping, spawnedTargetLeft, spawnedTargetRight));
+
+    }
+
+    void SpawnSingle(float ping)
+    {
+        // Choose random spawn zone safely
+        int spawnIndex = Random.Range(0, spawnZones.Count);
+
+        // Spawn both sides
+        spawnedTargetLeft = SpawnTarget(spawnZones[spawnIndex].leftPlayerSpawn.transform.position, true);
+        spawnedTargetRight = SpawnTarget(spawnZones[spawnIndex].rightPlayerSpawn.transform.position, false);
+
+        // Delay showing them until ping-adjusted time
+        StartCoroutine(EnableOnServer(ping, spawnedTargetLeft, spawnedTargetRight));
     }
 
     private GameObject SpawnTarget(Vector3 position, bool isLeft)

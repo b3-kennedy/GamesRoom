@@ -1,3 +1,4 @@
+using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -11,6 +12,14 @@ public class RhythmPlayer : NetworkBehaviour
     [HideInInspector] public GameObject leftTarget;
     [HideInInspector] public GameObject middleTarget;
     [HideInInspector] public GameObject rightTarget;
+
+    public GameObject leftLane;
+    public GameObject middleLane;
+    public GameObject rightLane;
+
+    bool leftCooldown;
+    bool middleCooldown;
+    bool rightCooldown;
 
     public override void OnGainedOwnership()
     {
@@ -26,27 +35,111 @@ public class RhythmPlayer : NetworkBehaviour
     {
         if (!IsOwner) return;
 
-        if (Input.GetKeyDown(KeyCode.Alpha1) && inZone1)
+        if (Input.GetKeyDown(KeyCode.Alpha1) && !leftCooldown)
         {
-            leftTarget.SetActive(false);
-            DestroyTargetServerRpc(leftTarget.GetComponent<NetworkObject>().NetworkObjectId);
+            if (inZone1)
+            {
+                leftTarget.SetActive(false);
+                DestroyTargetServerRpc(leftTarget.GetComponent<NetworkObject>().NetworkObjectId);
+            }
+            else
+            {
+                leftCooldown = true; // start cooldown
+                MeshRenderer rend = leftLane.GetComponent<MeshRenderer>();
+                rend.material.color = Color.red;
+                StartCoroutine(LerpColorWithCooldown(rend, Color.black, 0.5f, () => leftCooldown = false));
+                ShowLaneCooldownServerRpc(NetworkManager.Singleton.LocalClientId, 0);
+            }
         }
 
-        if (Input.GetKeyDown(KeyCode.Alpha2) && inZone2)
+        if (Input.GetKeyDown(KeyCode.Alpha2) && !middleCooldown)
         {
-            middleTarget.SetActive(false);
-            DestroyTargetServerRpc(middleTarget.GetComponent<NetworkObject>().NetworkObjectId);
-
+            if (inZone2)
+            {
+                middleTarget.SetActive(false);
+                DestroyTargetServerRpc(middleTarget.GetComponent<NetworkObject>().NetworkObjectId);
+            }
+            else
+            {
+                middleCooldown = true;
+                MeshRenderer rend = middleLane.GetComponent<MeshRenderer>();
+                rend.material.color = Color.red;
+                StartCoroutine(LerpColorWithCooldown(rend, Color.black, 0.5f, () => middleCooldown = false));
+                ShowLaneCooldownServerRpc(NetworkManager.Singleton.LocalClientId, 1);
+            }
         }
 
-        if (Input.GetKeyDown(KeyCode.Alpha3) && inZone3)
+        if (Input.GetKeyDown(KeyCode.Alpha3) && !rightCooldown)
         {
-            rightTarget.SetActive(false);
-            DestroyTargetServerRpc(rightTarget.GetComponent<NetworkObject>().NetworkObjectId);
-
+            if (inZone3)
+            {
+                rightTarget.SetActive(false);
+                DestroyTargetServerRpc(rightTarget.GetComponent<NetworkObject>().NetworkObjectId);
+            }
+            else
+            {
+                rightCooldown = true;
+                MeshRenderer rend = rightLane.GetComponent<MeshRenderer>();
+                rend.material.color = Color.red;
+                StartCoroutine(LerpColorWithCooldown(rend, Color.black, 0.5f, () => rightCooldown = false));
+                ShowLaneCooldownServerRpc(NetworkManager.Singleton.LocalClientId, 2);
+            }
         }
 
 
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    void ShowLaneCooldownServerRpc(ulong clientID, int laneNumber)
+    {
+        ShowLaneCooldownClientRpc(clientID, laneNumber);
+    }
+
+    [ClientRpc]
+    void ShowLaneCooldownClientRpc(ulong clientID, int laneNumber)
+    {
+        if (NetworkManager.Singleton.LocalClientId != clientID)
+        {
+            if (laneNumber == 0)
+            {
+                leftCooldown = true; // start cooldown
+                MeshRenderer rend = leftLane.GetComponent<MeshRenderer>();
+                rend.material.color = Color.red;
+                StartCoroutine(LerpColorWithCooldown(rend, Color.black, 0.5f, () => leftCooldown = false));
+            }
+            else if (laneNumber == 1)
+            {
+                middleCooldown = true; // start cooldown
+                MeshRenderer rend = middleLane.GetComponent<MeshRenderer>();
+                rend.material.color = Color.red;
+                StartCoroutine(LerpColorWithCooldown(rend, Color.black, 0.5f, () => middleCooldown = false));
+            }
+            else
+            {
+                rightCooldown = true; // start cooldown
+                MeshRenderer rend = rightLane.GetComponent<MeshRenderer>();
+                rend.material.color = Color.red;
+                StartCoroutine(LerpColorWithCooldown(rend, Color.black, 0.5f, () => rightCooldown = false));
+            }
+
+        }
+    }
+
+
+    IEnumerator LerpColorWithCooldown(MeshRenderer rend, Color targetColor, float duration, System.Action onComplete)
+    {
+        Color startColor = rend.material.color;
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            rend.material.color = Color.Lerp(startColor, targetColor, elapsed / duration);
+            yield return null;
+        }
+
+        rend.material.color = targetColor;
+        onComplete?.Invoke(); // reset cooldown
     }
 
     [ServerRpc(RequireOwnership = false)]

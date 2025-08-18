@@ -19,7 +19,6 @@ public class Move : NetworkBehaviour
     {
         if (other.CompareTag("Zone1") || other.CompareTag("Zone2") || other.CompareTag("Zone3"))
         {
-            Debug.Log("entered zone");
             RhythmGameZone zone = other.GetComponent<RhythmGameZone>();
             if (zone)
             {
@@ -32,7 +31,6 @@ public class Move : NetworkBehaviour
     {
         if (other.CompareTag("Zone1") || other.CompareTag("Zone2") || other.CompareTag("Zone3"))
         {
-            Debug.Log("left zone");
             RhythmGameZone zone = other.GetComponent<RhythmGameZone>();
             if (zone)
             {
