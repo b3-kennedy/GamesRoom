@@ -14,7 +14,7 @@ public class RythmSpawn
 
 public class RythmDuel : ArcadeGame
 {
-    public enum GameState { MAIN_MENU, GAME, GAME_OVER, WAVE_CLEARED}
+    public enum GameState { MAIN_MENU, GAME, GAME_OVER, WAVE_CLEARED, WAGER}
 
     [Header("Scenes")]
     public GameObject mainMenu;
@@ -23,6 +23,8 @@ public class RythmDuel : ArcadeGame
 
     public GameObject gameOverScene;
 
+    public GameObject wagerScene;
+
     [Header("Game Settings")]
     public float timeBetweenWaves = 5f;
     float waveTimer;
@@ -30,8 +32,6 @@ public class RythmDuel : ArcadeGame
     public int startingWaveTarget = 15;
 
     public float waveIncreaseTargetMultiplier = 1.5f;
-
-
 
     public float baseTargetSpeed = 2f;
 
@@ -47,23 +47,56 @@ public class RythmDuel : ArcadeGame
 
     public float minSpawnInterval = 0.2f;
 
+    [Header("Main Menu Scene")]
 
     List<NetworkObject> connectedPlayers = new List<NetworkObject>();
-
     NetworkVariable<int> connectedPlayersCount = new NetworkVariable<int>();
-
-    [Header("Other")]
     public TextMeshPro connectedPlayersText;
     public TextMeshPro joinText;
 
+    [Header("Wager Scene")]
+
+    public TextMeshPro playerName;
+    public TextMeshPro wagerAmountText;
+    public TextMeshPro rightPlayerConfirmText;
+    public int wagerAmount;
+
+    public Transform buttonParent;
+
+    public Transform rightPlayerButtonOptions;
+
+    
+
+    public bool isLeftPlayerLocked;
+
+    [Header("Game Scene")]
+
+    public GameObject leftPlayer;
+    public GameObject rightPlayer;
     public TextMeshPro leftPlayerName;
     public TextMeshPro rightPlayerName;
+    public List<RythmSpawn> spawnZones;
+    public GameObject target;
+
+    public Transform leftLives;
+    public Transform rightLives;
+
+    [Header("Wave Scene")]
 
     public TextMeshPro waveClearedText;
 
-    public TextMeshPro winnerText;
+    public int waveNumber = 1;
 
-    public List<RythmSpawn> spawnZones;
+    [Header("Game Over Scene")]
+
+    public TextMeshPro winnerText;
+    public string winner;
+
+
+
+
+
+
 
     
     float spawnInterval;
@@ -71,43 +104,19 @@ public class RythmDuel : ArcadeGame
     float timer;
     float pingTimer;
 
-    public GameObject target;
+
     GameObject spawnedTargetLeft;
     GameObject spawnedTargetRight;
 
-    public GameObject leftPlayer;
-    public GameObject rightPlayer;
-
-
-
-    public Transform leftLives;
-    public Transform rightLives;
-
     int leftLivesCount = 3;
     int rightLivesCount = 3;
-
-
-
-
     float targetSpeed;
 
     int waveTarget;
 
     bool waveCleared = false;
 
-    public int waveNumber = 1;
-
-    public string winner;
-
-
-
-
-
-    public List<GameObject> targetSpawnedList = new List<GameObject>();
-
-
-
-
+    List<GameObject> targetSpawnedList = new List<GameObject>();
 
     // Network variable for syncing game state across clients
     public NetworkVariable<GameState> netGameState = new NetworkVariable<GameState>(
@@ -183,13 +192,15 @@ public class RythmDuel : ArcadeGame
     void  MainMenu()
     {
         connectedPlayersText.text = $"{connectedPlayersCount.Value}/2";
-        if (connectedPlayersCount.Value == 1 && netGameState.Value != GameState.GAME)
+        if (connectedPlayersCount.Value == 1 && netGameState.Value != GameState.WAGER)
         {
-            ChangeStateServerRpc(GameState.GAME);
+            ChangeStateServerRpc(GameState.WAGER);
             if (IsServer)
             {
                 leftPlayer.GetComponent<NetworkObject>().ChangeOwnership(connectedPlayers[0].OwnerClientId);
+                leftPlayer.GetComponent<RhythmPlayer>().isLeftPlayer = true;
                 rightPlayer.GetComponent<NetworkObject>().ChangeOwnership(connectedPlayers[1].OwnerClientId);
+                rightPlayer.GetComponent<RhythmPlayer>().isLeftPlayer = false;
                 var leftPlayerObject = NetworkManager.Singleton.ConnectedClients[connectedPlayers[0].OwnerClientId].PlayerObject;
                 var rightPlayerObject = NetworkManager.Singleton.ConnectedClients[connectedPlayers[1].OwnerClientId].PlayerObject;
                 string leftPlayerName = leftPlayerObject.GetComponent<SteamPlayer>().playerName;
@@ -341,6 +352,30 @@ public class RythmDuel : ArcadeGame
         winnerText.text = $"{winner} Wins!";
     }
 
+    void Wager()
+    {
+        var leftPlayerObject = NetworkManager.Singleton.ConnectedClients[leftPlayer.GetComponent<NetworkObject>().OwnerClientId].PlayerObject;
+        playerName.text = $"{leftPlayerObject.GetComponent<SteamPlayer>().playerName} pick an amount to wager";
+        wagerAmountText.text = wagerAmount.ToString();
+
+        if (isLeftPlayerLocked)
+        {
+            buttonParent.gameObject.SetActive(false);
+            var rightPlayerObject = NetworkManager.Singleton.ConnectedClients[leftPlayer.GetComponent<NetworkObject>().OwnerClientId].PlayerObject;
+            var rightPlayerName = rightPlayerObject.GetComponent<SteamPlayer>().playerName;
+            rightPlayerConfirmText.text = $"{rightPlayerName}, do you agree to this wager?";
+            rightPlayerConfirmText.gameObject.SetActive(true);
+            rightPlayerButtonOptions.gameObject.SetActive(true);
+        }
+        else
+        {
+            rightPlayer.GetComponent<RhythmPlayer>().canInput = true;
+            buttonParent.gameObject.SetActive(true);
+            rightPlayerConfirmText.gameObject.SetActive(false);
+            rightPlayerButtonOptions.gameObject.SetActive(false);
+        }
+    }
+
     void SpawnTriple(float ping)
     {
         for (int i = 0; i < 3; i++)
@@ -458,6 +493,10 @@ public class RythmDuel : ArcadeGame
         {
             GameOver();
         }
+        else if (netGameState.Value == GameState.WAGER)
+        {
+            Wager();
+        }
     }
 
     IEnumerator EnableOnServer(float time, GameObject leftTarget, GameObject rightTarget)
@@ -509,6 +548,7 @@ public class RythmDuel : ArcadeGame
                 gameScene.SetActive(false);
                 waveScene.SetActive(false);
                 gameOverScene.SetActive(false);
+                wagerScene.SetActive(false);
                 break;
 
             case GameState.GAME:
@@ -516,26 +556,36 @@ public class RythmDuel : ArcadeGame
                 gameScene.SetActive(true);
                 waveScene.SetActive(false);
                 gameOverScene.SetActive(false);
+                wagerScene.SetActive(false);
                 break;
             case GameState.WAVE_CLEARED:
                 mainMenu.SetActive(false);
                 gameScene.SetActive(false);
                 waveScene.SetActive(true);
                 gameOverScene.SetActive(false);
+                wagerScene.SetActive(false);
                 break;
-
             case GameState.GAME_OVER:
                 for (int i = targetSpawnedList.Count - 1; i >= 0; i--)
                 {
                     Destroy(targetSpawnedList[i].gameObject);
-                    
+
                 }
                 targetSpawnedList.Clear();
                 mainMenu.SetActive(false);
                 gameScene.SetActive(false);
                 waveScene.SetActive(false);
                 gameOverScene.SetActive(true);
+                wagerScene.SetActive(false);
                 break;
+            case GameState.WAGER:
+                mainMenu.SetActive(false);
+                gameScene.SetActive(false);
+                waveScene.SetActive(false);
+                gameOverScene.SetActive(false);
+                wagerScene.SetActive(true);
+                break;
+
         }
     }
 }

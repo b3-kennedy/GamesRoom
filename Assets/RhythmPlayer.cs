@@ -25,6 +25,11 @@ public class RhythmPlayer : NetworkBehaviour
 
     public RythmDuel duel;
 
+    [HideInInspector] public bool isLeftPlayer = false;
+    [HideInInspector] public bool canInput = false;
+
+
+
     public override void OnGainedOwnership()
     {
         Debug.Log($"{OwnerClientId} gained ownership of this object");
@@ -92,12 +97,53 @@ public class RhythmPlayer : NetworkBehaviour
 
         if (duel.netGameState.Value == RythmDuel.GameState.GAME_OVER)
         {
-            
+
             if (Input.GetKeyDown(KeyCode.R))
             {
                 Debug.Log("reset");
                 duel.ResetServerRpc();
             }
+        }
+        else if (duel.netGameState.Value == RythmDuel.GameState.WAGER)
+        {
+
+            if (isLeftPlayer)
+            {
+                if (Input.GetKeyDown(KeyCode.X))
+                {
+                    duel.ChangeStateServerRpc(RythmDuel.GameState.GAME);
+                }
+
+                if (Input.GetKeyDown(KeyCode.LeftArrow) && duel.wagerAmount > 0)
+                {
+                    duel.wagerAmount -= 10;
+                }
+                else if (Input.GetKeyDown(KeyCode.RightArrow) && duel.wagerAmount < 500)
+                {
+                    duel.wagerAmount += 10;
+                }
+
+                if (Input.GetKeyDown(KeyCode.Return))
+                {
+                    duel.isLeftPlayerLocked = true;
+                }
+            }
+            else
+            {
+                if (!canInput) return;
+
+                if (Input.GetKeyDown(KeyCode.Y))
+                {
+                    duel.ChangeStateServerRpc(RythmDuel.GameState.GAME);
+                }
+
+                if (Input.GetKeyDown(KeyCode.N))
+                {
+                    duel.isLeftPlayerLocked = false;
+                }
+            }
+
+
         }
 
     }

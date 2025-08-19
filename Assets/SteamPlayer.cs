@@ -5,6 +5,7 @@ using Steamworks;
 public class SteamPlayer : NetworkBehaviour
 {
     public string playerName;
+    public NetworkVariable<float> credits;
 
     public void Start()
     {
