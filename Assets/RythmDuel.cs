@@ -4,6 +4,7 @@ using TMPro;
 using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
+using System.Threading.Tasks;
 
 [System.Serializable]
 public class RythmSpawn
@@ -354,15 +355,27 @@ public class RythmDuel : ArcadeGame
 
     void Wager()
     {
+        if (!IsServer) return;
+
         var leftPlayerObject = NetworkManager.Singleton.ConnectedClients[leftPlayer.GetComponent<NetworkObject>().OwnerClientId].PlayerObject;
-        playerName.text = $"{leftPlayerObject.GetComponent<SteamPlayer>().playerName} pick an amount to wager";
+        var leftPlayerName = leftPlayerObject.GetComponent<SteamPlayer>().playerName;
+        var rightPlayerObject = NetworkManager.Singleton.ConnectedClients[rightPlayer.GetComponent<NetworkObject>().OwnerClientId].PlayerObject;
+        var rightPlayerName = rightPlayerObject.GetComponent<SteamPlayer>().playerName;
+        WagerClientRpc(leftPlayerName, rightPlayerName);
+
+
+    }
+
+    [ClientRpc]
+    void WagerClientRpc(string leftPlayerName, string rightPlayerName)
+    {
+
+        playerName.text = $"{leftPlayerName} pick an amount to wager";
         wagerAmountText.text = wagerAmount.ToString();
 
         if (isLeftPlayerLocked)
         {
             buttonParent.gameObject.SetActive(false);
-            var rightPlayerObject = NetworkManager.Singleton.ConnectedClients[leftPlayer.GetComponent<NetworkObject>().OwnerClientId].PlayerObject;
-            var rightPlayerName = rightPlayerObject.GetComponent<SteamPlayer>().playerName;
             rightPlayerConfirmText.text = $"{rightPlayerName}, do you agree to this wager?";
             rightPlayerConfirmText.gameObject.SetActive(true);
             rightPlayerButtonOptions.gameObject.SetActive(true);
