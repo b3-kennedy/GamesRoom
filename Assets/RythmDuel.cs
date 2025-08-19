@@ -93,6 +93,7 @@ public class RythmDuel : ArcadeGame
     public TextMeshPro winnerText;
     SteamPlayer winner;
     SteamPlayer loser;
+    bool hasPayedOut = false;
 
 
 
@@ -187,6 +188,9 @@ public class RythmDuel : ArcadeGame
         targetSpeed = baseTargetSpeed;
         spawnInterval = baseSpawnInterval;
         waveTarget = startingWaveTarget;
+        winner = null;
+        loser = null;
+        hasPayedOut = false;
         Debug.Log(connectedPlayersCount.Value);
         ChangeStateServerRpc(GameState.MAIN_MENU);
 
@@ -356,14 +360,12 @@ public class RythmDuel : ArcadeGame
     void GameOver()
     {
         winnerText.text = $"{winner.playerName} Wins!";
-        PayoutWagerServerRpc();
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    void PayoutWagerServerRpc()
-    {
-        winner.credits.Value += wagerAmount.Value;
-        loser.credits.Value -= wagerAmount.Value;
+        if (!hasPayedOut && IsServer)
+        {
+            winner.credits.Value += wagerAmount.Value;
+            loser.credits.Value -= wagerAmount.Value;
+            hasPayedOut = true;
+        }
     }
 
     void Wager()
