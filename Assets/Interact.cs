@@ -31,9 +31,15 @@ public class Interact : NetworkBehaviour
             if (Physics.Raycast(cam.transform.position, cam.transform.forward, out RaycastHit hit, range))
             {
                 ArcadeMachine machine = hit.collider.GetComponent<ArcadeMachine>();
+                Table table = hit.collider.transform.root.GetComponent<Table>();
                 if (machine)
                 {
                     machine.arcadeGame.BeginServerRpc(NetworkManager.Singleton.LocalClientId);
+                }
+                else if (table)
+                {
+                    Debug.Log(table.tableGame);
+                    table.tableGame.BeginServerRpc(NetworkManager.Singleton.LocalClientId);
                 }
 
             }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ArcadeMachine : NetworkBehaviour
 {
-    public ArcadeGame arcadeGame;
+    public Game arcadeGame;
     public GameObject screen;
 
     public List<GameObject> nearPlayers = new List<GameObject>();

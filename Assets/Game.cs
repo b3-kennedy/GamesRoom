@@ -1,7 +1,7 @@
 using Unity.Netcode;
 using UnityEngine;
 
-public class ArcadeGame : NetworkBehaviour
+public class Game : NetworkBehaviour
 {
     [ServerRpc(RequireOwnership = false)]
     public virtual void BeginServerRpc(ulong clientID)

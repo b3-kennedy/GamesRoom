@@ -10,6 +10,7 @@ TagManager:
   - Zone2
   - Zone3
   - KillZone
+  - Table
   layers:
   - Default
   - TransparentFX

@@ -4,7 +4,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem.LowLevel;
 
-public class FlappyBird : ArcadeGame
+public class FlappyBird : Game
 {
     public GameObject mainMenu;
     public GameObject gameScene;
