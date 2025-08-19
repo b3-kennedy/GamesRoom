@@ -91,7 +91,8 @@ public class RythmDuel : ArcadeGame
     [Header("Game Over Scene")]
 
     public TextMeshPro winnerText;
-    public string winner;
+    SteamPlayer winner;
+    SteamPlayer loser;
 
 
 
@@ -159,6 +160,7 @@ public class RythmDuel : ArcadeGame
     public override void ResetServerRpc()
     {
         connectedPlayersCount.Value = 0;
+        wagerAmount.Value = 0;
         ResetClientRpc();
     }
 
@@ -190,7 +192,7 @@ public class RythmDuel : ArcadeGame
 
     }
 
-    void  MainMenu()
+    void MainMenu()
     {
         connectedPlayersText.text = $"{connectedPlayersCount.Value}/2";
         if (connectedPlayersCount.Value == 2 && netGameState.Value != GameState.WAGER)
@@ -232,6 +234,8 @@ public class RythmDuel : ArcadeGame
     {
         var lPlayer = leftPlayer.GetComponent<RhythmPlayer>();
         var rPlayer = rightPlayer.GetComponent<RhythmPlayer>();
+        var leftPlayerObject = NetworkManager.Singleton.ConnectedClients[rightPlayer.GetComponent<NetworkObject>().OwnerClientId].PlayerObject;
+        var rightPlayerObject = NetworkManager.Singleton.ConnectedClients[leftPlayer.GetComponent<NetworkObject>().OwnerClientId].PlayerObject;
 
         if (isLeft && lPlayer.canLoseLife)
         {
@@ -252,16 +256,17 @@ public class RythmDuel : ArcadeGame
         if (leftLivesCount <= 0)
         {
             ChangeStateServerRpc(GameState.GAME_OVER);
-            var playerObject = NetworkManager.Singleton.ConnectedClients[rightPlayer.GetComponent<NetworkObject>().OwnerClientId].PlayerObject;
-            winner = playerObject.GetComponent<SteamPlayer>().playerName;
+
+            winner = rightPlayerObject.GetComponent<SteamPlayer>();
+            loser = leftPlayerObject.GetComponent<SteamPlayer>();
             return;
         }
 
         if (rightLivesCount <= 0)
         {
             ChangeStateServerRpc(GameState.GAME_OVER);
-            var playerObject = NetworkManager.Singleton.ConnectedClients[leftPlayer.GetComponent<NetworkObject>().OwnerClientId].PlayerObject;
-            winner = playerObject.GetComponent<SteamPlayer>().playerName;
+            winner = leftPlayerObject.GetComponent<SteamPlayer>();
+            loser = rightPlayerObject.GetComponent<SteamPlayer>();
             return;
         }
     }
@@ -350,7 +355,15 @@ public class RythmDuel : ArcadeGame
 
     void GameOver()
     {
-        winnerText.text = $"{winner} Wins!";
+        winnerText.text = $"{winner.playerName} Wins!";
+        PayoutWagerServerRpc();
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    void PayoutWagerServerRpc()
+    {
+        winner.credits.Value += wagerAmount.Value;
+        loser.credits.Value -= wagerAmount.Value;
     }
 
     void Wager()
