@@ -126,7 +126,7 @@ public class RhythmPlayer : NetworkBehaviour
 
                 if (Input.GetKeyDown(KeyCode.Return))
                 {
-                    LockLeftPlayerServerRpc();
+                    ChangeLockValueLeftPlayerServerRpc(true);
                 }
             }
             else
@@ -140,7 +140,7 @@ public class RhythmPlayer : NetworkBehaviour
 
                 if (Input.GetKeyDown(KeyCode.N))
                 {
-                    duel.isLeftPlayerLocked = false;
+                    ChangeLockValueLeftPlayerServerRpc(false);
                 }
             }
 
@@ -151,15 +151,15 @@ public class RhythmPlayer : NetworkBehaviour
 
 
     [ServerRpc(RequireOwnership = false)]
-    void LockLeftPlayerServerRpc()
+    void ChangeLockValueLeftPlayerServerRpc(bool value)
     {
-        LockLeftPlayerClientRpc();
+        ChangeLockValueLeftPlayerClientRpc(value);
     }
 
     [ClientRpc]
-    void LockLeftPlayerClientRpc()
+    void ChangeLockValueLeftPlayerClientRpc(bool value)
     {
-        duel.isLeftPlayerLocked = true;
+        duel.isLeftPlayerLocked = value;
     }
 
     [ServerRpc(RequireOwnership = false)]
