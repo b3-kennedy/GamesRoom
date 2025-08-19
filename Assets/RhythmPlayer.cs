@@ -1,5 +1,6 @@
 using System.Collections;
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class RhythmPlayer : NetworkBehaviour
@@ -114,18 +115,18 @@ public class RhythmPlayer : NetworkBehaviour
                     duel.ChangeStateServerRpc(RythmDuel.GameState.GAME);
                 }
 
-                if (Input.GetKeyDown(KeyCode.LeftArrow) && duel.wagerAmount > 0)
+                if (Input.GetKeyDown(KeyCode.LeftArrow) && duel.wagerAmount.Value > 0)
                 {
-                    duel.wagerAmount -= 10;
+                    ChangeWagerAmountServerRpc(-10);
                 }
-                else if (Input.GetKeyDown(KeyCode.RightArrow) && duel.wagerAmount < 500)
+                else if (Input.GetKeyDown(KeyCode.RightArrow) && duel.wagerAmount.Value < 500)
                 {
-                    duel.wagerAmount += 10;
+                    ChangeWagerAmountServerRpc(10);
                 }
 
                 if (Input.GetKeyDown(KeyCode.Return))
                 {
-                    duel.isLeftPlayerLocked = true;
+                    LockLeftPlayerServerRpc();
                 }
             }
             else
@@ -146,6 +147,25 @@ public class RhythmPlayer : NetworkBehaviour
 
         }
 
+    }
+
+
+    [ServerRpc(RequireOwnership = false)]
+    void LockLeftPlayerServerRpc()
+    {
+        LockLeftPlayerClientRpc();
+    }
+
+    [ClientRpc]
+    void LockLeftPlayerClientRpc()
+    {
+        duel.isLeftPlayerLocked = true;
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    void ChangeWagerAmountServerRpc(int amount)
+    {
+        duel.wagerAmount.Value += amount;
     }
 
     public void LostLife()

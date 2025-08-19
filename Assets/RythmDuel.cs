@@ -60,7 +60,7 @@ public class RythmDuel : ArcadeGame
     public TextMeshPro playerName;
     public TextMeshPro wagerAmountText;
     public TextMeshPro rightPlayerConfirmText;
-    public int wagerAmount;
+    public NetworkVariable<int> wagerAmount;
 
     public Transform buttonParent;
 
@@ -371,7 +371,7 @@ public class RythmDuel : ArcadeGame
     {
 
         playerName.text = $"{leftPlayerName} pick an amount to wager";
-        wagerAmountText.text = wagerAmount.ToString();
+        wagerAmountText.text = wagerAmount.Value.ToString();
 
         if (isLeftPlayerLocked)
         {
