@@ -240,8 +240,8 @@ public class RythmDuel : ArcadeGame
     {
         var lPlayer = leftPlayer.GetComponent<RhythmPlayer>();
         var rPlayer = rightPlayer.GetComponent<RhythmPlayer>();
-        var leftPlayerObject = NetworkManager.Singleton.ConnectedClients[rightPlayer.GetComponent<NetworkObject>().OwnerClientId].PlayerObject;
-        var rightPlayerObject = NetworkManager.Singleton.ConnectedClients[leftPlayer.GetComponent<NetworkObject>().OwnerClientId].PlayerObject;
+        var leftPlayerObject = NetworkManager.Singleton.ConnectedClients[leftPlayer.GetComponent<NetworkObject>().OwnerClientId].PlayerObject;
+        var rightPlayerObject = NetworkManager.Singleton.ConnectedClients[rightPlayer.GetComponent<NetworkObject>().OwnerClientId].PlayerObject;
 
         if (isLeft && lPlayer.canLoseLife)
         {
