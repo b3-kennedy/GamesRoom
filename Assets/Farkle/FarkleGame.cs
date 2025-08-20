@@ -86,12 +86,12 @@ namespace Assets.Farkle
             if (isPlayer1)
             {
                 player1.GetComponent<FarklePlayer>().isTurn.Value = false;
-                player1.GetComponent<FarklePlayer>().isTurn.Value = true;
+                player2.GetComponent<FarklePlayer>().isTurn.Value = true;
             }
             else
             {
                 player1.GetComponent<FarklePlayer>().isTurn.Value = true;
-                player1.GetComponent<FarklePlayer>().isTurn.Value = false;
+                player2.GetComponent<FarklePlayer>().isTurn.Value = false;
             }
         }
 

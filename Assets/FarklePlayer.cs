@@ -71,6 +71,8 @@ namespace Assets.Farkle
         // Update is called once per frame
         void Update()
         {
+            if (!IsOwner) return;
+            
             WagerState();
             if (farkleGame.netGameState.Value == FarkleGame.GameState.GAME && isTurn.Value)
             {
@@ -87,7 +89,7 @@ namespace Assets.Farkle
             }
         }
 
-        [ServerRpc]
+        [ServerRpc(RequireOwnership = false)]
         void OnSwitchTurnServerRpc()
         {
             for (int i = spawnedDice.Count - 1; i >= 0; i--)
