@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Assets.Farkle;
 using Unity.Netcode;
@@ -29,7 +30,10 @@ namespace Assets.Farkle
             {
                 wagerState = wager;
             }
+
+            isTurn.OnValueChanged += OnTurnChanged;
         }
+
 
         void WagerState()
         {
@@ -77,13 +81,18 @@ namespace Assets.Farkle
                     farkleGame.SwitchTurnServerRpc(isPlayer1);
                     hasRolled = false;
                 }
+            }
+        }
 
+        private void OnTurnChanged(bool previousValue, bool newValue)
+        {
+            // Only roll dice when isTurn changes from false -> true
+            if (!previousValue && newValue)
+            {
                 if (!hasRolled && spawnedDice.Count == 0)
                 {
-
                     RollDiceServerRpc();
                     hasRolled = true;
-
                 }
             }
         }
