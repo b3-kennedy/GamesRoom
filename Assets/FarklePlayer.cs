@@ -77,7 +77,7 @@ namespace Assets.Farkle
                 if (!hasRolled)
                 {
                     RollDiceServerRpc();
-                    
+
                 }
             }
         }
@@ -90,8 +90,15 @@ namespace Assets.Farkle
                 GameObject dice = Instantiate(dicePrefab, dicePositions[i].position, Quaternion.identity);
                 spawnedDice.Add(dice);
                 dice.GetComponent<NetworkObject>().Spawn();
-                hasRolled = true;
+
             }
+            SetHasRolled();
+        }
+
+        [ClientRpc]
+        void SetHasRolled()
+        {
+            hasRolled = true;
         }
     }
 }
