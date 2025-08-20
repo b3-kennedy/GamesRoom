@@ -15,6 +15,8 @@ namespace Assets.Farkle
 
         public GameObject selectGraphic;
 
+        GameObject spawnedSelectGraphic;
+
         public List<Transform> dicePositions = new List<Transform>();
 
         public List<GameObject> spawnedDice = new List<GameObject>();
@@ -102,20 +104,31 @@ namespace Assets.Farkle
                 selectedDiceIndex++;
             }
 
-            selectGraphic.transform.position = spawnedDice[selectedDiceIndex].transform.position;
+            spawnedSelectGraphic.transform.position = spawnedDice[selectedDiceIndex].transform.position;
    
         }
 
         private void OnTurnChanged(bool previousValue, bool newValue)
         {
-            selectGraphic.SetActive(newValue);
             if (!previousValue && newValue)
             {
                 if (!hasRolled && spawnedDice.Count == 0)
                 {
-
+                    if (IsServer)
+                    {
+                        spawnedSelectGraphic = Instantiate(selectGraphic, dicePositions[0].transform.position, Quaternion.identity);
+                        spawnedSelectGraphic.GetComponent<NetworkObject>().Spawn();
+                    }
+                    
                     RollDiceServerRpc();
                     hasRolled = true;
+                }
+            }
+            else
+            {
+                if (spawnedSelectGraphic && IsServer)
+                {
+                    spawnedSelectGraphic.GetComponent<NetworkObject>().Despawn(true);
                 }
             }
         }
