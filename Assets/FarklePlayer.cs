@@ -43,7 +43,7 @@ namespace Assets.Farkle
 
                 }
             }
-            if (farkleGame.netGameState.Value == FarkleGame.GameState.WAGER && isPlayer1)
+            if (farkleGame.netGameState.Value == FarkleGame.GameState.WAGER && !isPlayer1)
             {
                 if (Input.GetKeyDown(KeyCode.Return))
                 {
