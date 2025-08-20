@@ -72,9 +72,10 @@ namespace Assets.Farkle
             {
                 if (!hasRolled)
                 {
-                    hasRolled = true;
+
                     RollDiceServerRpc();
-                    
+                    hasRolled = true;
+
                 }
 
                 if (Input.GetKeyDown(KeyCode.Space))
