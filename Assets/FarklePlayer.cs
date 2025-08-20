@@ -159,9 +159,21 @@ namespace Assets.Farkle
                 GameObject dice = Instantiate(dicePrefab, dicePositions[i].position, Quaternion.identity);
                 spawnedDice.Add(dice);
                 dice.GetComponent<NetworkObject>().Spawn();
+                SetDiceListClientRpc(dice.GetComponent<NetworkObject>().NetworkObjectId);
 
             }
             SetHasRolledClientRpc();
+        }
+
+        [ClientRpc]
+        void SetDiceListClientRpc(ulong netObjID)
+        {
+            if (IsServer) return;
+
+            if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(netObjID, out var dice))
+            {
+                spawnedDice.Add(dice.gameObject);
+            }
         }
 
         [ClientRpc]
