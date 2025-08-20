@@ -9,7 +9,11 @@ public class FarkleDice : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        RandomizeDiceServerRpc();
+        if (IsServer)
+        {
+            RandomizeDiceServerRpc();
+        }
+        
     }
 
     void Update()
@@ -29,12 +33,12 @@ public class FarkleDice : NetworkBehaviour
 
         switch (topFace)
         {
-            case 1: faceRotation = new Vector3(0, 0, 0); diceValue.Value = 2; break; //2
-            case 2: faceRotation = new Vector3(90, 0, 0); diceValue.Value = 6; break; //6
+            case 2: faceRotation = new Vector3(0, 0, 0); diceValue.Value = 2; break; //2
+            case 6: faceRotation = new Vector3(90, 0, 0); diceValue.Value = 6; break; //6
             case 3: faceRotation = new Vector3(0, 0, -90); diceValue.Value = 3; break; //3
             case 4: faceRotation = new Vector3(0, 0, 90); diceValue.Value = 4; break; //4
-            case 5: faceRotation = new Vector3(-90, 0, 0); diceValue.Value = 1; break; //1
-            case 6: faceRotation = new Vector3(180, 0, 0); diceValue.Value = 5; break; //5
+            case 1: faceRotation = new Vector3(-90, 0, 0); diceValue.Value = 1; break; //1
+            case 5: faceRotation = new Vector3(180, 0, 0); diceValue.Value = 5; break; //5
         }
 
         // Add random spin around vertical axis (Y-axis)
