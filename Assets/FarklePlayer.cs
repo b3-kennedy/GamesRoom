@@ -92,11 +92,11 @@ namespace Assets.Farkle
                 dice.GetComponent<NetworkObject>().Spawn();
 
             }
-            SetHasRolled();
+            SetHasRolledClientRpc();
         }
 
         [ClientRpc]
-        void SetHasRolled()
+        void SetHasRolledClientRpc()
         {
             hasRolled = true;
         }
