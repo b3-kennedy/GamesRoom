@@ -60,7 +60,7 @@ namespace Assets.Farkle
             player1.GetComponent<NetworkObject>().ChangeOwnership(connectedPlayers[0].OwnerClientId);
             player1.GetComponent<FarklePlayer>().isPlayer1 = true;
             player1.GetComponent<FarklePlayer>().farkleGame = this;
-            //player2.GetComponent<NetworkObject>().ChangeOwnership(connectedPlayers[1].OwnerClientId);
+            player2.GetComponent<NetworkObject>().ChangeOwnership(connectedPlayers[1].OwnerClientId);
             player2.GetComponent<FarklePlayer>().isPlayer1 = false;
             player2.GetComponent<FarklePlayer>().farkleGame = this;
         }
