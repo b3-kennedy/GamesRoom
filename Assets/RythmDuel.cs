@@ -201,7 +201,7 @@ public class RythmDuel : Game
     void MainMenu()
     {
         connectedPlayersText.text = $"{connectedPlayersCount.Value}/2";
-        if (connectedPlayersCount.Value == 1 && netGameState.Value != GameState.WAGER)
+        if (connectedPlayersCount.Value == 2 && netGameState.Value != GameState.WAGER)
         {
             ChangeStateServerRpc(GameState.WAGER);
             if (IsServer)

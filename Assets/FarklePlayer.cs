@@ -13,6 +13,8 @@ namespace Assets.Farkle
         public NetworkVariable<bool> isTurn;
         public GameObject dicePrefab;
 
+        public GameObject selectGraphic;
+
         public List<Transform> dicePositions = new List<Transform>();
 
         public List<GameObject> spawnedDice = new List<GameObject>();
@@ -20,6 +22,8 @@ namespace Assets.Farkle
         public bool isPlayer1;
 
         bool hasRolled;
+
+        int selectedDiceIndex;
 
         Wager wagerState;
 
@@ -72,6 +76,7 @@ namespace Assets.Farkle
             if (!IsOwner) return;
 
             WagerState();
+            SelectDice();
             if (farkleGame.netGameState.Value == FarkleGame.GameState.GAME && isTurn.Value)
             {
                 if (Input.GetKeyDown(KeyCode.Space))
@@ -84,13 +89,31 @@ namespace Assets.Farkle
             }
         }
 
+        void SelectDice()
+        {
+            if (spawnedDice.Count < 6) return;
+
+            if (Input.GetKeyDown(KeyCode.LeftArrow) && selectedDiceIndex > 0)
+            {
+                selectedDiceIndex--;
+            }
+            else if (Input.GetKeyDown(KeyCode.RightArrow) && selectedDiceIndex < 6)
+            {
+                selectedDiceIndex++;
+            }
+
+            selectGraphic.transform.position = spawnedDice[selectedDiceIndex].transform.position;
+   
+        }
+
         private void OnTurnChanged(bool previousValue, bool newValue)
         {
-            // Only roll dice when isTurn changes from false -> true
+            selectGraphic.SetActive(newValue);
             if (!previousValue && newValue)
             {
                 if (!hasRolled && spawnedDice.Count == 0)
                 {
+
                     RollDiceServerRpc();
                     hasRolled = true;
                 }
