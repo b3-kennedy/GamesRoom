@@ -118,6 +118,7 @@ namespace Assets.Farkle
                     {
                         spawnedSelectGraphic = Instantiate(selectGraphic, dicePositions[0].transform.position, Quaternion.identity);
                         spawnedSelectGraphic.GetComponent<NetworkObject>().SpawnWithOwnership(OwnerClientId);
+                        SetSelectGraphicClientRpc(spawnedSelectGraphic.GetComponent<NetworkObject>().NetworkObjectId);
                     }
                     
                     RollDiceServerRpc();
@@ -130,6 +131,15 @@ namespace Assets.Farkle
                 {
                     spawnedSelectGraphic.GetComponent<NetworkObject>().Despawn(true);
                 }
+            }
+        }
+
+        [ClientRpc]
+        void SetSelectGraphicClientRpc(ulong netObjID)
+        {
+            if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(netObjID, out var graphic))
+            {
+                spawnedSelectGraphic = graphic.gameObject;
             }
         }
 
