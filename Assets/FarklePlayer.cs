@@ -72,7 +72,7 @@ namespace Assets.Farkle
         void Update()
         {
             if (!IsOwner) return;
-            
+
             WagerState();
             if (farkleGame.netGameState.Value == FarkleGame.GameState.GAME && isTurn.Value)
             {
@@ -83,8 +83,10 @@ namespace Assets.Farkle
 
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
+
                     OnSwitchTurnServerRpc();
                     farkleGame.SwitchTurnServerRpc(isPlayer1);
+                    hasRolled = false;
                 }
             }
         }
