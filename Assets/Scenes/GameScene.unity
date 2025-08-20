@@ -6433,7 +6433,7 @@ MonoBehaviour:
   farkleGame: {fileID: 82378162}
   isTurn:
     m_InternalValue: 0
-  dicePrefab: {fileID: 0}
+  dicePrefab: {fileID: 5204929336509466415, guid: 037d34bb82623f84386878e149b9e4a5, type: 3}
   dicePositions:
   - {fileID: 1912054118}
   - {fileID: 1569001629}
@@ -7074,7 +7074,7 @@ MonoBehaviour:
   farkleGame: {fileID: 82378162}
   isTurn:
     m_InternalValue: 0
-  dicePrefab: {fileID: 0}
+  dicePrefab: {fileID: 2147404718145973682, guid: 4aaea6aa1f89d3b4db3637445da04d86, type: 3}
   dicePositions:
   - {fileID: 2011909427}
   - {fileID: 1036592111}
