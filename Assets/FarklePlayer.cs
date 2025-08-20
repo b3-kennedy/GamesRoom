@@ -117,7 +117,7 @@ namespace Assets.Farkle
                     if (IsServer)
                     {
                         spawnedSelectGraphic = Instantiate(selectGraphic, dicePositions[0].transform.position, Quaternion.identity);
-                        spawnedSelectGraphic.GetComponent<NetworkObject>().Spawn();
+                        spawnedSelectGraphic.GetComponent<NetworkObject>().SpawnWithOwnership(OwnerClientId);
                     }
                     
                     RollDiceServerRpc();
