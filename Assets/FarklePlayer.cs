@@ -77,10 +77,33 @@ namespace Assets.Farkle
                 if (!hasRolled)
                 {
                     RollDiceServerRpc();
+                }
 
+                if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    OnSwitchTurnServerRpc();
+                    farkleGame.SwitchTurnServerRpc(isPlayer1);
                 }
             }
         }
+
+        [ServerRpc]
+        void OnSwitchTurnServerRpc()
+        {
+            for (int i = spawnedDice.Count - 1; i >= 0; i--)
+            {
+                spawnedDice[i].GetComponent<NetworkObject>().Despawn(true);
+            }
+            OnSwitchTurnClientRpc();
+        }
+
+        [ClientRpc]
+        void OnSwitchTurnClientRpc()
+        {
+            spawnedDice.Clear();
+        }
+
+
 
         [ServerRpc(RequireOwnership = false)]
         void RollDiceServerRpc()

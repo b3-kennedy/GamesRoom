@@ -80,6 +80,21 @@ namespace Assets.Farkle
             }
         }
 
+        [ServerRpc(RequireOwnership = false)]
+        public void SwitchTurnServerRpc(bool isPlayer1)
+        {
+            if (isPlayer1)
+            {
+                player1.GetComponent<FarklePlayer>().isTurn.Value = false;
+                player1.GetComponent<FarklePlayer>().isTurn.Value = true;
+            }
+            else
+            {
+                player1.GetComponent<FarklePlayer>().isTurn.Value = true;
+                player1.GetComponent<FarklePlayer>().isTurn.Value = false;
+            }
+        }
+
         private void OnNetworkGameStateChanged(GameState oldState, GameState newState)
         {
 
