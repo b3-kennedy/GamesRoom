@@ -43,19 +43,13 @@ namespace Assets.Farkle
                 {
                     wagerState.SetWagerAmountServerRpc(10);
                 }
-
-                if (Input.GetKeyDown(KeyCode.Return))
-                {
-
-                }
-            }
-            if (farkleGame.netGameState.Value == FarkleGame.GameState.WAGER && !isPlayer1)
-            {
                 if (Input.GetKeyDown(KeyCode.Return))
                 {
                     wagerState.LockInAmountServerRpc(true);
                 }
-
+            }
+            if (farkleGame.netGameState.Value == FarkleGame.GameState.WAGER && !isPlayer1)
+            {
                 if (Input.GetKeyDown(KeyCode.Y) && wagerState.player2Buttons.gameObject.activeSelf)
                 {
                     farkleGame.ChangeStateServerRpc(FarkleGame.GameState.GAME);
@@ -78,7 +72,9 @@ namespace Assets.Farkle
             {
                 if (!hasRolled)
                 {
+                    hasRolled = true;
                     RollDiceServerRpc();
+                    
                 }
 
                 if (Input.GetKeyDown(KeyCode.Space))
