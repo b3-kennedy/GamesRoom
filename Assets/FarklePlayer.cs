@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Assets.Farkle;
 using Unity.Netcode;
 using UnityEngine;
@@ -9,9 +10,15 @@ namespace Assets.Farkle
 
         public FarkleGame farkleGame;
         public NetworkVariable<bool> isTurn;
-        public GameObject dice;
+        public GameObject dicePrefab;
+
+        public List<Transform> dicePositions = new List<Transform>();
+
+        public List<GameObject> spawnedDice = new List<GameObject>();
 
         public bool isPlayer1;
+
+        bool hasRolled;
 
         Wager wagerState;
 
@@ -24,8 +31,7 @@ namespace Assets.Farkle
             }
         }
 
-        // Update is called once per frame
-        void Update()
+        void WagerState()
         {
             if (farkleGame.netGameState.Value == FarkleGame.GameState.WAGER && isPlayer1)
             {
@@ -59,6 +65,31 @@ namespace Assets.Farkle
                 {
                     wagerState.LockInAmountServerRpc(false);
                 }
+            }
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+            WagerState();
+            if (farkleGame.netGameState.Value == FarkleGame.GameState.GAME && isTurn.Value)
+            {
+                if (!hasRolled)
+                {
+                    RollDiceServerRpc();
+                    hasRolled = true;
+                }
+            }
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        void RollDiceServerRpc()
+        {
+            for (int i = 0; i < 6; i++)
+            {
+                GameObject dice = Instantiate(dicePrefab, dicePositions[i].position, Quaternion.identity);
+                spawnedDice.Add(dice);
+                dice.GetComponent<NetworkObject>().Spawn();
             }
         }
     }

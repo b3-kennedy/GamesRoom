@@ -2688,6 +2688,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2449622943276338880, guid: 037d34bb82623f84386878e149b9e4a5, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 1828730185
+      objectReference: {fileID: 0}
+    - target: {fileID: 2449622943276338880, guid: 037d34bb82623f84386878e149b9e4a5, type: 3}
+      propertyPath: SceneMigrationSynchronization
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2449622943276338880, guid: 037d34bb82623f84386878e149b9e4a5, type: 3}
+      propertyPath: InScenePlacedSourceGlobalObjectIdHash
+      value: 283015364
+      objectReference: {fileID: 0}
     - target: {fileID: 5204929336509466415, guid: 037d34bb82623f84386878e149b9e4a5, type: 3}
       propertyPath: m_Name
       value: RedDice
@@ -4662,6 +4674,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1479967627063637724, guid: 4aaea6aa1f89d3b4db3637445da04d86, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 2985838389
+      objectReference: {fileID: 0}
+    - target: {fileID: 1479967627063637724, guid: 4aaea6aa1f89d3b4db3637445da04d86, type: 3}
+      propertyPath: SceneMigrationSynchronization
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1479967627063637724, guid: 4aaea6aa1f89d3b4db3637445da04d86, type: 3}
+      propertyPath: InScenePlacedSourceGlobalObjectIdHash
+      value: 1508538136
+      objectReference: {fileID: 0}
     - target: {fileID: 2147404718145973682, guid: 4aaea6aa1f89d3b4db3637445da04d86, type: 3}
       propertyPath: m_Name
       value: BlueDice
@@ -6409,7 +6433,15 @@ MonoBehaviour:
   farkleGame: {fileID: 82378162}
   isTurn:
     m_InternalValue: 0
-  dice: {fileID: 2147404718145973682, guid: 4aaea6aa1f89d3b4db3637445da04d86, type: 3}
+  dicePrefab: {fileID: 0}
+  dicePositions:
+  - {fileID: 1912054118}
+  - {fileID: 1569001629}
+  - {fileID: 792407698}
+  - {fileID: 518899358}
+  - {fileID: 1882950830}
+  - {fileID: 1915752334}
+  spawnedDice: []
   isPlayer1: 0
 --- !u!1 &1195088814
 GameObject:
@@ -7042,7 +7074,15 @@ MonoBehaviour:
   farkleGame: {fileID: 82378162}
   isTurn:
     m_InternalValue: 0
-  dice: {fileID: 5204929336509466415, guid: 037d34bb82623f84386878e149b9e4a5, type: 3}
+  dicePrefab: {fileID: 0}
+  dicePositions:
+  - {fileID: 2011909427}
+  - {fileID: 1036592111}
+  - {fileID: 1319316427}
+  - {fileID: 43208309}
+  - {fileID: 2011668965}
+  - {fileID: 31348969}
+  spawnedDice: []
   isPlayer1: 0
 --- !u!1 &1290689271
 GameObject:
