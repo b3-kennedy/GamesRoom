@@ -65,29 +65,26 @@ namespace Assets.Farkle
         // Update is called once per frame
         void Update()
         {
-
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-
-                OnSwitchTurnServerRpc();
-                farkleGame.SwitchTurnServerRpc(isPlayer1);
-                hasRolled = false;
-            }
-
             if (!IsOwner) return;
 
             WagerState();
             if (farkleGame.netGameState.Value == FarkleGame.GameState.GAME && isTurn.Value)
             {
-                if (!hasRolled)
+                if (Input.GetKeyDown(KeyCode.Space))
+                {
+
+                    OnSwitchTurnServerRpc();
+                    farkleGame.SwitchTurnServerRpc(isPlayer1);
+                    hasRolled = false;
+                }
+
+                if (!hasRolled && spawnedDice.Count == 0)
                 {
 
                     RollDiceServerRpc();
                     hasRolled = true;
 
                 }
-
-
             }
         }
 
