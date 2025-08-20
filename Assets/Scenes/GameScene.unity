@@ -6406,7 +6406,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  farkleGame: {fileID: 0}
+  farkleGame: {fileID: 82378162}
   isTurn:
     m_InternalValue: 0
   dice: {fileID: 2147404718145973682, guid: 4aaea6aa1f89d3b4db3637445da04d86, type: 3}
@@ -7039,7 +7039,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  farkleGame: {fileID: 0}
+  farkleGame: {fileID: 82378162}
   isTurn:
     m_InternalValue: 0
   dice: {fileID: 5204929336509466415, guid: 037d34bb82623f84386878e149b9e4a5, type: 3}
