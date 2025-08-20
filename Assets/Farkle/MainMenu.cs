@@ -31,9 +31,10 @@ namespace Assets.Farkle
         public override void OnStateUpdate()
         {
             waitForPlayerText.text = $"Waiting for players {farkleGame.connectedPlayersCount.Value}/2";
-            if (farkleGame.connectedPlayersCount.Value == 1)
+            if (farkleGame.connectedPlayersCount.Value == 2)
             {
-                farkleGame.ChangeStateServerRpc(FarkleGame.GameState.GAME);
+                farkleGame.AssignPlayers();
+                farkleGame.ChangeStateServerRpc(FarkleGame.GameState.WAGER);
             }
         }
     }

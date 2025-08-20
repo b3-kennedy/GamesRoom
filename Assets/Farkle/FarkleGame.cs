@@ -8,7 +8,7 @@ namespace Assets.Farkle
 {
     public class FarkleGame : Game
     {
-        public enum GameState { MAIN_MENU, GAME, GAME_OVER}
+        public enum GameState { MAIN_MENU, GAME, GAME_OVER, WAGER}
 
         public NetworkVariable<GameState> netGameState = new NetworkVariable<GameState>(
             GameState.MAIN_MENU,
@@ -17,21 +17,30 @@ namespace Assets.Farkle
         );
 
         public State mainMenu;
+        public State gameState;
+        public State wagerState;
 
         public NetworkVariable<int> connectedPlayersCount = new NetworkVariable<int>();
         public List<NetworkObject> connectedPlayers = new List<NetworkObject>();
+
+        public GameObject player1;
+        public GameObject player2;
 
         void Start()
         {
             // Listen for state changes
             netGameState.OnValueChanged += OnNetworkGameStateChanged;
+
             mainMenu.game = this;
+            gameState.game = this;
+            wagerState.game = this;
 
             // Apply initial state locally
             ApplyState(netGameState.Value);
 
-
         }
+
+
 
         [ServerRpc(RequireOwnership = false)]
         public override void BeginServerRpc(ulong clientID)
@@ -43,6 +52,31 @@ namespace Assets.Farkle
 
                 connectedPlayers.Add(NetworkManager.Singleton.ConnectedClients[clientID].PlayerObject);
                 connectedPlayersCount.Value = connectedPlayers.Count;
+            }
+        }
+
+        public void AssignPlayers()
+        {
+            player1.GetComponent<NetworkObject>().ChangeOwnership(connectedPlayers[0].OwnerClientId);
+            player1.GetComponent<FarklePlayer>().isPlayer1 = true;
+            player1.GetComponent<FarklePlayer>().farkleGame = this;
+            //player2.GetComponent<NetworkObject>().ChangeOwnership(connectedPlayers[1].OwnerClientId);
+            player2.GetComponent<FarklePlayer>().isPlayer1 = false;
+            player2.GetComponent<FarklePlayer>().farkleGame = this;
+        }
+
+        public void SetFirstTurn(int player)
+        {
+            Debug.Log("first turn");
+            if (player == 0)
+            {
+                player1.GetComponent<FarklePlayer>().isTurn.Value = true;
+                player2.GetComponent<FarklePlayer>().isTurn.Value = false;
+            }
+            else
+            {
+                player1.GetComponent<FarklePlayer>().isTurn.Value = false;
+                player2.GetComponent<FarklePlayer>().isTurn.Value = true;
             }
         }
 
@@ -76,8 +110,11 @@ namespace Assets.Farkle
                     break;
 
                 case GameState.GAME:
+                    gameState.OnStateExit();
                     break;
-
+                case GameState.WAGER:
+                    wagerState.OnStateExit();
+                    break;
                 case GameState.GAME_OVER:
                     break;
             }
@@ -93,8 +130,11 @@ namespace Assets.Farkle
                     break;
 
                 case GameState.GAME:
+                    gameState.OnStateEnter();
                     break;
-
+                case GameState.WAGER:
+                    wagerState.OnStateEnter();
+                    break;
                 case GameState.GAME_OVER:
                     break;
             }
