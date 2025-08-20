@@ -41,26 +41,37 @@ namespace Assets.Farkle
 
 
         [ServerRpc(RequireOwnership = false)]
-        public void LockInAmountServerRpc()
+        public void LockInAmountServerRpc(bool value)
         {
             var ownerID = farkleGame.player2.GetComponent<NetworkObject>().OwnerClientId;
             var player2 = NetworkManager.Singleton.ConnectedClients[ownerID].PlayerObject.GetComponent<NetworkObject>().NetworkObjectId;
-            LockedInClientRpc(player2);
+            LockedInClientRpc(player2, value);
 
         }
 
         [ClientRpc]
-        void LockedInClientRpc(ulong player2ID)
+        void LockedInClientRpc(ulong player2ID, bool confirm)
         {
-            player2Confirm.gameObject.SetActive(true);
-            player2Buttons.gameObject.SetActive(true);
-            wagerText.gameObject.SetActive(false);
-            enterButtonPrompt.gameObject.SetActive(false);
-            if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(player2ID, out var player))
+            if (confirm)
             {
-                var playerName = player.GetComponent<SteamPlayer>().playerName;
-                player2Confirm.text = $"{playerName} do you agree to this wager?";
+                player2Confirm.gameObject.SetActive(true);
+                player2Buttons.gameObject.SetActive(true);
+                wagerText.gameObject.SetActive(false);
+                enterButtonPrompt.gameObject.SetActive(false);
+                if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(player2ID, out var player))
+                {
+                    var playerName = player.GetComponent<SteamPlayer>().playerName;
+                    player2Confirm.text = $"{playerName} do you agree to this wager?";
+                }
             }
+            else
+            {
+                player2Confirm.gameObject.SetActive(false);
+                player2Buttons.gameObject.SetActive(false);
+                wagerText.gameObject.SetActive(true);
+                enterButtonPrompt.gameObject.SetActive(true);
+            }
+
 
         }
 

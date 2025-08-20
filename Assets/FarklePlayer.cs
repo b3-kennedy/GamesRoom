@@ -47,7 +47,17 @@ namespace Assets.Farkle
             {
                 if (Input.GetKeyDown(KeyCode.Return))
                 {
-                    wagerState.LockInAmountServerRpc();
+                    wagerState.LockInAmountServerRpc(true);
+                }
+
+                if (Input.GetKeyDown(KeyCode.Y) && wagerState.player2Buttons.gameObject.activeSelf)
+                {
+                    farkleGame.ChangeStateServerRpc(FarkleGame.GameState.GAME);
+                }
+
+                if (Input.GetKeyDown(KeyCode.N) && wagerState.player2Buttons.gameObject.activeSelf)
+                {
+                    wagerState.LockInAmountServerRpc(false);
                 }
             }
         }
