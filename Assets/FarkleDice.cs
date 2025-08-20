@@ -5,7 +5,47 @@ public class FarkleDice : NetworkBehaviour
 {
 
     public NetworkVariable<int> diceValue;
+    public NetworkVariable<bool> isSelected = new NetworkVariable<bool>(false);
+
+    public GameObject selectGraphic;
+    GameObject spawnedSelectGraphic;
     // Call this to randomize dice at start
+
+    void Start()
+    {
+        isSelected.OnValueChanged += SelectedValueChange;
+    }
+
+    private void SelectedValueChange(bool previousValue, bool newValue)
+    {
+        if (newValue)
+        {
+            //spawn select graphic
+            if (IsServer)
+            {
+                spawnedSelectGraphic = Instantiate(selectGraphic, transform.position, Quaternion.identity);
+                spawnedSelectGraphic.GetComponent<NetworkObject>().SpawnWithOwnership(OwnerClientId);
+                SetSelectGraphicClientRpc(spawnedSelectGraphic.GetComponent<NetworkObject>().NetworkObjectId);
+            }
+        }
+        else
+        {
+            //hide select graphic
+            if (IsServer && spawnedSelectGraphic)
+            {
+                spawnedSelectGraphic.GetComponent<NetworkObject>().Despawn(true);
+            }
+        }
+    }
+
+    void SetSelectGraphicClientRpc(ulong netObjID)
+    {
+        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(netObjID, out var graphic))
+        {
+            spawnedSelectGraphic = graphic.gameObject;
+            spawnedSelectGraphic.GetComponent<MeshRenderer>().material.color = Color.green;
+        }
+    }
 
     public override void OnNetworkSpawn()
     {
@@ -13,7 +53,7 @@ public class FarkleDice : NetworkBehaviour
         {
             RandomizeDiceServerRpc();
         }
-        
+
     }
 
     void Update()

@@ -150,3 +150,6 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   diceValue:
     m_InternalValue: 0
+  isSelected:
+    m_InternalValue: 0
+  selectGraphic: {fileID: 8634082920321938662, guid: 5f45fc80f9f8c3146bb135c034df76d1, type: 3}

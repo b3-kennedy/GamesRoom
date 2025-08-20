@@ -95,17 +95,43 @@ namespace Assets.Farkle
         {
             if (spawnedDice.Count < 6) return;
 
-            if (Input.GetKeyDown(KeyCode.LeftArrow) && selectedDiceIndex > 0)
+            if (Input.GetKeyDown(KeyCode.LeftArrow))
             {
                 selectedDiceIndex--;
+                if (selectedDiceIndex < 0) selectedDiceIndex = 5;
             }
-            else if (Input.GetKeyDown(KeyCode.RightArrow) && selectedDiceIndex < 6)
+            else if (Input.GetKeyDown(KeyCode.RightArrow))
             {
                 selectedDiceIndex++;
+                if (selectedDiceIndex > 5) selectedDiceIndex = 0;
             }
 
+            if (Input.GetKeyDown(KeyCode.Return))
+            {
+                SelectedDiceServerRpc(spawnedDice[selectedDiceIndex].GetComponent<NetworkObject>().NetworkObjectId);
+            }
+
+
+
             spawnedSelectGraphic.transform.position = spawnedDice[selectedDiceIndex].transform.position;
-   
+
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        void SelectedDiceServerRpc(ulong netObjID)
+        {
+            if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(netObjID, out var dice))
+            {
+                if (!dice.GetComponent<FarkleDice>().isSelected.Value)
+                {
+                    dice.GetComponent<FarkleDice>().isSelected.Value = true;
+                }
+                else
+                {
+                    dice.GetComponent<FarkleDice>().isSelected.Value = false;
+                }
+                
+            }
         }
 
         private void OnTurnChanged(bool previousValue, bool newValue)
@@ -120,7 +146,7 @@ namespace Assets.Farkle
                         spawnedSelectGraphic.GetComponent<NetworkObject>().SpawnWithOwnership(OwnerClientId);
                         SetSelectGraphicClientRpc(spawnedSelectGraphic.GetComponent<NetworkObject>().NetworkObjectId);
                     }
-                    
+
                     RollDiceServerRpc();
                     hasRolled = true;
                 }
