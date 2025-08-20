@@ -38,6 +38,7 @@ public class FarkleDice : NetworkBehaviour
         }
     }
 
+    [ClientRpc]
     void SetSelectGraphicClientRpc(ulong netObjID)
     {
         if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(netObjID, out var graphic))
