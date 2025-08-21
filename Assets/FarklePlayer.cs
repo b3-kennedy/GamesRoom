@@ -28,6 +28,8 @@ namespace Assets.Farkle
         public NetworkVariable<int> playerScore = new NetworkVariable<int>();
         public NetworkVariable<int> roundScore = new NetworkVariable<int>();
 
+        public NetworkVariable<int> lockedInRoundScore = new NetworkVariable<int>();
+
         public bool isPlayer1;
 
         bool hasRolled;
@@ -316,6 +318,7 @@ namespace Assets.Farkle
             else
             {
                 roundScore.Value = 0;
+                lockedInRoundScore.Value = 0;
                 StartCoroutine(SwitchTurnAfterTime(3));
             }
             
@@ -372,6 +375,7 @@ namespace Assets.Farkle
         [ServerRpc(RequireOwnership = false)]
         void RemoveSelectedDiceServerRpc()
         {
+            lockedInRoundScore.Value += roundScore.Value;
             for (int i = spawnedDice.Count - 1; i >= 0; i--)
             {
                 if (spawnedDice[i].GetComponent<FarkleDice>().isSelected.Value)
