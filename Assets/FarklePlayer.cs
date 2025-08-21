@@ -300,6 +300,7 @@ namespace Assets.Farkle
             }
             else
             {
+                roundScore.Value = 0;
                 StartCoroutine(SwitchTurnAfterTime(3));
             }
             
