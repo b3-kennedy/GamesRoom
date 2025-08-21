@@ -193,7 +193,7 @@ namespace Assets.Farkle
                     score += count * 50;
                 }
             }
-            roundScore.Value += score;
+            roundScore.Value = score;
 
             
         }
