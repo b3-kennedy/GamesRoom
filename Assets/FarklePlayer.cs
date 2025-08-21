@@ -126,8 +126,11 @@ namespace Assets.Farkle
 
 
 
-
-            spawnedSelectGraphic.transform.position = spawnedDice[selectedDiceIndex].transform.position;
+            if (spawnedSelectGraphic)
+            {
+                spawnedSelectGraphic.transform.position = spawnedDice[selectedDiceIndex].transform.position;
+            }
+            
 
         }
 
