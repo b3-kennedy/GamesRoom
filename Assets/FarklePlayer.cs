@@ -275,6 +275,7 @@ namespace Assets.Farkle
         void OnSwitchTurnClientRpc()
         {
             spawnedDice.Clear();
+            selectedDiceValues.Clear();
         }
 
         [ServerRpc(RequireOwnership = false)]
