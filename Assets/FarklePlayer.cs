@@ -232,10 +232,11 @@ namespace Assets.Farkle
             }
             else
             {
+                hasRolled = false;
                 if (spawnedSelectGraphic && IsServer)
                 {
                     spawnedSelectGraphic.GetComponent<NetworkObject>().Despawn(true);
-                    
+
                 }
             }
         }
