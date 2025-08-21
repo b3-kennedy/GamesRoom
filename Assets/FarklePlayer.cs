@@ -266,6 +266,7 @@ namespace Assets.Farkle
             {
                 spawnedDice[i].GetComponent<NetworkObject>().Despawn(true);
             }
+            spawnedDice.Clear();
         }
 
         [ServerRpc(RequireOwnership = false)]
@@ -340,6 +341,7 @@ namespace Assets.Farkle
         void SetHasRolledClientRpc()
         {
             hasRolled = true;
+            selectedDiceIndex = 0;
         }
     }
 }
