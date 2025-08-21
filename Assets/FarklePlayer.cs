@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Assets.Farkle;
 using Unity.Netcode;
@@ -293,10 +294,18 @@ namespace Assets.Farkle
             }
             else
             {
-                Debug.Log("stop");
+                StartCoroutine(SwitchTurnAfterTime(3));
             }
 
             SetHasRolledClientRpc();
+        }
+
+        IEnumerator SwitchTurnAfterTime(float seconds)
+        {
+            yield return new WaitForSeconds(seconds);
+            OnSwitchTurnServerRpc();
+            farkleGame.SwitchTurnServerRpc(isPlayer1);
+            hasRolled = false;
         }
 
         bool CheckDice()
