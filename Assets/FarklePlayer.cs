@@ -24,6 +24,7 @@ namespace Assets.Farkle
         public List<int> selectedDiceValues = new List<int>();
 
         public NetworkVariable<int> playerScore = new NetworkVariable<int>();
+        public NetworkVariable<int> roundScore = new NetworkVariable<int>();
 
         public bool isPlayer1;
 
@@ -113,8 +114,7 @@ namespace Assets.Farkle
             if (Input.GetKeyDown(KeyCode.Return))
             {
                 SelectedDiceServerRpc(spawnedDice[selectedDiceIndex].GetComponent<NetworkObject>().NetworkObjectId);
-                selectedDiceValues.Add(spawnedDice[selectedDiceIndex].GetComponent<FarkleDice>().diceValue.Value);
-                CalculateDiceScore();
+                
             }
             
 
@@ -125,8 +125,8 @@ namespace Assets.Farkle
         }
 
 
-
-        void CalculateDiceScore()
+        [ServerRpc(RequireOwnership = false)]
+        void CalculateDiceScoreServerRpc()
         {
             Dictionary<int, int> scoringDictionary = new Dictionary<int, int>();
 
@@ -142,9 +142,7 @@ namespace Assets.Farkle
                 }
             }
 
-            int score = 0;
-            SetDiceScoreServerRpc(0);
-
+            roundScore.Value = 0;
             foreach (var kvp in scoringDictionary)
             {
                 int face = kvp.Key;
@@ -154,11 +152,11 @@ namespace Assets.Farkle
                 {
                     if (face == 1)
                     {
-                        score += 1000;
+                        roundScore.Value += 1000;
                     }
                     else
                     {
-                        score += face * 100;
+                        roundScore.Value += face * 100;
                     }
 
                     count -= 3;
@@ -166,15 +164,13 @@ namespace Assets.Farkle
 
                 if (face == 1)
                 {
-                    score += count * 100;
+                    roundScore.Value += count * 100;
                 }
                 else if (face == 5)
                 {
-                    score += count * 50;
+                    roundScore.Value += count * 50;
                 }
             }
-
-            SetDiceScoreServerRpc(score);
         }
 
         [ServerRpc(RequireOwnership = false)]
@@ -191,13 +187,17 @@ namespace Assets.Farkle
                 if (!dice.GetComponent<FarkleDice>().isSelected.Value)
                 {
                     dice.GetComponent<FarkleDice>().isSelected.Value = true;
+                    selectedDiceValues.Add(dice.GetComponent<FarkleDice>().diceValue.Value);
                 }
                 else
                 {
                     dice.GetComponent<FarkleDice>().isSelected.Value = false;
+                    selectedDiceValues.Remove(dice.GetComponent<FarkleDice>().diceValue.Value);
                 }
-                
+
             }
+
+            CalculateDiceScoreServerRpc();
         }
 
         private void OnTurnChanged(bool previousValue, bool newValue)
