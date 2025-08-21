@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
@@ -21,6 +22,13 @@ namespace Assets.Farkle
             {
                 farkleGame = fg;
             }
+
+            wagerAmount.OnValueChanged += WagerAmountChanged;
+        }
+
+        private void WagerAmountChanged(int previousValue, int newValue)
+        {
+            wagerAmountText.text = wagerAmount.Value.ToString();
         }
 
         public override void OnStateEnter()
@@ -79,15 +87,9 @@ namespace Assets.Farkle
         public void SetWagerAmountServerRpc(int value)
         {
             wagerAmount.Value += value;
-            SetWagerAmountTextClientRpc();
         }
         
 
-        [ClientRpc]
-        void SetWagerAmountTextClientRpc()
-        {
-            wagerAmountText.text = wagerAmount.Value.ToString();
-        }
 
         [ServerRpc(RequireOwnership = false)]
         void SetWagerTextServerRpc()
