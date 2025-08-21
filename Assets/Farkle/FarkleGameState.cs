@@ -18,6 +18,7 @@ namespace Assets.Farkle
 
         public override void OnStateEnter()
         {
+            gameObject.SetActive(true);
             Debug.Log("gamee");
             if (IsServer)
             {
