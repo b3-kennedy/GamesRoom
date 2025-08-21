@@ -248,14 +248,13 @@ namespace Assets.Farkle
         {
             playerScore.Value += roundScore.Value;
             RemoveDiceServerRpc();
-            OnSwitchTurnClientRpc(6);
+            OnSwitchTurnClientRpc();
         }
 
         [ClientRpc]
-        void OnSwitchTurnClientRpc(int amountToRoll)
+        void OnSwitchTurnClientRpc()
         {
             spawnedDice.Clear();
-            RollServerRpc(amountToRoll);
         }
 
         [ServerRpc(RequireOwnership = false)]
@@ -268,19 +267,19 @@ namespace Assets.Farkle
                 spawnedDice[i].GetComponent<NetworkObject>().Despawn(true);
             }
             spawnedDice.Clear();
+            ClearDiceListClientRpc();
+        }
+
+        [ClientRpc]
+        void ClearDiceListClientRpc()
+        {
+            spawnedDice.Clear();
         }
 
         [ServerRpc(RequireOwnership = false)]
         void RollDiceServerRpc(int amountToRoll)
         {
             RemoveDiceServerRpc();
-            OnSwitchTurnClientRpc(amountToRoll);
-            SetHasRolledClientRpc();
-        }
-
-        [ServerRpc(RequireOwnership = false)]
-        void RollServerRpc(int amountToRoll)
-        {
             for (int i = 0; i < amountToRoll; i++)
             {
                 GameObject dice = Instantiate(dicePrefab, dicePositions[i].position, Quaternion.identity);
@@ -289,6 +288,7 @@ namespace Assets.Farkle
                 SetDiceListClientRpc(dice.GetComponent<NetworkObject>().NetworkObjectId);
 
             }
+            SetHasRolledClientRpc();
         }
 
         [ServerRpc(RequireOwnership = false)]
