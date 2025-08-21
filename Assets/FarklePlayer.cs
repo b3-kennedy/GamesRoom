@@ -21,6 +21,10 @@ namespace Assets.Farkle
 
         public List<GameObject> spawnedDice = new List<GameObject>();
 
+        public List<int> selectedDiceValues = new List<int>();
+
+        public NetworkVariable<int> playerScore = new NetworkVariable<int>();
+
         public bool isPlayer1;
 
         bool hasRolled;
@@ -109,12 +113,73 @@ namespace Assets.Farkle
             if (Input.GetKeyDown(KeyCode.Return))
             {
                 SelectedDiceServerRpc(spawnedDice[selectedDiceIndex].GetComponent<NetworkObject>().NetworkObjectId);
+                selectedDiceValues.Add(spawnedDice[selectedDiceIndex].GetComponent<FarkleDice>().diceValue.Value);
+                CalculateDiceScore();
             }
+            
 
 
 
             spawnedSelectGraphic.transform.position = spawnedDice[selectedDiceIndex].transform.position;
 
+        }
+
+
+
+        void CalculateDiceScore()
+        {
+            Dictionary<int, int> scoringDictionary = new Dictionary<int, int>();
+
+            foreach (var value in selectedDiceValues)
+            {
+                if (scoringDictionary.ContainsKey(value))
+                {
+                    scoringDictionary[value]++;
+                }
+                else
+                {
+                    scoringDictionary[value] = 1;
+                }
+            }
+
+            int score = 0;
+
+            foreach (var kvp in scoringDictionary)
+            {
+                int face = kvp.Key;
+                int count = kvp.Value;
+
+                if (count >= 3)
+                {
+                    if (face == 1)
+                    {
+                        score += 1000;
+                    }
+                    else
+                    {
+                        score += face * 100;
+                    }
+
+                    count -= 3;
+                }
+
+                if (face == 1)
+                {
+                    score += count * 100;
+                }
+                else if (face == 5)
+                {
+                    score += count * 50;
+                }
+            }
+
+            SetDiceScoreServerRpc(score);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        void SetDiceScoreServerRpc(int score)
+        {
+            playerScore.Value = score;
         }
 
         [ServerRpc(RequireOwnership = false)]
@@ -156,6 +221,7 @@ namespace Assets.Farkle
                 if (spawnedSelectGraphic && IsServer)
                 {
                     spawnedSelectGraphic.GetComponent<NetworkObject>().Despawn(true);
+                    
                 }
             }
         }
