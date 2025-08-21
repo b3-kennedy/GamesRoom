@@ -273,6 +273,8 @@ namespace Assets.Farkle
         [ClientRpc]
         void OnSwitchTurnClientRpc()
         {
+
+            selectedDiceValues.Clear();
             spawnedDice.Clear();
         }
 
@@ -388,7 +390,6 @@ namespace Assets.Farkle
         [ClientRpc]
         void ModifyDiceListClientRpc()
         {
-            selectedDiceValues.Clear();
             for (int i = spawnedDice.Count - 1; i >= 0; i--)
             {
                 if (spawnedDice[i] == null)
