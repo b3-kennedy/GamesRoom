@@ -266,13 +266,13 @@ namespace Assets.Farkle
             {
                 spawnedDice[i].GetComponent<NetworkObject>().Despawn(true);
             }
-            OnSwitchTurnClientRpc();
         }
 
         [ServerRpc(RequireOwnership = false)]
         void RollDiceServerRpc(int amountToRoll)
         {
             RemoveDiceServerRpc();
+            OnSwitchTurnClientRpc();
             for (int i = 0; i < amountToRoll; i++)
             {
                 GameObject dice = Instantiate(dicePrefab, dicePositions[i].position, Quaternion.identity);
