@@ -92,7 +92,7 @@ namespace Assets.Farkle
 
         void SelectDice()
         {
-            if (spawnedDice.Count < 6) return;
+            //if (spawnedDice.Count < 6) return;
 
             if (Input.GetKeyDown(KeyCode.LeftArrow))
             {
