@@ -11,6 +11,7 @@ namespace Assets.Farkle
     public class FarklePlayer : NetworkBehaviour
     {
         public TextMeshPro playerScoreText;
+        public TextMeshPro currentRoundScoreText;
         public FarkleGame farkleGame;
         public NetworkVariable<bool> isTurn;
         public GameObject dicePrefab;
@@ -48,6 +49,7 @@ namespace Assets.Farkle
 
             isTurn.OnValueChanged += OnTurnChanged;
             playerScore.OnValueChanged += OnPlayerScoreChanged;
+            roundScore.OnValueChanged += OnRoundScoreChanged;
         }
 
         private void OnPlayerScoreChanged(int previousValue, int newValue)
@@ -58,7 +60,7 @@ namespace Assets.Farkle
 
         private void OnRoundScoreChanged(int previousValue, int newValue)
         {
-            throw new NotImplementedException();
+            currentRoundScoreText.text = $"Current round score: {lockedInRoundScore.Value + roundScore.Value}";
         }
 
         void WagerState()
@@ -167,34 +169,49 @@ namespace Assets.Farkle
             }
 
             int score = 0;
-            foreach (var kvp in scoringDictionary)
+            // Check for straight 1-2-3-4-5-6
+            if (scoringDictionary.Count == 6 &&
+                scoringDictionary.ContainsKey(1) &&
+                scoringDictionary.ContainsKey(2) &&
+                scoringDictionary.ContainsKey(3) &&
+                scoringDictionary.ContainsKey(4) &&
+                scoringDictionary.ContainsKey(5) &&
+                scoringDictionary.ContainsKey(6))
             {
-                int face = kvp.Key;
-                int count = kvp.Value;
-
-                if (count >= 3)
+                score = 3000;
+            }
+            else
+            {
+                foreach (var kvp in scoringDictionary)
                 {
+                    int face = kvp.Key;
+                    int count = kvp.Value;
+
+                    if (count >= 3)
+                    {
+                        if (face == 1)
+                        {
+                            score += 1000;
+                        }
+                        else
+                        {
+                            score += face * 100;
+                        }
+
+                        count -= 3;
+                    }
+
                     if (face == 1)
                     {
-                        score += 1000;
+                        score += count * 100;
                     }
-                    else
+                    else if (face == 5)
                     {
-                        score += face * 100;
+                        score += count * 50;
                     }
-
-                    count -= 3;
-                }
-
-                if (face == 1)
-                {
-                    score += count * 100;
-                }
-                else if (face == 5)
-                {
-                    score += count * 50;
                 }
             }
+
             roundScore.Value = score;
 
             
