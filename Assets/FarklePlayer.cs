@@ -178,6 +178,8 @@ namespace Assets.Farkle
                     roundScore.Value += count * 50;
                 }
             }
+
+            selectedDiceValues.Clear();
         }
 
         [ServerRpc(RequireOwnership = false)]
@@ -297,7 +299,7 @@ namespace Assets.Farkle
             {
                 StartCoroutine(SwitchTurnAfterTime(3));
             }
-            roundScore.Value = 0;
+            
             SetHasRolledClientRpc();
         }
 
