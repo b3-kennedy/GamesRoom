@@ -83,16 +83,10 @@ namespace Assets.Farkle
             if (!IsOwner) return;
 
             WagerState();
-            SelectDice();
+            
             if (farkleGame.netGameState.Value == FarkleGame.GameState.GAME && isTurn.Value)
             {
-                if (Input.GetKeyDown(KeyCode.Space))
-                {
-
-                    OnSwitchTurnServerRpc();
-                    farkleGame.SwitchTurnServerRpc(isPlayer1);
-                    hasRolled = false;
-                }
+                SelectDice();
             }
         }
 
@@ -114,13 +108,39 @@ namespace Assets.Farkle
             if (Input.GetKeyDown(KeyCode.Return))
             {
                 SelectedDiceServerRpc(spawnedDice[selectedDiceIndex].GetComponent<NetworkObject>().NetworkObjectId);
-                
             }
-            
+
+            if (Input.GetKeyDown(KeyCode.End))
+            {
+                RemoveSelectedDiceServerRpc();
+            }
+
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+
+                OnSwitchTurnServerRpc();
+                farkleGame.SwitchTurnServerRpc(isPlayer1);
+                hasRolled = false;
+            }
+
 
 
 
             spawnedSelectGraphic.transform.position = spawnedDice[selectedDiceIndex].transform.position;
+
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        void RemoveSelectedDiceServerRpc()
+        {
+            for (int i = spawnedDice.Count - 1; i >= 0; i--)
+            {
+                if (spawnedDice[i].GetComponent<FarkleDice>().isSelected.Value)
+                {
+                    spawnedDice[i].GetComponent<NetworkObject>().Despawn(true);
+                    spawnedDice.RemoveAt(i);
+                }
+            }
 
         }
 
@@ -239,6 +259,7 @@ namespace Assets.Farkle
         [ServerRpc(RequireOwnership = false)]
         void OnSwitchTurnServerRpc()
         {
+            playerScore.Value += roundScore.Value;
             for (int i = spawnedDice.Count - 1; i >= 0; i--)
             {
                 spawnedDice[i].GetComponent<NetworkObject>().Despawn(true);
