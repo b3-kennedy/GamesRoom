@@ -6,7 +6,7 @@ namespace Assets.Farkle
     public class GameOver : State
     {
         FarkleGame farkleGame;
-        
+
         public TextMeshPro winnerText;
 
         void Start()
@@ -19,6 +19,7 @@ namespace Assets.Farkle
         }
         public override void OnStateEnter()
         {
+            Debug.Log(farkleGame.winner);
             winnerText.text = $"{farkleGame.winner.playerName} Wins!";
         }
     }
