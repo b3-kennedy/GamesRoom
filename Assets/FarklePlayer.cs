@@ -182,7 +182,7 @@ namespace Assets.Farkle
                 }
             }
 
-            selectedDiceValues.Clear();
+            
         }
 
         [ServerRpc(RequireOwnership = false)]
@@ -374,6 +374,7 @@ namespace Assets.Farkle
         [ClientRpc]
         void ModifyDiceListClientRpc()
         {
+            selectedDiceValues.Clear();
             for (int i = spawnedDice.Count - 1; i >= 0; i--)
             {
                 if (spawnedDice[i] == null)
