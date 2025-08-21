@@ -267,8 +267,9 @@ namespace Assets.Farkle
         [ServerRpc(RequireOwnership = false)]
         void OnSwitchTurnServerRpc()
         {
-            playerScore.Value += roundScore.Value;
+            playerScore.Value += lockedInRoundScore.Value + roundScore.Value;
             roundScore.Value = 0;
+            lockedInRoundScore.Value = 0;
             RemoveDiceServerRpc();
             OnSwitchTurnClientRpc();
         }
