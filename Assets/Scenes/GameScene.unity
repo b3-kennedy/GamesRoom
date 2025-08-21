@@ -6370,6 +6370,8 @@ MonoBehaviour:
   selectedDiceValues: 
   playerScore:
     m_InternalValue: 0
+  roundScore:
+    m_InternalValue: 0
   isPlayer1: 0
 --- !u!1 &1195088814
 GameObject:
@@ -6818,6 +6820,7 @@ GameObject:
   - component: {fileID: 1269867193}
   - component: {fileID: 1269867194}
   - component: {fileID: 1269867195}
+  - component: {fileID: 1269867196}
   m_Layer: 0
   m_Name: Wager
   m_TagString: Untagged
@@ -6891,6 +6894,18 @@ MonoBehaviour:
   wagerAmountText: {fileID: 1195088816}
   wagerAmount:
     m_InternalValue: 0
+--- !u!114 &1269867196
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1269867192}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8eea7adf43746842bb03c9ff79ee329, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1270285396
 GameObject:
   m_ObjectHideFlags: 0
@@ -7014,6 +7029,8 @@ MonoBehaviour:
   spawnedDice: []
   selectedDiceValues: 
   playerScore:
+    m_InternalValue: 0
+  roundScore:
     m_InternalValue: 0
   isPlayer1: 0
 --- !u!1 &1290689271
@@ -8285,6 +8302,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1468893655}
   - component: {fileID: 1468893656}
+  - component: {fileID: 1468893657}
   m_Layer: 0
   m_Name: Game
   m_TagString: Untagged
@@ -8322,6 +8340,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   game: {fileID: 0}
+--- !u!114 &1468893657
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1468893654}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8eea7adf43746842bb03c9ff79ee329, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1500699649
 GameObject:
   m_ObjectHideFlags: 0
@@ -9534,6 +9564,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1772100075}
   - component: {fileID: 1772100076}
+  - component: {fileID: 1772100077}
   m_Layer: 0
   m_Name: MainMenu
   m_TagString: Untagged
@@ -9572,6 +9603,18 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   game: {fileID: 0}
   waitForPlayerText: {fileID: 1453662142}
+--- !u!114 &1772100077
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1772100074}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8eea7adf43746842bb03c9ff79ee329, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1810650394
 GameObject:
   m_ObjectHideFlags: 0
