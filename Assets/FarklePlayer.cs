@@ -132,8 +132,7 @@ namespace Assets.Farkle
 
 
 
-        [ServerRpc(RequireOwnership = false)]
-        void CalculateDiceScoreServerRpc()
+        void CalculateDiceScore()
         {
             Dictionary<int, int> scoringDictionary = new Dictionary<int, int>();
 
@@ -204,7 +203,7 @@ namespace Assets.Farkle
 
             }
 
-            CalculateDiceScoreServerRpc();
+            CalculateDiceScore();
         }
 
         private void OnTurnChanged(bool previousValue, bool newValue)
@@ -288,8 +287,56 @@ namespace Assets.Farkle
                 SetDiceListClientRpc(dice.GetComponent<NetworkObject>().NetworkObjectId);
 
             }
+            if (CheckDice())
+            {
+                Debug.Log("continue");
+            }
+            else
+            {
+                Debug.Log("stop");
+            }
+
             SetHasRolledClientRpc();
         }
+
+        bool CheckDice()
+        {
+            if (spawnedDice.Count == 0) return false;
+
+            // Count occurrences of each dice value
+            Dictionary<int, int> counts = new Dictionary<int, int>();
+            foreach (var dice in spawnedDice)
+            {
+                int value = dice.GetComponent<FarkleDice>().diceValue.Value;
+                if (counts.ContainsKey(value))
+                    counts[value]++;
+                else
+                    counts[value] = 1;
+            }
+
+            // Check for scoring combinations
+            foreach (var kvp in counts)
+            {
+                int face = kvp.Key;
+                int count = kvp.Value;
+
+                // Three or more of a kind
+                if (count >= 3)
+                {
+                    return true;
+                }
+
+                // Single 1 or 5
+                if (face == 1 || face == 5)
+                {
+                    return true;
+                }
+            }
+
+            // No scoring combinations found
+            return false;
+        }
+
 
         [ServerRpc(RequireOwnership = false)]
         void RemoveSelectedDiceServerRpc()

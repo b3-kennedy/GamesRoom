@@ -40,9 +40,13 @@ public class FarkleDice : NetworkBehaviour
 
     public override void OnNetworkDespawn()
     {
-        if (spawnedSelectGraphic)
+        if (spawnedSelectGraphic != null)
         {
-            spawnedSelectGraphic.GetComponent<NetworkObject>().Despawn(true);
+            NetworkObject netObj = spawnedSelectGraphic.GetComponent<NetworkObject>();
+            if (netObj != null && netObj.IsSpawned)
+            {
+                netObj.Despawn(true);
+            }
         }
     }
 
