@@ -97,7 +97,7 @@ namespace Assets.Farkle
             if (Input.GetKeyDown(KeyCode.LeftArrow))
             {
                 selectedDiceIndex--;
-                if (selectedDiceIndex < 0) selectedDiceIndex = 5;
+                if (selectedDiceIndex < 0) selectedDiceIndex = spawnedDice.Count-1;
             }
             else if (Input.GetKeyDown(KeyCode.RightArrow))
             {
