@@ -305,7 +305,8 @@ namespace Assets.Farkle
 
             ModifyDiceListClientRpc();
 
-
+            int diceToRoll = spawnedDice.Count > 0 ? spawnedDice.Count : 6;
+            RollDiceServerRpc(diceToRoll);  // only server spawns dice
         }
 
         [ClientRpc]
@@ -317,17 +318,6 @@ namespace Assets.Farkle
                 {
                     spawnedDice.RemoveAt(i);
                 }
-            }
-            Debug.Log(spawnedDice.Count);
-            if (spawnedDice.Count > 0)
-            {
-
-                RollDiceServerRpc(spawnedDice.Count);
-
-            }
-            else
-            {
-                RollDiceServerRpc(6);
             }
             
         }
