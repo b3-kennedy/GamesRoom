@@ -130,23 +130,6 @@ namespace Assets.Farkle
 
         }
 
-        [ServerRpc(RequireOwnership = false)]
-        void RemoveSelectedDiceServerRpc()
-        {
-            for (int i = spawnedDice.Count - 1; i >= 0; i--)
-            {
-                if (spawnedDice[i].GetComponent<FarkleDice>().isSelected.Value)
-                {
-                    spawnedDice[i].GetComponent<NetworkObject>().Despawn(true);
-                    spawnedDice.RemoveAt(i);
-                }
-            }
-
-            ModifyDiceListClientRpc();
-
-
-        }
-
 
 
         [ServerRpc(RequireOwnership = false)]
@@ -301,6 +284,23 @@ namespace Assets.Farkle
             SetHasRolledClientRpc();
         }
 
+        [ServerRpc(RequireOwnership = false)]
+        void RemoveSelectedDiceServerRpc()
+        {
+            for (int i = spawnedDice.Count - 1; i >= 0; i--)
+            {
+                if (spawnedDice[i].GetComponent<FarkleDice>().isSelected.Value)
+                {
+                    spawnedDice[i].GetComponent<NetworkObject>().Despawn(true);
+                    spawnedDice.RemoveAt(i);
+                }
+            }
+
+            ModifyDiceListClientRpc();
+
+
+        }
+
         [ClientRpc]
         void ModifyDiceListClientRpc()
         {
@@ -311,11 +311,12 @@ namespace Assets.Farkle
                     spawnedDice.RemoveAt(i);
                 }
             }
+            Debug.Log(spawnedDice.Count);
             if (spawnedDice.Count > 0)
             {
 
                 RollDiceServerRpc(spawnedDice.Count);
-                
+
             }
             else
             {
