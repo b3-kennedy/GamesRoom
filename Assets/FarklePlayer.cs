@@ -45,8 +45,19 @@ namespace Assets.Farkle
             }
 
             isTurn.OnValueChanged += OnTurnChanged;
+            playerScore.OnValueChanged += OnPlayerScoreChanged;
         }
 
+        private void OnPlayerScoreChanged(int previousValue, int newValue)
+        {
+            var playerObject = NetworkManager.Singleton.ConnectedClients[OwnerClientId].PlayerObject;
+            playerScoreText.text = $"{playerObject.GetComponent<SteamPlayer>().playerName}: {playerScore.Value}";
+        }
+
+        private void OnRoundScoreChanged(int previousValue, int newValue)
+        {
+            throw new NotImplementedException();
+        }
 
         void WagerState()
         {
@@ -262,8 +273,6 @@ namespace Assets.Farkle
         [ClientRpc]
         void OnSwitchTurnClientRpc()
         {
-            var playerObject = NetworkManager.Singleton.ConnectedClients[OwnerClientId].PlayerObject;
-            playerScoreText.text = $"{playerObject.GetComponent<SteamPlayer>().playerName}: {playerScore.Value}";
             spawnedDice.Clear();
         }
 
