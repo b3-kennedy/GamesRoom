@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Assets.Farkle;
+using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -9,7 +10,7 @@ namespace Assets.Farkle
 {
     public class FarklePlayer : NetworkBehaviour
     {
-
+        public TextMeshPro playerScoreText;
         public FarkleGame farkleGame;
         public NetworkVariable<bool> isTurn;
         public GameObject dicePrefab;
@@ -252,6 +253,8 @@ namespace Assets.Farkle
         void OnSwitchTurnServerRpc()
         {
             playerScore.Value += roundScore.Value;
+            var playerObject = NetworkManager.Singleton.ConnectedClients[OwnerClientId].PlayerObject;
+            playerScoreText.text = $"{playerObject.GetComponent<SteamPlayer>().playerName}: {playerScore.Value}";
             roundScore.Value = 0;
             RemoveDiceServerRpc();
             OnSwitchTurnClientRpc();
