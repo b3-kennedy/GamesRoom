@@ -164,7 +164,7 @@ namespace Assets.Farkle
                 }
             }
 
-            roundScore.Value = 0;
+            int score = 0;
             foreach (var kvp in scoringDictionary)
             {
                 int face = kvp.Key;
@@ -174,11 +174,11 @@ namespace Assets.Farkle
                 {
                     if (face == 1)
                     {
-                        roundScore.Value += 1000;
+                        score += 1000;
                     }
                     else
                     {
-                        roundScore.Value += face * 100;
+                        score += face * 100;
                     }
 
                     count -= 3;
@@ -186,13 +186,14 @@ namespace Assets.Farkle
 
                 if (face == 1)
                 {
-                    roundScore.Value += count * 100;
+                    score += count * 100;
                 }
                 else if (face == 5)
                 {
-                    roundScore.Value += count * 50;
+                    score += count * 50;
                 }
             }
+            roundScore.Value += score;
 
             
         }
@@ -273,8 +274,6 @@ namespace Assets.Farkle
         [ClientRpc]
         void OnSwitchTurnClientRpc()
         {
-
-            selectedDiceValues.Clear();
             spawnedDice.Clear();
         }
 
@@ -390,6 +389,7 @@ namespace Assets.Farkle
         [ClientRpc]
         void ModifyDiceListClientRpc()
         {
+            selectedDiceValues.Clear();
             for (int i = spawnedDice.Count - 1; i >= 0; i--)
             {
                 if (spawnedDice[i] == null)
