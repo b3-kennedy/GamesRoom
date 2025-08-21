@@ -19,8 +19,14 @@ namespace Assets.Farkle
         }
         public override void OnStateEnter()
         {
+            gameObject.SetActive(true);
             Debug.Log(farkleGame);
             winnerText.text = $"{farkleGame.winner.playerName} Wins!";
+        }
+
+        public override void OnStateExit()
+        {
+            gameObject.SetActive(false);
         }
     }
 }
