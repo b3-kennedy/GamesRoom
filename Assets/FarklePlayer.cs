@@ -142,6 +142,8 @@ namespace Assets.Farkle
                 }
             }
 
+            ModifyDiceListClientRpc();
+
         }
 
 
@@ -233,7 +235,7 @@ namespace Assets.Farkle
                         SetSelectGraphicClientRpc(spawnedSelectGraphic.GetComponent<NetworkObject>().NetworkObjectId);
                     }
 
-                    RollDiceServerRpc();
+                    RollDiceServerRpc(6);
                     hasRolled = true;
                 }
             }
@@ -276,9 +278,9 @@ namespace Assets.Farkle
 
 
         [ServerRpc(RequireOwnership = false)]
-        void RollDiceServerRpc()
+        void RollDiceServerRpc(int amountToRoll)
         {
-            for (int i = 0; i < 6; i++)
+            for (int i = 0; i < amountToRoll; i++)
             {
                 GameObject dice = Instantiate(dicePrefab, dicePositions[i].position, Quaternion.identity);
                 spawnedDice.Add(dice);
@@ -287,6 +289,27 @@ namespace Assets.Farkle
 
             }
             SetHasRolledClientRpc();
+        }
+
+        [ClientRpc]
+        void ModifyDiceListClientRpc()
+        {
+            for (int i = spawnedDice.Count - 1; i >= 0; i--)
+            {
+                if (spawnedDice[i] == null)
+                {
+                    spawnedDice.RemoveAt(i);
+                }
+            }
+            if (spawnedDice.Count > 0)
+            {
+                RollDiceServerRpc(spawnedDice.Count);
+            }
+            else
+            {
+                RollDiceServerRpc(6);
+            }
+            
         }
 
         [ClientRpc]
