@@ -102,7 +102,7 @@ namespace Assets.Farkle
             else if (Input.GetKeyDown(KeyCode.RightArrow))
             {
                 selectedDiceIndex++;
-                if (selectedDiceIndex > 5) selectedDiceIndex = 0;
+                if (selectedDiceIndex > spawnedDice.Count-1) selectedDiceIndex = 0;
             }
 
             if (Input.GetKeyDown(KeyCode.Return))
