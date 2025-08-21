@@ -143,6 +143,7 @@ namespace Assets.Farkle
             }
 
             int score = 0;
+            SetDiceScoreServerRpc(0);
 
             foreach (var kvp in scoringDictionary)
             {
