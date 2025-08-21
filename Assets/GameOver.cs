@@ -16,6 +16,7 @@ namespace Assets.Farkle
             {
                 farkleGame = fg;
             }
+
         }
         public override void OnStateEnter()
         {

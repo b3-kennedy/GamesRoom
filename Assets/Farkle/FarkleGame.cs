@@ -38,6 +38,7 @@ namespace Assets.Farkle
             mainMenu.game = this;
             gameState.game = this;
             wagerState.game = this;
+            gameOver.game = this;
 
             // Apply initial state locally
             ApplyState(netGameState.Value);
