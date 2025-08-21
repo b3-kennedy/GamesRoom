@@ -129,7 +129,7 @@ namespace Assets.Farkle
                 SelectedDiceServerRpc(spawnedDice[selectedDiceIndex].GetComponent<NetworkObject>().NetworkObjectId);
             }
 
-            if (Input.GetKeyDown(KeyCode.End))
+            if (Input.GetKeyDown(KeyCode.End) && roundScore.Value > 0)
             {
                 RemoveSelectedDiceServerRpc();
             }
