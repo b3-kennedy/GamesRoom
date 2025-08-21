@@ -253,8 +253,6 @@ namespace Assets.Farkle
         void OnSwitchTurnServerRpc()
         {
             playerScore.Value += roundScore.Value;
-            var playerObject = NetworkManager.Singleton.ConnectedClients[OwnerClientId].PlayerObject;
-            playerScoreText.text = $"{playerObject.GetComponent<SteamPlayer>().playerName}: {playerScore.Value}";
             roundScore.Value = 0;
             RemoveDiceServerRpc();
             OnSwitchTurnClientRpc();
@@ -263,6 +261,8 @@ namespace Assets.Farkle
         [ClientRpc]
         void OnSwitchTurnClientRpc()
         {
+            var playerObject = NetworkManager.Singleton.ConnectedClients[OwnerClientId].PlayerObject;
+            playerScoreText.text = $"{playerObject.GetComponent<SteamPlayer>().playerName}: {playerScore.Value}";
             spawnedDice.Clear();
         }
 
