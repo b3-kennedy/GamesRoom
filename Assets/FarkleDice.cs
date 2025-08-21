@@ -38,6 +38,14 @@ public class FarkleDice : NetworkBehaviour
         }
     }
 
+    public override void OnNetworkDespawn()
+    {
+        if (spawnedSelectGraphic)
+        {
+            spawnedSelectGraphic.GetComponent<NetworkObject>().Despawn(true);
+        }
+    }
+
     [ClientRpc]
     void SetSelectGraphicClientRpc(ulong netObjID)
     {
