@@ -247,6 +247,7 @@ namespace Assets.Farkle
         void OnSwitchTurnServerRpc()
         {
             playerScore.Value += roundScore.Value;
+            roundScore.Value = 0;
             RemoveDiceServerRpc();
             OnSwitchTurnClientRpc();
         }
@@ -296,7 +297,7 @@ namespace Assets.Farkle
             {
                 StartCoroutine(SwitchTurnAfterTime(3));
             }
-
+            roundScore.Value = 0;
             SetHasRolledClientRpc();
         }
 
