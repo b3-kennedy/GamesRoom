@@ -19,7 +19,7 @@ namespace Assets.Farkle
         }
         public override void OnStateEnter()
         {
-            Debug.Log(farkleGame.winner);
+            Debug.Log(farkleGame);
             winnerText.text = $"{farkleGame.winner.playerName} Wins!";
         }
     }
