@@ -39,8 +39,6 @@ namespace Assets.Farkle
 
         Wager wagerState;
 
-        NetworkObject playerObject;
-
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
@@ -54,18 +52,9 @@ namespace Assets.Farkle
             roundScore.OnValueChanged += OnRoundScoreChanged;
         }
 
-        public override void OnGainedOwnership()
-        {
-            playerObject = NetworkManager.Singleton.ConnectedClients[OwnerClientId].PlayerObject;
-        }
-
-        public override void OnLostOwnership()
-        {
-            Debug.Log($"{OwnerClientId} lost ownership of this object");
-        }
-
         private void OnPlayerScoreChanged(int previousValue, int newValue)
         {
+            var playerObject = NetworkManager.Singleton.ConnectedClients[OwnerClientId].PlayerObject;
             playerScoreText.text = $"{playerObject.GetComponent<SteamPlayer>().playerName}: {playerScore.Value}";
         }
 
