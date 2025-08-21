@@ -20,11 +20,15 @@ namespace Assets.Farkle
         public State gameState;
         public State wagerState;
 
+        public State gameOver;
+
         public NetworkVariable<int> connectedPlayersCount = new NetworkVariable<int>();
         public List<NetworkObject> connectedPlayers = new List<NetworkObject>();
 
         public GameObject player1;
         public GameObject player2;
+
+        public FarklePlayer winner;
 
         void Start()
         {
@@ -131,6 +135,7 @@ namespace Assets.Farkle
                     wagerState.OnStateExit();
                     break;
                 case GameState.GAME_OVER:
+                    gameOver.OnStateExit();
                     break;
             }
         }
@@ -151,6 +156,7 @@ namespace Assets.Farkle
                     wagerState.OnStateEnter();
                     break;
                 case GameState.GAME_OVER:
+                    gameOver.OnStateEnter();
                     break;
             }
         }
