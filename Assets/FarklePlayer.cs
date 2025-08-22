@@ -33,7 +33,7 @@ namespace Assets.Farkle
 
         public bool isPlayer1;
 
-        bool hasRolled;
+        [HideInInspector] public bool hasRolled;
 
         int selectedDiceIndex;
 
@@ -162,6 +162,7 @@ namespace Assets.Farkle
             
 
         }
+
 
 
 
