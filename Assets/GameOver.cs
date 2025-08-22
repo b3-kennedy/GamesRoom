@@ -1,4 +1,5 @@
 using TMPro;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace Assets.Farkle
@@ -27,7 +28,9 @@ namespace Assets.Farkle
             {
                 if (farkleGame.wagerState is Wager wager)
                 {
-                    farkleGame.winner.GetComponent<SteamPlayer>().credits.Value += wager.wagerAmount.Value;
+                    var ownerID = farkleGame.winner.GetComponent<NetworkObject>().OwnerClientId;
+                    var player = NetworkManager.Singleton.ConnectedClients[ownerID].PlayerObject;
+                    player.GetComponent<SteamPlayer>().credits.Value += wager.wagerAmount.Value;
                 }
 
             }
