@@ -1,6 +1,8 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Assets.Farkle;
+using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -8,7 +10,8 @@ namespace Assets.Farkle
 {
     public class FarklePlayer : NetworkBehaviour
     {
-
+        public TextMeshPro playerScoreText;
+        public TextMeshPro currentRoundScoreText;
         public FarkleGame farkleGame;
         public NetworkVariable<bool> isTurn;
         public GameObject dicePrefab;
@@ -26,6 +29,8 @@ namespace Assets.Farkle
         public NetworkVariable<int> playerScore = new NetworkVariable<int>();
         public NetworkVariable<int> roundScore = new NetworkVariable<int>();
 
+        public NetworkVariable<int> lockedInRoundScore = new NetworkVariable<int>();
+
         public bool isPlayer1;
 
         bool hasRolled;
@@ -33,6 +38,8 @@ namespace Assets.Farkle
         int selectedDiceIndex;
 
         Wager wagerState;
+
+        [HideInInspector] public string playerName;
 
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
@@ -43,8 +50,21 @@ namespace Assets.Farkle
             }
 
             isTurn.OnValueChanged += OnTurnChanged;
+            playerScore.OnValueChanged += OnPlayerScoreChanged;
+            roundScore.OnValueChanged += OnRoundScoreChanged;
         }
 
+
+        private void OnPlayerScoreChanged(int previousValue, int newValue)
+        {
+            var playerObject = NetworkManager.Singleton.ConnectedClients[OwnerClientId].PlayerObject;
+            playerScoreText.text = $"{playerObject.GetComponent<SteamPlayer>().playerName}: {playerScore.Value}";
+        }
+
+        private void OnRoundScoreChanged(int previousValue, int newValue)
+        {
+            currentRoundScoreText.text = $"Current round score: {lockedInRoundScore.Value + roundScore.Value}";
+        }
 
         void WagerState()
         {
@@ -92,17 +112,17 @@ namespace Assets.Farkle
 
         void SelectDice()
         {
-            if (spawnedDice.Count < 6) return;
+            //if (spawnedDice.Count < 6) return;
 
             if (Input.GetKeyDown(KeyCode.LeftArrow))
             {
                 selectedDiceIndex--;
-                if (selectedDiceIndex < 0) selectedDiceIndex = 5;
+                if (selectedDiceIndex < 0) selectedDiceIndex = spawnedDice.Count-1;
             }
             else if (Input.GetKeyDown(KeyCode.RightArrow))
             {
                 selectedDiceIndex++;
-                if (selectedDiceIndex > 5) selectedDiceIndex = 0;
+                if (selectedDiceIndex > spawnedDice.Count-1) selectedDiceIndex = 0;
             }
 
             if (Input.GetKeyDown(KeyCode.Return))
@@ -110,7 +130,7 @@ namespace Assets.Farkle
                 SelectedDiceServerRpc(spawnedDice[selectedDiceIndex].GetComponent<NetworkObject>().NetworkObjectId);
             }
 
-            if (Input.GetKeyDown(KeyCode.End))
+            if (Input.GetKeyDown(KeyCode.End) && roundScore.Value > 0)
             {
                 RemoveSelectedDiceServerRpc();
             }
@@ -125,15 +145,17 @@ namespace Assets.Farkle
 
 
 
-
-            spawnedSelectGraphic.transform.position = spawnedDice[selectedDiceIndex].transform.position;
+            if (spawnedSelectGraphic)
+            {
+                spawnedSelectGraphic.transform.position = spawnedDice[selectedDiceIndex].transform.position;
+            }
+            
 
         }
 
 
 
-        [ServerRpc(RequireOwnership = false)]
-        void CalculateDiceScoreServerRpc()
+        void CalculateDiceScore()
         {
             Dictionary<int, int> scoringDictionary = new Dictionary<int, int>();
 
@@ -149,35 +171,53 @@ namespace Assets.Farkle
                 }
             }
 
-            roundScore.Value = 0;
-            foreach (var kvp in scoringDictionary)
+            int score = 0;
+            // Check for straight 1-2-3-4-5-6
+            if (scoringDictionary.Count == 6 &&
+                scoringDictionary.ContainsKey(1) &&
+                scoringDictionary.ContainsKey(2) &&
+                scoringDictionary.ContainsKey(3) &&
+                scoringDictionary.ContainsKey(4) &&
+                scoringDictionary.ContainsKey(5) &&
+                scoringDictionary.ContainsKey(6))
             {
-                int face = kvp.Key;
-                int count = kvp.Value;
-
-                if (count >= 3)
+                score = 3000;
+            }
+            else
+            {
+                foreach (var kvp in scoringDictionary)
                 {
+                    int face = kvp.Key;
+                    int count = kvp.Value;
+
+                    if (count >= 3)
+                    {
+                        if (face == 1)
+                        {
+                            score += 1000;
+                        }
+                        else
+                        {
+                            score += face * 100;
+                        }
+
+                        count -= 3;
+                    }
+
                     if (face == 1)
                     {
-                        roundScore.Value += 1000;
+                        score += count * 100;
                     }
-                    else
+                    else if (face == 5)
                     {
-                        roundScore.Value += face * 100;
+                        score += count * 50;
                     }
-
-                    count -= 3;
-                }
-
-                if (face == 1)
-                {
-                    roundScore.Value += count * 100;
-                }
-                else if (face == 5)
-                {
-                    roundScore.Value += count * 50;
                 }
             }
+
+            roundScore.Value = score;
+
+            
         }
 
         [ServerRpc(RequireOwnership = false)]
@@ -204,7 +244,7 @@ namespace Assets.Farkle
 
             }
 
-            CalculateDiceScoreServerRpc();
+            CalculateDiceScore();
         }
 
         private void OnTurnChanged(bool previousValue, bool newValue)
@@ -226,10 +266,11 @@ namespace Assets.Farkle
             }
             else
             {
+                hasRolled = false;
                 if (spawnedSelectGraphic && IsServer)
                 {
                     spawnedSelectGraphic.GetComponent<NetworkObject>().Despawn(true);
-                    
+
                 }
             }
         }
@@ -246,7 +287,9 @@ namespace Assets.Farkle
         [ServerRpc(RequireOwnership = false)]
         void OnSwitchTurnServerRpc()
         {
-            playerScore.Value += roundScore.Value;
+            playerScore.Value += lockedInRoundScore.Value + roundScore.Value;
+            roundScore.Value = 0;
+            lockedInRoundScore.Value = 0;
             RemoveDiceServerRpc();
             OnSwitchTurnClientRpc();
         }
@@ -255,6 +298,8 @@ namespace Assets.Farkle
         void OnSwitchTurnClientRpc()
         {
             spawnedDice.Clear();
+            selectedDiceValues.Clear();
+            currentRoundScoreText.text = "Current round score: 0";
         }
 
         [ServerRpc(RequireOwnership = false)]
@@ -288,12 +333,71 @@ namespace Assets.Farkle
                 SetDiceListClientRpc(dice.GetComponent<NetworkObject>().NetworkObjectId);
 
             }
+            if (CheckDice())
+            {
+                Debug.Log("continue");
+            }
+            else
+            {
+                roundScore.Value = 0;
+                lockedInRoundScore.Value = 0;
+                StartCoroutine(SwitchTurnAfterTime(3));
+            }
+            
             SetHasRolledClientRpc();
         }
+
+        IEnumerator SwitchTurnAfterTime(float seconds)
+        {
+            yield return new WaitForSeconds(seconds);
+            OnSwitchTurnServerRpc();
+            farkleGame.SwitchTurnServerRpc(isPlayer1);
+            hasRolled = false;
+        }
+
+        bool CheckDice()
+        {
+            if (spawnedDice.Count == 0) return false;
+
+            // Count occurrences of each dice value
+            Dictionary<int, int> counts = new Dictionary<int, int>();
+            foreach (var dice in spawnedDice)
+            {
+                int value = dice.GetComponent<FarkleDice>().diceValue.Value;
+                if (counts.ContainsKey(value))
+                    counts[value]++;
+                else
+                    counts[value] = 1;
+            }
+
+            // Check for scoring combinations
+            foreach (var kvp in counts)
+            {
+                int face = kvp.Key;
+                int count = kvp.Value;
+
+                // Three or more of a kind
+                if (count >= 3)
+                {
+                    return true;
+                }
+
+                // Single 1 or 5
+                if (face == 1 || face == 5)
+                {
+                    return true;
+                }
+            }
+
+            // No scoring combinations found
+            return false;
+        }
+
 
         [ServerRpc(RequireOwnership = false)]
         void RemoveSelectedDiceServerRpc()
         {
+            lockedInRoundScore.Value += roundScore.Value;
             for (int i = spawnedDice.Count - 1; i >= 0; i--)
             {
                 if (spawnedDice[i].GetComponent<FarkleDice>().isSelected.Value)
@@ -305,29 +409,20 @@ namespace Assets.Farkle
 
             ModifyDiceListClientRpc();
 
-
+            int diceToRoll = spawnedDice.Count > 0 ? spawnedDice.Count : 6;
+            RollDiceServerRpc(diceToRoll);  // only server spawns dice
         }
 
         [ClientRpc]
         void ModifyDiceListClientRpc()
         {
+            selectedDiceValues.Clear();
             for (int i = spawnedDice.Count - 1; i >= 0; i--)
             {
                 if (spawnedDice[i] == null)
                 {
                     spawnedDice.RemoveAt(i);
                 }
-            }
-            Debug.Log(spawnedDice.Count);
-            if (spawnedDice.Count > 0)
-            {
-
-                RollDiceServerRpc(spawnedDice.Count);
-
-            }
-            else
-            {
-                RollDiceServerRpc(6);
             }
             
         }

@@ -12,6 +12,10 @@ public class State : NetworkBehaviour
 
     }
 
+    public virtual void OnReset()
+    {
+        
+    }
 
 
     void Update()
