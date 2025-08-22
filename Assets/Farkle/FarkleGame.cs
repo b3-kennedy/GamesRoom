@@ -68,7 +68,7 @@ namespace Assets.Farkle
             FarklePlayer farklePlayer1 = player1.GetComponent<FarklePlayer>();
             FarklePlayer farklePlayer2 = player2.GetComponent<FarklePlayer>();
             connectedPlayersCount.Value = 0;
-            wagerState.OnReset();
+            
             farklePlayer1.playerScore.Value = 0;
             farklePlayer1.roundScore.Value = 0;
             farklePlayer1.lockedInRoundScore.Value = 0;
@@ -87,6 +87,7 @@ namespace Assets.Farkle
         {
             FarklePlayer farklePlayer1 = player1.GetComponent<FarklePlayer>();
             FarklePlayer farklePlayer2 = player2.GetComponent<FarklePlayer>();
+            wagerState.OnReset();
             connectedPlayers.Clear();
 
             farklePlayer1.hasRolled = false;
