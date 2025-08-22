@@ -18,7 +18,7 @@ namespace Assets.Farkle
 
         public GameObject selectGraphic;
 
-        GameObject spawnedSelectGraphic;
+        [HideInInspector] public GameObject spawnedSelectGraphic;
 
         public List<Transform> dicePositions = new List<Transform>();
 
@@ -33,7 +33,7 @@ namespace Assets.Farkle
 
         public bool isPlayer1;
 
-        bool hasRolled;
+        [HideInInspector] public bool hasRolled;
 
         int selectedDiceIndex;
 
@@ -103,11 +103,21 @@ namespace Assets.Farkle
             if (!IsOwner) return;
 
             WagerState();
-            
+
             if (farkleGame.netGameState.Value == FarkleGame.GameState.GAME && isTurn.Value)
             {
                 SelectDice();
             }
+
+            if (farkleGame.netGameState.Value == FarkleGame.GameState.GAME_OVER)
+            {
+                if (Input.GetKeyDown(KeyCode.R))
+                {
+                    farkleGame.ResetServerRpc();
+                }
+            }
+
+
         }
 
         void SelectDice()
@@ -152,6 +162,7 @@ namespace Assets.Farkle
             
 
         }
+
 
 
 

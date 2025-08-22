@@ -28,7 +28,9 @@ namespace Assets.Farkle
         public GameObject player1;
         public GameObject player2;
 
-        public FarklePlayer winner;
+    
+        [HideInInspector] public FarklePlayer winner;
+        [HideInInspector] public FarklePlayer loser;
 
         void Start()
         {
@@ -66,13 +68,17 @@ namespace Assets.Farkle
             FarklePlayer farklePlayer1 = player1.GetComponent<FarklePlayer>();
             FarklePlayer farklePlayer2 = player2.GetComponent<FarklePlayer>();
             connectedPlayersCount.Value = 0;
-            wagerState.OnReset();
+            
             farklePlayer1.playerScore.Value = 0;
             farklePlayer1.roundScore.Value = 0;
             farklePlayer1.lockedInRoundScore.Value = 0;
+            farklePlayer1.isTurn.Value = false;
+            
+            
             farklePlayer2.playerScore.Value = 0;
             farklePlayer2.roundScore.Value = 0;
             farklePlayer2.lockedInRoundScore.Value = 0;
+            farklePlayer2.isTurn.Value = false;
             ResetClientRpc();
         }
 
@@ -81,28 +87,44 @@ namespace Assets.Farkle
         {
             FarklePlayer farklePlayer1 = player1.GetComponent<FarklePlayer>();
             FarklePlayer farklePlayer2 = player2.GetComponent<FarklePlayer>();
+            wagerState.OnReset();
             connectedPlayers.Clear();
-            if (farklePlayer1.spawnedDice.Count > 0)
-            {
-                for (int i = farklePlayer1.spawnedDice.Count - 1; i >= 0 ; i--)
-                {
-                    Destroy(farklePlayer1.spawnedDice[i].gameObject);
-                }
-            }
 
+            farklePlayer1.hasRolled = false;
+            farklePlayer2.hasRolled = false;
             if (farklePlayer2.spawnedDice.Count > 0)
             {
-                for (int i = farklePlayer2.spawnedDice.Count - 1; i >= 0; i--)
+                for (int i = farklePlayer2.spawnedDice.Count - 1; i >= 0 ; i--)
                 {
-                    Destroy(farklePlayer2.spawnedDice[i].gameObject);
+                    DestroyDiceServerRpc(farklePlayer2.spawnedDice[i].GetComponent<NetworkObject>().NetworkObjectId);
+                }
+            }
+            if (farklePlayer1.spawnedDice.Count > 0)
+            {
+                for (int i = farklePlayer1.spawnedDice.Count - 1; i >= 0; i--)
+                {
+                    DestroyDiceServerRpc(farklePlayer1.spawnedDice[i].GetComponent<NetworkObject>().NetworkObjectId);
                 }
             }
 
+            farklePlayer1.spawnedDice.Clear();
+            farklePlayer2.spawnedDice.Clear();
+            Destroy(farklePlayer1.spawnedSelectGraphic);
+            Destroy(farklePlayer2.spawnedSelectGraphic);
             winner = null;
 
 
             ChangeStateServerRpc(GameState.MAIN_MENU);
 
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        void DestroyDiceServerRpc(ulong netObjID)
+        {
+            if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(netObjID, out var dice))
+            {
+                dice.Despawn(true);
+            }
         }
 
         public void AssignPlayers()
