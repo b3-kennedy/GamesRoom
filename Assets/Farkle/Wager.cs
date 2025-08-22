@@ -36,7 +36,12 @@ namespace Assets.Farkle
             if (IsServer)
             {
                 wagerAmount.Value = 0;
+
             }
+            wagerText.gameObject.SetActive(true);
+            enterButtonPrompt.gameObject.SetActive(true);
+            player2Buttons.gameObject.SetActive(false);
+            player2Confirm.gameObject.SetActive(false);
         }
 
         public override void OnStateEnter()
