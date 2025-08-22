@@ -60,6 +60,51 @@ namespace Assets.Farkle
             }
         }
 
+        [ServerRpc(RequireOwnership = false)]
+        public override void ResetServerRpc()
+        {
+            FarklePlayer farklePlayer1 = player1.GetComponent<FarklePlayer>();
+            FarklePlayer farklePlayer2 = player2.GetComponent<FarklePlayer>();
+            connectedPlayersCount.Value = 0;
+            wagerState.OnReset();
+            farklePlayer1.playerScore.Value = 0;
+            farklePlayer1.roundScore.Value = 0;
+            farklePlayer1.lockedInRoundScore.Value = 0;
+            farklePlayer2.playerScore.Value = 0;
+            farklePlayer2.roundScore.Value = 0;
+            farklePlayer2.lockedInRoundScore.Value = 0;
+            ResetClientRpc();
+        }
+
+        [ClientRpc]
+        void ResetClientRpc()
+        {
+            FarklePlayer farklePlayer1 = player1.GetComponent<FarklePlayer>();
+            FarklePlayer farklePlayer2 = player2.GetComponent<FarklePlayer>();
+            connectedPlayers.Clear();
+            if (farklePlayer1.spawnedDice.Count > 0)
+            {
+                for (int i = farklePlayer1.spawnedDice.Count - 1; i >= 0 ; i--)
+                {
+                    Destroy(farklePlayer1.spawnedDice[i].gameObject);
+                }
+            }
+
+            if (farklePlayer2.spawnedDice.Count > 0)
+            {
+                for (int i = farklePlayer2.spawnedDice.Count - 1; i >= 0; i--)
+                {
+                    Destroy(farklePlayer2.spawnedDice[i].gameObject);
+                }
+            }
+
+            winner = null;
+
+
+            ChangeStateServerRpc(GameState.MAIN_MENU);
+
+        }
+
         public void AssignPlayers()
         {
             player1.GetComponent<NetworkObject>().ChangeOwnership(connectedPlayers[0].OwnerClientId);

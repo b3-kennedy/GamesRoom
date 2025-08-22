@@ -54,6 +54,7 @@ namespace Assets.Farkle
             roundScore.OnValueChanged += OnRoundScoreChanged;
         }
 
+
         private void OnPlayerScoreChanged(int previousValue, int newValue)
         {
             var playerObject = NetworkManager.Singleton.ConnectedClients[OwnerClientId].PlayerObject;

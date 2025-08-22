@@ -23,6 +23,18 @@ namespace Assets.Farkle
             gameObject.SetActive(true);
             Debug.Log(farkleGame);
             winnerText.text = $"{farkleGame.winner.playerName} Wins!";
+            if (IsServer)
+            {
+                if (farkleGame.wagerState is Wager wager)
+                {
+                    farkleGame.winner.GetComponent<SteamPlayer>().credits.Value += wager.wagerAmount.Value;
+                }
+
+            }
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                farkleGame.ResetServerRpc();
+            }
         }
 
         public override void OnStateExit()

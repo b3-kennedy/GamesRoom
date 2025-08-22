@@ -31,6 +31,14 @@ namespace Assets.Farkle
             wagerAmountText.text = wagerAmount.Value.ToString();
         }
 
+        public override void OnReset()
+        {
+            if (IsServer)
+            {
+                wagerAmount.Value = 0;
+            }
+        }
+
         public override void OnStateEnter()
         {
             gameObject.SetActive(true);
