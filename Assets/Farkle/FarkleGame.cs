@@ -69,9 +69,11 @@ namespace Assets.Farkle
             FarklePlayer farklePlayer2 = player2.GetComponent<FarklePlayer>();
             connectedPlayersCount.Value = 0;
             wagerState.OnReset();
+            farklePlayer1.selectGraphic.GetComponent<NetworkObject>().Despawn();
             farklePlayer1.playerScore.Value = 0;
             farklePlayer1.roundScore.Value = 0;
             farklePlayer1.lockedInRoundScore.Value = 0;
+            farklePlayer2.selectGraphic.GetComponent<NetworkObject>().Despawn();
             farklePlayer2.playerScore.Value = 0;
             farklePlayer2.roundScore.Value = 0;
             farklePlayer2.lockedInRoundScore.Value = 0;
