@@ -28,7 +28,9 @@ namespace Assets.Farkle
         public GameObject player1;
         public GameObject player2;
 
-        public FarklePlayer winner;
+    
+        [HideInInspector] public FarklePlayer winner;
+        [HideInInspector] public FarklePlayer loser;
 
         void Start()
         {

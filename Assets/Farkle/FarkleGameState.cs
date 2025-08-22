@@ -47,11 +47,13 @@ namespace Assets.Farkle
             if (farklePlayer1.playerScore.Value >= scoreToWin)
             {
                 farkleGame.winner = farklePlayer1;
+                farkleGame.loser = farklePlayer2;
                 farkleGame.ChangeStateServerRpc(FarkleGame.GameState.GAME_OVER);
             }
             else if (farklePlayer2.playerScore.Value >= scoreToWin)
             {
                 farkleGame.winner = farklePlayer2;
+                farkleGame.loser = farklePlayer1;
                 farkleGame.ChangeStateServerRpc(FarkleGame.GameState.GAME_OVER);
             }
         }
