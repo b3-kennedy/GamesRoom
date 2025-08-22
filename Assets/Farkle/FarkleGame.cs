@@ -77,6 +77,23 @@ namespace Assets.Farkle
             farklePlayer2.roundScore.Value = 0;
             farklePlayer2.lockedInRoundScore.Value = 0;
             farklePlayer2.spawnedDice.Clear();
+
+            if (farklePlayer1.spawnedDice.Count > 0)
+            {
+                for (int i = farklePlayer1.spawnedDice.Count - 1; i >= 0; i--)
+                {
+                    farklePlayer1.spawnedDice[i].GetComponent<NetworkObject>().Despawn(true);
+                }
+            }
+
+            if (farklePlayer2.spawnedDice.Count > 0)
+            {
+                for (int i = farklePlayer2.spawnedDice.Count - 1; i >= 0; i--)
+                {
+                    farklePlayer2.spawnedDice[i].GetComponent<NetworkObject>().Despawn(true);
+                }
+            }
+
             ResetClientRpc();
         }
 
@@ -86,21 +103,7 @@ namespace Assets.Farkle
             FarklePlayer farklePlayer1 = player1.GetComponent<FarklePlayer>();
             FarklePlayer farklePlayer2 = player2.GetComponent<FarklePlayer>();
             connectedPlayers.Clear();
-            if (farklePlayer1.spawnedDice.Count > 0)
-            {
-                for (int i = farklePlayer1.spawnedDice.Count - 1; i >= 0 ; i--)
-                {
-                    Destroy(farklePlayer1.spawnedDice[i].gameObject);
-                }
-            }
 
-            if (farklePlayer2.spawnedDice.Count > 0)
-            {
-                for (int i = farklePlayer2.spawnedDice.Count - 1; i >= 0; i--)
-                {
-                    Destroy(farklePlayer2.spawnedDice[i].gameObject);
-                }
-            }
             Destroy(farklePlayer1.selectGraphic);
             Destroy(farklePlayer2.selectGraphic);
             winner = null;
