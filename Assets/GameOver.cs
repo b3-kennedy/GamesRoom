@@ -34,13 +34,9 @@ namespace Assets.Farkle
 
                     var owner2ID = farkleGame.loser.GetComponent<NetworkObject>().OwnerClientId;
                     var player2 = NetworkManager.Singleton.ConnectedClients[owner2ID].PlayerObject;
-                    player2.GetComponent<SteamPlayer>().credits.Value += wager.wagerAmount.Value;
+                    player2.GetComponent<SteamPlayer>().credits.Value -= wager.wagerAmount.Value;
                 }
 
-            }
-            if (Input.GetKeyDown(KeyCode.R))
-            {
-                farkleGame.ResetServerRpc();
             }
         }
 

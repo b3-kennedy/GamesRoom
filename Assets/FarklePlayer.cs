@@ -103,11 +103,21 @@ namespace Assets.Farkle
             if (!IsOwner) return;
 
             WagerState();
-            
+
             if (farkleGame.netGameState.Value == FarkleGame.GameState.GAME && isTurn.Value)
             {
                 SelectDice();
             }
+
+            if (farkleGame.netGameState.Value == FarkleGame.GameState.GAME_OVER)
+            {
+                if (Input.GetKeyDown(KeyCode.R))
+                {
+                    farkleGame.ResetServerRpc();
+                }
+            }
+
+
         }
 
         void SelectDice()
