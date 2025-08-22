@@ -104,8 +104,8 @@ namespace Assets.Farkle
             FarklePlayer farklePlayer2 = player2.GetComponent<FarklePlayer>();
             connectedPlayers.Clear();
 
-            Destroy(farklePlayer1.selectGraphic);
-            Destroy(farklePlayer2.selectGraphic);
+            Destroy(farklePlayer1.spawnedSelectGraphic);
+            Destroy(farklePlayer2.spawnedSelectGraphic);
             winner = null;
 
 

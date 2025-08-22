@@ -18,7 +18,7 @@ namespace Assets.Farkle
 
         public GameObject selectGraphic;
 
-        GameObject spawnedSelectGraphic;
+        [HideInInspector] public GameObject spawnedSelectGraphic;
 
         public List<Transform> dicePositions = new List<Transform>();
 
