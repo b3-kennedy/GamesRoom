@@ -75,18 +75,21 @@ public class FlappyBird : Game
     [ServerRpc(RequireOwnership = false)]
     public override void BeginServerRpc(ulong clientID)
     {
-
-        netGameState.Value = GameState.GAME;
-        if (bird != null)
+        if (netGameState.Value == GameState.MAIN_MENU)
         {
-            Destroy(bird);
-        }
-        bird = Instantiate(birdPrefab);
+            netGameState.Value = GameState.GAME;
+            if (bird != null)
+            {
+                Destroy(bird);
+            }
+            bird = Instantiate(birdPrefab);
 
-        bird.transform.position = birdPosition;
-        var netObj = bird.GetComponent<NetworkObject>();
-        netObj.SpawnWithOwnership(clientID);
-        HookBirdEventsClientRpc(netObj.NetworkObjectId);
+            bird.transform.position = birdPosition;
+            var netObj = bird.GetComponent<NetworkObject>();
+            netObj.SpawnWithOwnership(clientID);
+            HookBirdEventsClientRpc(netObj.NetworkObjectId);
+        }
+
 
     }
 

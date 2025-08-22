@@ -52,14 +52,18 @@ namespace Assets.Farkle
         [ServerRpc(RequireOwnership = false)]
         public override void BeginServerRpc(ulong clientID)
         {
-            Debug.Log("begun");
-            if (connectedPlayers.Count < 2)
+            if (netGameState.Value == GameState.MAIN_MENU)
             {
-                if (connectedPlayers.Contains(NetworkManager.Singleton.ConnectedClients[clientID].PlayerObject)) return;
+                Debug.Log("begun");
+                if (connectedPlayers.Count < 2)
+                {
+                    if (connectedPlayers.Contains(NetworkManager.Singleton.ConnectedClients[clientID].PlayerObject)) return;
 
-                connectedPlayers.Add(NetworkManager.Singleton.ConnectedClients[clientID].PlayerObject);
-                connectedPlayersCount.Value = connectedPlayers.Count;
+                    connectedPlayers.Add(NetworkManager.Singleton.ConnectedClients[clientID].PlayerObject);
+                    connectedPlayersCount.Value = connectedPlayers.Count;
+                }
             }
+
         }
 
         [ServerRpc(RequireOwnership = false)]

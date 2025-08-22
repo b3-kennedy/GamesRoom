@@ -145,16 +145,20 @@ public class RythmDuel : Game
     [ServerRpc(RequireOwnership = false)]
     public override void BeginServerRpc(ulong clientID)
     {
-        waveTarget = startingWaveTarget;
-        spawnInterval = baseSpawnInterval;
-        targetSpeed = baseTargetSpeed;
-        if (connectedPlayers.Count < 2)
+        if (netGameState.Value == GameState.MAIN_MENU)
         {
-            if (connectedPlayers.Contains(NetworkManager.Singleton.ConnectedClients[clientID].PlayerObject)) return;
+            waveTarget = startingWaveTarget;
+            spawnInterval = baseSpawnInterval;
+            targetSpeed = baseTargetSpeed;
+            if (connectedPlayers.Count < 2)
+            {
+                if (connectedPlayers.Contains(NetworkManager.Singleton.ConnectedClients[clientID].PlayerObject)) return;
 
-            connectedPlayers.Add(NetworkManager.Singleton.ConnectedClients[clientID].PlayerObject);
-            connectedPlayersCount.Value = connectedPlayers.Count;
+                connectedPlayers.Add(NetworkManager.Singleton.ConnectedClients[clientID].PlayerObject);
+                connectedPlayersCount.Value = connectedPlayers.Count;
+            }
         }
+
     }
 
     [ServerRpc(RequireOwnership = false)]
