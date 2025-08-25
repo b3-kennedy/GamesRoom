@@ -22,7 +22,7 @@ namespace Assets.CreditClicker
         [HideInInspector] public int clickCredits;
 
         public float baseIncomeSpeed;
-        [HideInInspector] public float incomeSpeed;
+        public float incomeSpeed;
 
         void Start()
         {
