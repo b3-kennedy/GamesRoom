@@ -25,17 +25,26 @@ namespace Assets.CreditClicker
 
         ulong ownerID;
 
+        public int upgradeSelectionIndex;
+
+        GameState gameState;
+
 
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
             originalScale = sphere.transform.localScale;
+
         }
 
         public void OnPlayerAssigned()
         {
             steamPlayer = playerObject.GetComponent<SteamPlayer>();
             ownerID = playerObject.GetComponent<NetworkObject>().OwnerClientId;
+            if (game.gameState is GameState g)
+            {
+                gameState = g;
+            }
         }
 
         // Update is called once per frame
@@ -46,6 +55,28 @@ namespace Assets.CreditClicker
             if (Input.GetKeyDown(KeyCode.Space) && !isPulsing)
             {
                 StartCoroutine(Pulse());
+            }
+
+            if (Input.GetKeyDown(KeyCode.U) && !gameState.isUpgradePanelOpen)
+            {
+                gameState.ChangeUpgradePanelStateServerRpc(true);
+            }
+            else if (Input.GetKeyDown(KeyCode.U) && gameState.isUpgradePanelOpen)
+            {
+                gameState.ChangeUpgradePanelStateServerRpc(false);
+            }
+
+            if (Input.GetKeyDown(KeyCode.UpArrow) && gameState.isUpgradePanelOpen && upgradeSelectionIndex < gameState.upgradeParent.childCount-1)
+            {
+                gameState.upgradeParent.GetChild(upgradeSelectionIndex).GetComponent<UpgradeUI>().DeselectServerRpc();
+                upgradeSelectionIndex++;
+                gameState.upgradeParent.GetChild(upgradeSelectionIndex).GetComponent<UpgradeUI>().SelectServerRpc();
+            }
+            if (Input.GetKeyDown(KeyCode.DownArrow) && gameState.isUpgradePanelOpen && upgradeSelectionIndex > 0)
+            {
+                gameState.upgradeParent.GetChild(upgradeSelectionIndex).GetComponent<UpgradeUI>().DeselectServerRpc();
+                upgradeSelectionIndex--;
+                gameState.upgradeParent.GetChild(upgradeSelectionIndex).GetComponent<UpgradeUI>().SelectServerRpc();
             }
         }
 

@@ -14,7 +14,7 @@ namespace Assets.CreditClicker
         );
 
         public State mainMenu;
-        public State game;
+        public State gameState;
         public Player player;
 
         [Header("Game Settings")]
@@ -29,7 +29,7 @@ namespace Assets.CreditClicker
             clickCredits = baseClickCredits;
             incomeSpeed = baseIncomeSpeed;
             mainMenu.game = this;
-            game.game = this;
+            gameState.game = this;
             // Listen for state changes
             netGameState.OnValueChanged += OnNetworkGameStateChanged;
 
@@ -44,12 +44,26 @@ namespace Assets.CreditClicker
             if (netGameState.Value == GameState.MAIN_MENU)
             {
                 player.gameObject.GetComponent<NetworkObject>().ChangeOwnership(clientID);
-                player.playerObject = NetworkManager.Singleton.ConnectedClients[clientID].PlayerObject.gameObject;
+                ulong netObjID = NetworkManager.Singleton.ConnectedClients[clientID].PlayerObject.GetComponent<NetworkObject>().NetworkObjectId;
+                netGameState.Value = GameState.GAME;
+                OnBeginClientRpc(netObjID);
+            }
+
+        }
+
+        [ClientRpc]
+        void OnBeginClientRpc(ulong netID)
+        {
+            if (NetworkManager.SpawnManager.SpawnedObjects.TryGetValue(netID, out var playerObj))
+            {
+                player.playerObject = playerObj.gameObject;
                 player.playerObject.GetComponent<PlayerMovement>().canJump = false;
                 player.game = this;
                 player.OnPlayerAssigned();
-                netGameState.Value = GameState.GAME;
+                
+                
             }
+            
 
         }
 
@@ -89,7 +103,7 @@ namespace Assets.CreditClicker
                     mainMenu.OnStateExit();                
                     break;
                 case GameState.GAME:
-                    game.OnStateExit();                    
+                    gameState.OnStateExit();                    
                     break;
                 case GameState.GAME_OVER:
                     
@@ -107,7 +121,7 @@ namespace Assets.CreditClicker
                     break;
 
                 case GameState.GAME:
-                    game.OnStateEnter();
+                    gameState.OnStateEnter();
                     break;
 
                 case GameState.GAME_OVER:

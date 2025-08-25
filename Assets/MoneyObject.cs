@@ -10,7 +10,11 @@ namespace Assets.CreditClicker
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
-            Destroy(gameObject, 5f);
+            if (IsServer)
+            {
+                Destroy(gameObject, 5f);
+            }
+            
             rb = GetComponent<Rigidbody>();
             float randomX = Random.Range(-1f, 1f);
             float randomY = Random.Range(-1f, 1f);
