@@ -41,7 +41,7 @@ namespace Assets.CreditClicker
         {
             steamPlayer = playerObject.GetComponent<SteamPlayer>();
             ownerID = playerObject.GetComponent<NetworkObject>().OwnerClientId;
-            //sphere.GetComponent<NetworkObject>().ChangeOwnership(ownerID);
+            sphere.GetComponent<NetworkObject>().ChangeOwnership(ownerID);
             if (game.gameState is GameState g)
             {
                 gameState = g;
@@ -55,7 +55,8 @@ namespace Assets.CreditClicker
 
             if (Input.GetKeyDown(KeyCode.Space) && !isPulsing)
             {
-                StartCoroutine(Pulse());
+                StartCoroutine(Pulse(OwnerClientId));
+                PulseServerRpc(OwnerClientId);                
             }
 
             if (Input.GetKeyDown(KeyCode.U))
@@ -94,11 +95,28 @@ namespace Assets.CreditClicker
             spawnedMoneyObject.GetComponent<NetworkObject>().Spawn();
         }
 
+        [ServerRpc(RequireOwnership = false)]
+        void PulseServerRpc(ulong clientID)
+        {
+            PulseClientRpc(clientID);
+        }
 
-        private IEnumerator Pulse()
+        [ClientRpc]
+        void PulseClientRpc(ulong clientID)
+        {
+            if(NetworkManager.Singleton.LocalClientId == clientID) return;
+            StartCoroutine(Pulse(clientID));
+        }
+
+
+        private IEnumerator Pulse(ulong clientId)
         {
             isPulsing = true;
-            AddCreditsServerRpc(game.clickCredits, ownerID);
+            if (NetworkManager.Singleton.LocalClientId != clientId)
+            {
+                AddCreditsServerRpc(game.clickCredits, clientId);
+            }
+            
             // Scale up
             Vector3 targetScale = originalScale * pulseScale;
             float t = 0;
@@ -109,7 +127,7 @@ namespace Assets.CreditClicker
                 yield return null;
             }
 
-            
+
 
             // Scale back down
             t = 0;
@@ -121,7 +139,7 @@ namespace Assets.CreditClicker
             }
 
 
-            
+
             isPulsing = false;
         }
     }
