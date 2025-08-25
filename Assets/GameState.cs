@@ -27,9 +27,9 @@ namespace Assets.CreditClicker
         }
 
         [ServerRpc(RequireOwnership = false)]
-        public void ChangeUpgradePanelStateServerRpc(bool value)
+        public void ChangeUpgradePanelStateServerRpc(bool value, ulong clientID)
         {
-            StartCoroutine(LerpUpgradePanel(value));
+            ChangeUpgradePanelStateClientRpc(value, clientID);
         }
 
         // public override void OnNetworkSpawn()
@@ -37,10 +37,20 @@ namespace Assets.CreditClicker
         //     gameObject.SetActive(false);
         // }
 
-        private IEnumerator LerpUpgradePanel(bool open)
+        [ClientRpc]
+        void ChangeUpgradePanelStateClientRpc(bool value, ulong clientID)
+        {
+            if (NetworkManager.Singleton.LocalClientId == clientID) return;
+
+            StartCoroutine(LerpUpgradePanel(value));
+        }
+
+        public IEnumerator LerpUpgradePanel(bool open)
         {
             Vector3 startPos = open ? upgradePanelStart.position : upgradePanelFinish.position;
             Vector3 endPos = open ? upgradePanelFinish.position : upgradePanelStart.position;
+
+            isUpgradePanelOpen = open;
 
             float elapsed = 0f;
             while (elapsed < lerpDuration)
@@ -53,7 +63,7 @@ namespace Assets.CreditClicker
 
             upgradePanel.transform.position = endPos;
 
-            isUpgradePanelOpen = open;
+
         }
 
 
