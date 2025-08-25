@@ -67,7 +67,7 @@ namespace Assets.CreditClicker
             Upgrade upgrade = upgradeParent.GetChild(index).GetComponent<UpgradeUI>().upgrade;
             if (upgrade.upgradeType == Upgrade.UpgradeType.CLICK_SPEED)
             {
-                player.game.incomeSpeed *= 0.9f;
+                player.game.incomeSpeed *= upgrade.value;
                 Debug.Log("Upgraded click speed");
                 upgradeParent.GetChild(index).GetComponent<UpgradeUI>().UpgradeCostServerRpc(newCost);
             }
