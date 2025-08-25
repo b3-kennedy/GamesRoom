@@ -62,12 +62,12 @@ namespace Assets.CreditClicker
             {
                 if (!gameState.isUpgradePanelOpen.Value)
                 {
-                    gameState.LerpUpgradePanel(true);
+                    //gameState.LerpUpgradePanel(true);
                     gameState.ChangeUpgradePanelStateServerRpc(true, ownerID);
                 }
                 else
                 {
-                    gameState.LerpUpgradePanel(false);
+                    //gameState.LerpUpgradePanel(false);
                     gameState.ChangeUpgradePanelStateServerRpc(false, ownerID);
                 }
             }

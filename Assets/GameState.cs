@@ -40,7 +40,7 @@ namespace Assets.CreditClicker
         [ClientRpc]
         void ChangeUpgradePanelStateClientRpc(bool value, ulong clientID)
         {
-            if (NetworkManager.Singleton.LocalClientId == clientID) return;
+            //if (NetworkManager.Singleton.LocalClientId == clientID) return;
 
             StartCoroutine(LerpUpgradePanel(value));
         }
