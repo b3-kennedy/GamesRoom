@@ -14,7 +14,7 @@ namespace Assets.CreditClicker
 
         public float lerpDuration = 0.5f;
 
-        [HideInInspector] public bool isUpgradePanelOpen;
+        [HideInInspector] public NetworkVariable<bool> isUpgradePanelOpen;
 
         void Start()
         {
@@ -50,7 +50,7 @@ namespace Assets.CreditClicker
             Vector3 startPos = open ? upgradePanelStart.position : upgradePanelFinish.position;
             Vector3 endPos = open ? upgradePanelFinish.position : upgradePanelStart.position;
 
-            isUpgradePanelOpen = open;
+            
 
             float elapsed = 0f;
             while (elapsed < lerpDuration)
@@ -63,7 +63,10 @@ namespace Assets.CreditClicker
 
             upgradePanel.transform.position = endPos;
 
-
+            if (IsServer)
+            {
+                isUpgradePanelOpen.Value = open;
+            }
         }
 
 

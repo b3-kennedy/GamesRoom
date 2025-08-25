@@ -60,7 +60,7 @@ namespace Assets.CreditClicker
 
             if (Input.GetKeyDown(KeyCode.U))
             {
-                if (!gameState.isUpgradePanelOpen)
+                if (!gameState.isUpgradePanelOpen.Value)
                 {
                     gameState.LerpUpgradePanel(true);
                     gameState.ChangeUpgradePanelStateServerRpc(true, ownerID);
@@ -74,13 +74,13 @@ namespace Assets.CreditClicker
 
 
 
-            if (Input.GetKeyDown(KeyCode.UpArrow) && gameState.isUpgradePanelOpen && upgradeSelectionIndex < gameState.upgradeParent.childCount-1)
+            if (Input.GetKeyDown(KeyCode.UpArrow) && gameState.isUpgradePanelOpen.Value && upgradeSelectionIndex < gameState.upgradeParent.childCount-1)
             {
                 gameState.upgradeParent.GetChild(upgradeSelectionIndex).GetComponent<UpgradeUI>().DeselectServerRpc();
                 upgradeSelectionIndex++;
                 gameState.upgradeParent.GetChild(upgradeSelectionIndex).GetComponent<UpgradeUI>().SelectServerRpc();
             }
-            if (Input.GetKeyDown(KeyCode.DownArrow) && gameState.isUpgradePanelOpen && upgradeSelectionIndex > 0)
+            if (Input.GetKeyDown(KeyCode.DownArrow) && gameState.isUpgradePanelOpen.Value && upgradeSelectionIndex > 0)
             {
                 gameState.upgradeParent.GetChild(upgradeSelectionIndex).GetComponent<UpgradeUI>().DeselectServerRpc();
                 upgradeSelectionIndex--;
