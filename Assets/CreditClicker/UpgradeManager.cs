@@ -1,15 +1,24 @@
 using System.Collections.Generic;
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Assets.CreditClicker
 {
+    [System.Serializable]
+    public class UpgradeValues
+    {
+        public int cost;
+        public int tier;
+    }
     public class UpgradeManager : NetworkBehaviour
     {
         public Transform upgradePanel;
         Transform upgradeParent;
 
         Player player;
+
+        public Dictionary<Upgrade, UpgradeValues> upgrades = new Dictionary<Upgrade, UpgradeValues>();
 
         void Start()
         {
@@ -24,25 +33,43 @@ namespace Assets.CreditClicker
             var player = NetworkManager.Singleton.ConnectedClients[playerID].PlayerObject;
             if (player.GetComponent<SteamPlayer>().credits.Value >= upgrade.cost)
             {
-                player.GetComponent<SteamPlayer>().credits.Value -= upgrade.cost;
-                ApplyUpgradeClientRpc(index, playerID);
+                if (!upgrades.ContainsKey(upgrade))
+                {
+                    UpgradeValues values = new UpgradeValues
+                    {
+                        cost = Mathf.RoundToInt(upgrade.cost * upgrade.costIncreasePerTier),
+                        tier = 1
+                    };
+                    upgrades.Add(upgrade, values);
+                }
+                else
+                {
+                    UpgradeValues values = upgrades[upgrade];
+                    values.tier++;
+                    values.cost = Mathf.RoundToInt(values.cost * upgrade.costIncreasePerTier);
+                    upgrades[upgrade] = values;
+                }
+
+                int currentCost = upgrades[upgrade].cost;
+                player.GetComponent<SteamPlayer>().credits.Value -= currentCost;
+
+                ApplyUpgradeClientRpc(index, playerID, currentCost);
             }
-            
+
 
         }
 
         [ClientRpc]
-        void ApplyUpgradeClientRpc(int index, ulong playerID)
+        void ApplyUpgradeClientRpc(int index, ulong playerID, int newCost)
         {
             if (NetworkManager.Singleton.LocalClientId != playerID) return;
 
             Upgrade upgrade = upgradeParent.GetChild(index).GetComponent<UpgradeUI>().upgrade;
             if (upgrade.upgradeType == Upgrade.UpgradeType.CLICK_SPEED)
             {
-                upgrade.tier++;
-                upgrade.cost *= Mathf.RoundToInt(upgrade.costIncreasePerTier);
                 player.game.incomeSpeed *= 0.9f;
                 Debug.Log("Upgraded click speed");
+                upgradeParent.GetChild(index).GetComponent<UpgradeUI>().UpgradeCostServerRpc(newCost);
             }
         }
     }

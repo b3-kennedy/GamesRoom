@@ -18,6 +18,7 @@ namespace Assets.CreditClicker
 
         public TextMeshProUGUI titleText;
         public TextMeshProUGUI descriptionText;
+        public TextMeshProUGUI costText;
 
 
         void Start()
@@ -26,6 +27,19 @@ namespace Assets.CreditClicker
             isSelected.OnValueChanged += OnValueChanged;
             titleText.text = $"{upgrade.upgradeName}:";
             descriptionText.text = upgrade.upgradeDescription;
+            costText.text = $"${upgrade.cost}";
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void UpgradeCostServerRpc(int newCost)
+        {
+            UpgradeCostClientRpc(newCost);
+        }
+
+        [ClientRpc]
+        void UpgradeCostClientRpc(int newCost)
+        {
+            costText.text = $"${newCost}";
         }
 
         [ServerRpc(RequireOwnership = false)]

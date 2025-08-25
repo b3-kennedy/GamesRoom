@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgradeName: Click Speed
   upgradeDescription: Increases the time between clicks by 10%
-  cost: 25
+  cost: 10
   upgradeType: 2
   value: 0.9
-  tier: 0
-  costIncreasePerTier: 10
+  tier: 1
+  costIncreasePerTier: 2

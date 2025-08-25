@@ -53,7 +53,7 @@ namespace Assets.CreditClicker
             if (!IsOwner) return;
 
             if (game && game.netGameState.Value != CreditClickerGame.GameState.GAME) return;
-            
+
             if (Input.GetKeyDown(KeyCode.Space) && !isPulsing)
             {
                 StartCoroutine(Pulse(OwnerClientId));
@@ -77,7 +77,7 @@ namespace Assets.CreditClicker
                 }
             }
 
-            if (gameState.isUpgradePanelOpen.Value)
+            if (gameState && gameState.isUpgradePanelOpen.Value)
             {
                 if (Input.GetKeyDown(KeyCode.DownArrow) && upgradeSelectionIndex < gameState.upgradeParent.childCount - 1)
                 {
