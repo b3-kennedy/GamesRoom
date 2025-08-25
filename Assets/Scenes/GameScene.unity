@@ -4932,6 +4932,7 @@ GameObject:
   - component: {fileID: 781721905}
   - component: {fileID: 781721907}
   - component: {fileID: 781721906}
+  - component: {fileID: 781721908}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -4999,6 +5000,21 @@ MonoBehaviour:
   pulseKey: 32
   moneyObjectPrefab: {fileID: 4332951449207143838, guid: 6248ddd28f3c22347aee14d2d594e3fe, type: 3}
   upgradeSelectionIndex: 0
+  gameState: {fileID: 0}
+--- !u!114 &781721908
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 781721904}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d7f5627e8df7ae41acb80b56465bb09, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  upgradePanel: {fileID: 1567745876}
 --- !u!114 &789227674
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6845,6 +6861,31 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   isSelected:
     m_InternalValue: 0
+  upgrade: {fileID: 11400000, guid: 86422cb57dca0724690e3708bc860335, type: 2}
+  titleText: {fileID: 1000241396}
+  descriptionText: {fileID: 1000241395}
+--- !u!114 &1000241395 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2991156650847337959, guid: 8c54c4e9c86d48e4b959988c24a0eb34, type: 3}
+  m_PrefabInstance: {fileID: 1000241391}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1000241396 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5621394739223315945, guid: 8c54c4e9c86d48e4b959988c24a0eb34, type: 3}
+  m_PrefabInstance: {fileID: 1000241391}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1003939375
 GameObject:
   m_ObjectHideFlags: 0
@@ -13815,7 +13856,8 @@ MonoBehaviour:
   upgradePanelFinish: {fileID: 30335893}
   upgradeParent: {fileID: 0}
   lerpDuration: 0.25
-  isUpgradePanelOpen: 0
+  isUpgradePanelOpen:
+    m_InternalValue: 0
 --- !u!4 &1937415056
 Transform:
   m_ObjectHideFlags: 0
@@ -15203,7 +15245,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0

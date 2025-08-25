@@ -1,4 +1,5 @@
 using System;
+using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,11 +14,18 @@ namespace Assets.CreditClicker
 
         public NetworkVariable<bool> isSelected;
 
+        public Upgrade upgrade;
+
+        public TextMeshProUGUI titleText;
+        public TextMeshProUGUI descriptionText;
+
 
         void Start()
         {
             image = GetComponent<Image>();
             isSelected.OnValueChanged += OnValueChanged;
+            titleText.text = $"{upgrade.upgradeName}:";
+            descriptionText.text = upgrade.upgradeDescription;
         }
 
         [ServerRpc(RequireOwnership = false)]

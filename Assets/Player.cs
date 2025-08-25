@@ -27,7 +27,7 @@ namespace Assets.CreditClicker
 
         public int upgradeSelectionIndex;
 
-        GameState gameState;
+        [HideInInspector] public GameState gameState;
 
 
         // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -52,10 +52,13 @@ namespace Assets.CreditClicker
         {
             if (!IsOwner) return;
 
+            if (game && game.netGameState.Value != CreditClickerGame.GameState.GAME) return;
+            
             if (Input.GetKeyDown(KeyCode.Space) && !isPulsing)
             {
                 StartCoroutine(Pulse(OwnerClientId));
-                PulseServerRpc(OwnerClientId);                
+                PulseServerRpc(OwnerClientId);
+                AddCreditsServerRpc(game.clickCredits, OwnerClientId);
             }
 
             if (Input.GetKeyDown(KeyCode.U))
@@ -64,6 +67,8 @@ namespace Assets.CreditClicker
                 {
                     //gameState.LerpUpgradePanel(true);
                     gameState.ChangeUpgradePanelStateServerRpc(true, ownerID);
+                    gameState.upgradeParent.GetChild(upgradeSelectionIndex).GetComponent<UpgradeUI>().SelectServerRpc();
+                    upgradeSelectionIndex = 0;
                 }
                 else
                 {
@@ -72,20 +77,28 @@ namespace Assets.CreditClicker
                 }
             }
 
+            if (gameState.isUpgradePanelOpen.Value)
+            {
+                if (Input.GetKeyDown(KeyCode.DownArrow) && upgradeSelectionIndex < gameState.upgradeParent.childCount - 1)
+                {
+                    gameState.upgradeParent.GetChild(upgradeSelectionIndex).GetComponent<UpgradeUI>().DeselectServerRpc();
+                    upgradeSelectionIndex++;
+                    gameState.upgradeParent.GetChild(upgradeSelectionIndex).GetComponent<UpgradeUI>().SelectServerRpc();
+                }
+                if (Input.GetKeyDown(KeyCode.UpArrow) && upgradeSelectionIndex > 0)
+                {
+                    gameState.upgradeParent.GetChild(upgradeSelectionIndex).GetComponent<UpgradeUI>().DeselectServerRpc();
+                    upgradeSelectionIndex--;
+                    gameState.upgradeParent.GetChild(upgradeSelectionIndex).GetComponent<UpgradeUI>().SelectServerRpc();
+                }
+
+                if (Input.GetKeyDown(KeyCode.Return))
+                {
+                    GetComponent<UpgradeManager>().BuyUpgradeServerRpc(upgradeSelectionIndex, ownerID);
+                }
+            }
 
 
-            if (Input.GetKeyDown(KeyCode.UpArrow) && gameState.isUpgradePanelOpen.Value && upgradeSelectionIndex < gameState.upgradeParent.childCount-1)
-            {
-                gameState.upgradeParent.GetChild(upgradeSelectionIndex).GetComponent<UpgradeUI>().DeselectServerRpc();
-                upgradeSelectionIndex++;
-                gameState.upgradeParent.GetChild(upgradeSelectionIndex).GetComponent<UpgradeUI>().SelectServerRpc();
-            }
-            if (Input.GetKeyDown(KeyCode.DownArrow) && gameState.isUpgradePanelOpen.Value && upgradeSelectionIndex > 0)
-            {
-                gameState.upgradeParent.GetChild(upgradeSelectionIndex).GetComponent<UpgradeUI>().DeselectServerRpc();
-                upgradeSelectionIndex--;
-                gameState.upgradeParent.GetChild(upgradeSelectionIndex).GetComponent<UpgradeUI>().SelectServerRpc();
-            }
         }
 
         [ServerRpc(RequireOwnership = false)]
@@ -112,12 +125,7 @@ namespace Assets.CreditClicker
 
         private IEnumerator Pulse(ulong clientId)
         {
-            isPulsing = true;
-            if (NetworkManager.Singleton.LocalClientId != clientId)
-            {
-                AddCreditsServerRpc(game.clickCredits, clientId);
-            }
-            
+            isPulsing = true;      
             // Scale up
             Vector3 targetScale = originalScale * pulseScale;
             float t = 0;
