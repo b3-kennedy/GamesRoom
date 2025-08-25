@@ -9,6 +9,8 @@ public class ArcadeMachine : NetworkBehaviour
 
     public List<GameObject> nearPlayers = new List<GameObject>();
 
+    public GameObject activePlayer;
+
 
     void Start()
     {
@@ -26,6 +28,12 @@ public class ArcadeMachine : NetworkBehaviour
         TurnOnClientRpc();
     }
 
+    [ServerRpc(RequireOwnership = false)]
+    public void SetActivePlayerServerRpc(ulong clientID)
+    {
+        activePlayer = NetworkManager.Singleton.ConnectedClients[clientID].PlayerObject.gameObject;
+    }
+
     [ClientRpc]
     void TurnOnClientRpc()
     {
@@ -39,6 +47,11 @@ public class ArcadeMachine : NetworkBehaviour
         if (nearPlayers.Count == 0 && screen.activeSelf)
         {
             TurnOffScreenClientRpc();
+        }
+
+        if (activePlayer && !nearPlayers.Contains(activePlayer))
+        {
+            arcadeGame.ResetServerRpc();
         }
     }
 

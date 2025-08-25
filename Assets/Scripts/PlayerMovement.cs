@@ -30,6 +30,8 @@ public class PlayerMovement : NetworkBehaviour
 
     private Rigidbody rb;
 
+    public bool canJump = true;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -51,7 +53,7 @@ public class PlayerMovement : NetworkBehaviour
         state = isSprinting ? PlayerState.SPRINT : PlayerState.NORMAL;
 
         // Jump
-        if (Input.GetKeyDown(KeyCode.Space) && IsGrounded())
+        if (Input.GetKeyDown(KeyCode.Space) && IsGrounded() && canJump)
         {
             Jump();
         }

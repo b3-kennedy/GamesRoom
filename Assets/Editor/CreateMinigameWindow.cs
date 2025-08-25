@@ -81,6 +81,7 @@ public class CreateMinigameWindow : EditorWindow
 
                 private void OnNetworkGameStateChanged(GameState oldState, GameState newState)
                 {{
+                    LeaveState(oldState)
                     Debug.Log($""Game state changed from {{oldState}} to {{newState}}"");
                     ApplyState(newState);
                 }}
@@ -89,6 +90,19 @@ public class CreateMinigameWindow : EditorWindow
                 public void ChangeStateServerRpc(GameState newState)
                 {{
                     netGameState.Value = newState;
+                }}
+
+                void LeaveState(GameState state)
+                {{
+                    switch (state)
+                    {{
+                        case GameState.MAIN_MENU:                    
+                            break;
+                        case GameState.GAME:                    
+                            break;
+                        case GameState.GAME_OVER:
+                            break;
+                    }}
                 }}
 
                 private void ApplyState(GameState state)

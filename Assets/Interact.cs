@@ -34,6 +34,7 @@ public class Interact : NetworkBehaviour
                 Table table = hit.collider.transform.root.GetComponent<Table>();
                 if (machine)
                 {
+                    machine.SetActivePlayerServerRpc(NetworkManager.Singleton.LocalClientId);
                     machine.arcadeGame.BeginServerRpc(NetworkManager.Singleton.LocalClientId);
                 }
                 else if (table)
