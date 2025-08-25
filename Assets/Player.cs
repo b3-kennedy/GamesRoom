@@ -40,8 +40,7 @@ namespace Assets.CreditClicker
         public void OnPlayerAssigned()
         {
             steamPlayer = playerObject.GetComponent<SteamPlayer>();
-            ownerID = playerObject.GetComponent<NetworkObject>().OwnerClientId;
-            sphere.GetComponent<NetworkObject>().ChangeOwnership(ownerID);
+            ownerID = playerObject.GetComponent<NetworkObject>().OwnerClientId;            
             if (game.gameState is GameState g)
             {
                 gameState = g;
