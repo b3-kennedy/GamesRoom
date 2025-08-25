@@ -103,7 +103,7 @@ namespace Assets.CreditClicker
                 yield return null;
             }
 
-            AddCreditsServerRpc(game.clickCredits, ownerID);
+            
 
             // Scale back down
             t = 0;
@@ -114,8 +114,8 @@ namespace Assets.CreditClicker
                 yield return null;
             }
 
-            
 
+            AddCreditsServerRpc(game.clickCredits, ownerID);
             isPulsing = false;
         }
     }

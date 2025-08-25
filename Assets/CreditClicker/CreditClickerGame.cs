@@ -78,7 +78,11 @@ namespace Assets.CreditClicker
         [ClientRpc]
         void ResetClientRpc()
         {
-            player.playerObject.GetComponent<PlayerMovement>().canJump = true;
+            if (player.playerObject)
+            {
+                player.playerObject.GetComponent<PlayerMovement>().canJump = true;
+            }
+            
         }
 
 
