@@ -32,10 +32,10 @@ namespace Assets.CreditClicker
             StartCoroutine(LerpUpgradePanel(value));
         }
 
-        public override void OnNetworkSpawn()
-        {
-            gameObject.SetActive(false);
-        }
+        // public override void OnNetworkSpawn()
+        // {
+        //     gameObject.SetActive(false);
+        // }
 
         private IEnumerator LerpUpgradePanel(bool open)
         {
