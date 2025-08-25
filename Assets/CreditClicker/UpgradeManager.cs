@@ -35,6 +35,7 @@ namespace Assets.CreditClicker
             {
                 if (!upgrades.ContainsKey(upgrade))
                 {
+                    player.GetComponent<SteamPlayer>().credits.Value -= upgrade.cost;
                     UpgradeValues values = new UpgradeValues
                     {
                         cost = Mathf.RoundToInt(upgrade.cost * upgrade.costIncreasePerTier),
@@ -44,6 +45,7 @@ namespace Assets.CreditClicker
                 }
                 else
                 {
+                    player.GetComponent<SteamPlayer>().credits.Value -= upgrade.cost;
                     UpgradeValues values = upgrades[upgrade];
                     values.tier++;
                     values.cost = Mathf.RoundToInt(values.cost * upgrade.costIncreasePerTier);
@@ -51,7 +53,7 @@ namespace Assets.CreditClicker
                 }
 
                 int currentCost = upgrades[upgrade].cost;
-                player.GetComponent<SteamPlayer>().credits.Value -= currentCost;
+
 
                 ApplyUpgradeClientRpc(index, playerID, currentCost);
             }
