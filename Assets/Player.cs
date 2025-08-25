@@ -58,14 +58,19 @@ namespace Assets.CreditClicker
                 StartCoroutine(Pulse());
             }
 
-            if (Input.GetKeyDown(KeyCode.U) && !gameState.isUpgradePanelOpen)
+            if (Input.GetKeyDown(KeyCode.U))
             {
-                gameState.ChangeUpgradePanelStateServerRpc(true);
+                if (!gameState.isUpgradePanelOpen)
+                {
+                    gameState.ChangeUpgradePanelStateServerRpc(true);
+                }
+                else
+                {
+                    gameState.ChangeUpgradePanelStateServerRpc(false);
+                }
             }
-            else if (Input.GetKeyDown(KeyCode.U) && gameState.isUpgradePanelOpen)
-            {
-                gameState.ChangeUpgradePanelStateServerRpc(false);
-            }
+
+
 
             if (Input.GetKeyDown(KeyCode.UpArrow) && gameState.isUpgradePanelOpen && upgradeSelectionIndex < gameState.upgradeParent.childCount-1)
             {
@@ -93,7 +98,7 @@ namespace Assets.CreditClicker
         private IEnumerator Pulse()
         {
             isPulsing = true;
-
+            AddCreditsServerRpc(game.clickCredits, ownerID);
             // Scale up
             Vector3 targetScale = originalScale * pulseScale;
             float t = 0;
@@ -116,7 +121,7 @@ namespace Assets.CreditClicker
             }
 
 
-            AddCreditsServerRpc(game.clickCredits, ownerID);
+            
             isPulsing = false;
         }
     }
