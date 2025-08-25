@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: ClickInterval
   m_EditorClassIdentifier: 
   upgradeName: Click Speed
-  upgradeDescription: Increases the time between clicks by 10%
+  upgradeDescription: Decreases the time between clicks by 10%
   cost: 10
   upgradeType: 2
   value: 0.1

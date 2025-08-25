@@ -45,7 +45,7 @@ namespace Assets.CreditClicker
                 }
                 else
                 {
-                    player.GetComponent<SteamPlayer>().credits.Value -= upgrade.cost;
+                    player.GetComponent<SteamPlayer>().credits.Value -= upgrades[upgrade].cost;
                     UpgradeValues values = upgrades[upgrade];
                     values.tier++;
                     values.cost = Mathf.RoundToInt(values.cost * upgrade.costIncreasePerTier);
