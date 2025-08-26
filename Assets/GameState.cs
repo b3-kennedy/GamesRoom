@@ -36,6 +36,8 @@ namespace Assets.CreditClicker
         public override void OnStateEnter()
         {
             gameObject.SetActive(true);
+            activeUpgrades.SetActive(true);
+            passiveUpgrades.SetActive(false);
             Debug.Log(player);
 
         }
