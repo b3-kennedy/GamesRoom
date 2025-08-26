@@ -60,7 +60,7 @@ namespace Assets.CreditClicker
             {
                 StartCoroutine(Pulse(OwnerClientId));
                 PulseServerRpc(OwnerClientId);
-                AddCreditsServerRpc(sphere.transform.position,game.clickCredits, OwnerClientId);
+                AddCreditsServerRpc(sphere.transform.position, game.clickCredits, OwnerClientId);
             }
 
             if (Input.GetKeyDown(KeyCode.U))
@@ -120,7 +120,7 @@ namespace Assets.CreditClicker
             NetworkManager.Singleton.ConnectedClients[id].PlayerObject.GetComponent<SteamPlayer>().credits.Value += amount;
             for (int i = 0; i < amount; i++)
             {
-                GameObject spawnedMoneyObject = Instantiate(moneyObjectPrefab, sphere.transform.position, Quaternion.identity);
+                GameObject spawnedMoneyObject = Instantiate(moneyObjectPrefab, spawnPos, Quaternion.identity);
                 spawnedMoneyObject.GetComponent<NetworkObject>().Spawn();
             }
 

@@ -69,36 +69,38 @@ namespace Assets.CreditClicker
                 int currentCost = upgrades[upgrade].cost;
 
 
-                ApplyUpgradeClientRpc(index, playerID, currentCost);
+                ApplyUpgradeClientRpc(index, playerID, currentCost, upgrades[upgrade].tier);
             }
 
 
         }
 
         [ClientRpc]
-        void ApplyUpgradeClientRpc(int index, ulong playerID, int newCost)
+        void ApplyUpgradeClientRpc(int index, ulong playerID, int newCost, int tier)
         {
             if (NetworkManager.Singleton.LocalClientId != playerID) return;
 
-            Upgrade upgrade = creditPlayer.gameState.upgradeParent.GetChild(index).GetComponent<UpgradeUI>().upgrade;
+            var ui = creditPlayer.gameState.upgradeParent.GetChild(index).GetComponent<UpgradeUI>();
+            Upgrade upgrade = ui.upgrade;
             if (upgrade.upgradeType == Upgrade.UpgradeType.CLICK_SPEED)
             {
                 creditPlayer.game.incomeSpeed *= upgrade.value;
                 Debug.Log("Upgraded click speed");
-                upgradeParent.GetChild(index).GetComponent<UpgradeUI>().UpgradeCostServerRpc(newCost);
+                ui.UpgradeCostServerRpc(newCost);
             }
-            else if (upgrade.upgradeType == Upgrade.UpgradeType.PASSIVE)
+            else if (upgrade.upgradeType == Upgrade.UpgradeType.PASSIVE && upgrade.tier < 4)
             {
                 Debug.Log("Add passive income");
-                upgradeParent.GetChild(index).GetComponent<UpgradeUI>().UpgradeCostServerRpc(newCost);
-                SpawnPassiveCreditServerRpc(playerID);
+                Debug.Log(creditPlayer.gameState.upgradeParent.parent.parent);
+                ui.UpgradeCostServerRpc(newCost);
+                SpawnPassiveCreditServerRpc(playerID, tier);
             }
         }
 
         [ServerRpc(RequireOwnership = false)]
-        void SpawnPassiveCreditServerRpc(ulong playerID)
+        void SpawnPassiveCreditServerRpc(ulong playerID, int tier)
         {
-            GameObject spawner = Instantiate(passiveCreditObject);
+            GameObject spawner = Instantiate(passiveCreditObject, creditPlayer.gameState.sphereSpawnsParent.GetChild(tier-1).position, Quaternion.identity);
             spawner.GetComponent<PassiveCreditGain>().player = creditPlayer;
             spawner.GetComponent<NetworkObject>().SpawnWithOwnership(playerID);
         }

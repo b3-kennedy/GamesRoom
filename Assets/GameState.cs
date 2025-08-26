@@ -10,7 +10,7 @@ namespace Assets.CreditClicker
         public GameObject upgradePanel;
         public Transform upgradePanelStart;
         public Transform upgradePanelFinish;
-
+        public Transform sphereSpawnsParent;
         public GameObject activeUpgrades;
         public GameObject passiveUpgrades;
 
