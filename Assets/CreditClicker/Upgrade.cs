@@ -14,6 +14,7 @@ namespace Assets.CreditClicker
         public float value;
         public int tier;
         public float costIncreasePerTier;
+
     }
 }
 

@@ -8,28 +8,40 @@ namespace Assets.CreditClicker
     [System.Serializable]
     public class UpgradeValues
     {
+        public Upgrade baseUpgrade;
         public int cost;
         public int tier;
+
+        public float value;
+
+        public string GetDescription()
+        {
+            return $"{baseUpgrade.upgradeDescription}\n" +
+                   $"Tier: {tier}\n" +
+                   $"Effect: x{baseUpgrade.value * tier}";
+        }
     }
     public class UpgradeManager : NetworkBehaviour
     {
         public Transform upgradePanel;
         Transform upgradeParent;
 
-        Player player;
+        public GameObject passiveCreditObject;
+
+        Player creditPlayer;
 
         public Dictionary<Upgrade, UpgradeValues> upgrades = new Dictionary<Upgrade, UpgradeValues>();
 
         void Start()
         {
-            player = GetComponent<Player>();
+            creditPlayer = GetComponent<Player>();
             upgradeParent = upgradePanel.transform.GetChild(0).GetChild(0).GetChild(0);
         }
 
         [ServerRpc(RequireOwnership = false)]
         public void BuyUpgradeServerRpc(int index, ulong playerID)
         {
-            Upgrade upgrade = upgradeParent.GetChild(index).GetComponent<UpgradeUI>().upgrade;
+            Upgrade upgrade = creditPlayer.gameState.upgradeParent.GetChild(index).GetComponent<UpgradeUI>().upgrade;
             var player = NetworkManager.Singleton.ConnectedClients[playerID].PlayerObject;
             if (player.GetComponent<SteamPlayer>().credits.Value >= upgrade.cost)
             {
@@ -38,8 +50,10 @@ namespace Assets.CreditClicker
                     player.GetComponent<SteamPlayer>().credits.Value -= upgrade.cost;
                     UpgradeValues values = new UpgradeValues
                     {
+                        baseUpgrade = upgrade,
                         cost = Mathf.RoundToInt(upgrade.cost * upgrade.costIncreasePerTier),
-                        tier = 1
+                        tier = 1,
+                        value = upgrade.value
                     };
                     upgrades.Add(upgrade, values);
                 }
@@ -66,13 +80,27 @@ namespace Assets.CreditClicker
         {
             if (NetworkManager.Singleton.LocalClientId != playerID) return;
 
-            Upgrade upgrade = upgradeParent.GetChild(index).GetComponent<UpgradeUI>().upgrade;
+            Upgrade upgrade = creditPlayer.gameState.upgradeParent.GetChild(index).GetComponent<UpgradeUI>().upgrade;
             if (upgrade.upgradeType == Upgrade.UpgradeType.CLICK_SPEED)
             {
-                player.game.incomeSpeed *= upgrade.value;
+                creditPlayer.game.incomeSpeed *= upgrade.value;
                 Debug.Log("Upgraded click speed");
                 upgradeParent.GetChild(index).GetComponent<UpgradeUI>().UpgradeCostServerRpc(newCost);
             }
+            else if (upgrade.upgradeType == Upgrade.UpgradeType.PASSIVE)
+            {
+                Debug.Log("Add passive income");
+                upgradeParent.GetChild(index).GetComponent<UpgradeUI>().UpgradeCostServerRpc(newCost);
+                SpawnPassiveCreditServerRpc(playerID);
+            }
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        void SpawnPassiveCreditServerRpc(ulong playerID)
+        {
+            GameObject spawner = Instantiate(passiveCreditObject);
+            spawner.GetComponent<PassiveCreditGain>().player = creditPlayer;
+            spawner.GetComponent<NetworkObject>().SpawnWithOwnership(playerID);
         }
     }
 }

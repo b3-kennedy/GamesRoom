@@ -1,6 +1,7 @@
 using Unity.Netcode;
 using UnityEngine;
 using System.Collections;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Assets.CreditClicker
 {
@@ -10,11 +11,16 @@ namespace Assets.CreditClicker
         public Transform upgradePanelStart;
         public Transform upgradePanelFinish;
 
+        public GameObject activeUpgrades;
+        public GameObject passiveUpgrades;
+
         [HideInInspector] public Transform upgradeParent;
 
         public float lerpDuration = 0.5f;
 
         [HideInInspector] public NetworkVariable<bool> isUpgradePanelOpen;
+
+        [HideInInspector] public Player player;
 
         void Start()
         {
@@ -24,6 +30,34 @@ namespace Assets.CreditClicker
         public override void OnStateEnter()
         {
             gameObject.SetActive(true);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void ChangeUpgradesServerRpc(bool activeValue, bool passiveValue)
+        {
+            ChangeUpgradesClientRpc(activeValue, passiveValue);
+        }
+
+        [ClientRpc]
+        void ChangeUpgradesClientRpc(bool activeValue, bool passiveValue)
+        {
+            activeUpgrades.SetActive(activeValue);
+            passiveUpgrades.SetActive(passiveValue);
+            if (activeValue)
+            {
+                upgradeParent = upgradePanel.transform.GetChild(0).GetChild(0).GetChild(0);
+            }
+            else
+            {
+                upgradeParent = upgradePanel.transform.GetChild(1).GetChild(0).GetChild(0);
+            }
+
+            for (int i = 0; i < upgradeParent.childCount; i++)
+            {
+                upgradeParent.GetChild(i).GetComponent<UpgradeUI>().isSelected.Value = false;
+            }
+            upgradeParent.GetChild(0).GetComponent<UpgradeUI>().isSelected.Value = true;
+            player.upgradeSelectionIndex = 0;
         }
 
         [ServerRpc(RequireOwnership = false)]

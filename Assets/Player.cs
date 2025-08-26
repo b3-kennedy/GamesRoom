@@ -40,11 +40,13 @@ namespace Assets.CreditClicker
         public void OnPlayerAssigned()
         {
             steamPlayer = playerObject.GetComponent<SteamPlayer>();
-            ownerID = playerObject.GetComponent<NetworkObject>().OwnerClientId;            
+            ownerID = playerObject.GetComponent<NetworkObject>().OwnerClientId;
             if (game.gameState is GameState g)
             {
                 gameState = g;
             }
+            gameState.player = this;
+            gameState.passiveUpgrades.SetActive(false);
         }
 
         // Update is called once per frame
@@ -58,7 +60,7 @@ namespace Assets.CreditClicker
             {
                 StartCoroutine(Pulse(OwnerClientId));
                 PulseServerRpc(OwnerClientId);
-                AddCreditsServerRpc(game.clickCredits, OwnerClientId);
+                AddCreditsServerRpc(sphere.transform.position,game.clickCredits, OwnerClientId);
             }
 
             if (Input.GetKeyDown(KeyCode.U))
@@ -96,17 +98,32 @@ namespace Assets.CreditClicker
                 {
                     GetComponent<UpgradeManager>().BuyUpgradeServerRpc(upgradeSelectionIndex, ownerID);
                 }
+                if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.LeftArrow))
+                {
+                    if (gameState.passiveUpgrades.activeSelf)
+                    {
+                        gameState.ChangeUpgradesServerRpc(true, false);
+                    }
+                    else if (gameState.activeUpgrades.activeSelf)
+                    {
+                        gameState.ChangeUpgradesServerRpc(false, true);
+                    }
+                }
             }
 
 
         }
 
         [ServerRpc(RequireOwnership = false)]
-        void AddCreditsServerRpc(int amount, ulong id)
+        public void AddCreditsServerRpc(Vector3 spawnPos,int amount, ulong id)
         {
             NetworkManager.Singleton.ConnectedClients[id].PlayerObject.GetComponent<SteamPlayer>().credits.Value += amount;
-            GameObject spawnedMoneyObject = Instantiate(moneyObjectPrefab, sphere.transform.position, Quaternion.identity);
-            spawnedMoneyObject.GetComponent<NetworkObject>().Spawn();
+            for (int i = 0; i < amount; i++)
+            {
+                GameObject spawnedMoneyObject = Instantiate(moneyObjectPrefab, sphere.transform.position, Quaternion.identity);
+                spawnedMoneyObject.GetComponent<NetworkObject>().Spawn();
+            }
+
         }
 
         [ServerRpc(RequireOwnership = false)]
