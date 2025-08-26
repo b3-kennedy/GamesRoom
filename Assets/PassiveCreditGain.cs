@@ -13,6 +13,9 @@ namespace Assets.CreditClicker
         bool isPulsing;
         float pulseScale = 0.9f;
 
+        float interval = 10f;
+        int moneyPerPulse = 3;
+
         Vector3 originalScale;
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
@@ -25,7 +28,7 @@ namespace Assets.CreditClicker
         void Update()
         {
             timer += Time.deltaTime;
-            if (timer >= 10)
+            if (timer >= interval)
             {
                 PulseServerRpc();
                 timer = 0;
@@ -33,9 +36,33 @@ namespace Assets.CreditClicker
         }
 
         [ServerRpc(RequireOwnership = false)]
+        public void IncreaseValueServerRpc(int value)
+        {
+            IncreaseValueClientRpc(value);
+        }
+
+        [ClientRpc]
+        void IncreaseValueClientRpc(int value)
+        {
+            moneyPerPulse += value;
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void DecreaseIntervalServerRpc(float value)
+        {
+            DecreaseIntervalClientRpc(value);
+        }
+
+        [ClientRpc]
+        void DecreaseIntervalClientRpc(float value)
+        {
+            interval *= value;
+        }
+
+        [ServerRpc(RequireOwnership = false)]
         void PulseServerRpc()
         {
-            player.AddCreditsServerRpc(transform.position, 10, OwnerClientId);
+            player.AddCreditsServerRpc(transform.position, moneyPerPulse, OwnerClientId);
             PulseClientRpc();
         }
 

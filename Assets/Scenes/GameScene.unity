@@ -5426,6 +5426,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   upgradePanel: {fileID: 1567745876}
   passiveCreditObject: {fileID: 186601434372888653, guid: f99f55933cf77094992561a6a9b23985, type: 3}
+  passiveGainers: []
 --- !u!114 &789227674
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12995,6 +12996,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1695956847}
     m_Modifications:
+    - target: {fileID: 2218560894649789253, guid: 8c54c4e9c86d48e4b959988c24a0eb34, type: 3}
+      propertyPath: upgrade
+      value: 
+      objectReference: {fileID: 11400000, guid: 466e152577e5fad418a0a60a22caf7e6, type: 2}
     - target: {fileID: 5093719730613442165, guid: 8c54c4e9c86d48e4b959988c24a0eb34, type: 3}
       propertyPath: m_Name
       value: UpgradePrefab (1)
@@ -13609,6 +13614,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1695956847}
     m_Modifications:
+    - target: {fileID: 2218560894649789253, guid: 8c54c4e9c86d48e4b959988c24a0eb34, type: 3}
+      propertyPath: upgrade
+      value: 
+      objectReference: {fileID: 11400000, guid: c294b53bc983b484b953076c54ac7611, type: 2}
     - target: {fileID: 5093719730613442165, guid: 8c54c4e9c86d48e4b959988c24a0eb34, type: 3}
       propertyPath: m_Name
       value: UpgradePrefab (2)

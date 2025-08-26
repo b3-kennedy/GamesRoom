@@ -33,6 +33,8 @@ namespace Assets.CreditClicker
 
         public Dictionary<Upgrade, UpgradeValues> upgrades = new Dictionary<Upgrade, UpgradeValues>();
 
+        public List<GameObject> passiveGainers;
+
         void Start()
         {
             creditPlayer = GetComponent<Player>();
@@ -42,9 +44,11 @@ namespace Assets.CreditClicker
         [ServerRpc(RequireOwnership = false)]
         public void BuyUpgradeServerRpc(int index, ulong playerID)
         {
-            Upgrade upgrade = creditPlayer.gameState.upgradeParent.GetChild(index).GetComponent<UpgradeUI>().upgrade;
+            var upgradeUI = creditPlayer.gameState.upgradeParent.GetChild(index).GetComponent<UpgradeUI>();
+            Upgrade upgrade = upgradeUI.upgrade;
             var player = NetworkManager.Singleton.ConnectedClients[playerID].PlayerObject;
-            if (player.GetComponent<SteamPlayer>().credits.Value >= upgrade.cost)
+            Debug.Log($"Credits: {player.GetComponent<SteamPlayer>().credits.Value} Cost: {upgradeUI.cost}");
+            if (player.GetComponent<SteamPlayer>().credits.Value >= upgradeUI.cost && upgradeUI.currentTier < upgrade.maxTiers)
             {
                 if (!upgrades.ContainsKey(upgrade))
                 {
@@ -84,14 +88,14 @@ namespace Assets.CreditClicker
             var ui = creditPlayer.gameState.upgradeParent.GetChild(index).GetComponent<UpgradeUI>();
             ui.currentTier = tier;
             Upgrade upgrade = ui.upgrade;
-            if (upgrade.upgradeType == Upgrade.UpgradeType.CLICK_SPEED && upgrade.tier < upgrade.maxTiers)
+            if (upgrade.upgradeType == Upgrade.UpgradeType.CLICK_SPEED && ui.currentTier <= upgrade.maxTiers)
             {
                 creditPlayer.game.incomeSpeed *= upgrade.value;
                 Debug.Log("Upgraded click speed");
                 ui.UpgradeCostServerRpc(newCost);
                 AddTierToUpgradeUIServerRpc(index, tier);
             }
-            else if (upgrade.upgradeType == Upgrade.UpgradeType.PASSIVE && upgrade.tier < upgrade.maxTiers)
+            else if (upgrade.upgradeType == Upgrade.UpgradeType.PASSIVE && ui.currentTier <= upgrade.maxTiers)
             {
                 Debug.Log("Add passive income");
                 Debug.Log(creditPlayer.gameState.upgradeParent.parent.parent);
@@ -99,13 +103,41 @@ namespace Assets.CreditClicker
                 SpawnPassiveCreditServerRpc(playerID, tier);
                 AddTierToUpgradeUIServerRpc(index, tier);
             }
-            else if (upgrade.upgradeType == Upgrade.UpgradeType.ACTIVE && upgrade.tier < upgrade.maxTiers)
+            else if (upgrade.upgradeType == Upgrade.UpgradeType.ACTIVE && ui.currentTier <= upgrade.maxTiers)
             {
                 creditPlayer.game.clickCredits += (int)upgrade.value;
                 ui.UpgradeCostServerRpc(newCost);
                 AddTierToUpgradeUIServerRpc(index, tier);
             }
-            
+            else if (upgrade.upgradeType == Upgrade.UpgradeType.PASSIVE_INCREASE && ui.currentTier <= upgrade.maxTiers)
+            {
+                if (passiveGainers.Count == 0) return;
+
+                foreach (var gainer in passiveGainers)
+                {
+                    gainer.GetComponent<PassiveCreditGain>().DecreaseIntervalServerRpc(upgrade.value);
+
+                }
+
+                ui.UpgradeCostServerRpc(newCost);
+                AddTierToUpgradeUIServerRpc(index, tier);
+
+            }
+            else if (upgrade.upgradeType == Upgrade.UpgradeType.PASSIVE_MONEY_INCREASE && ui.currentTier <= upgrade.maxTiers)
+            {
+                if (passiveGainers.Count == 0) return;
+
+                foreach (var gainer in passiveGainers)
+                {
+                    gainer.GetComponent<PassiveCreditGain>().IncreaseValueServerRpc((int)upgrade.value);
+
+                }
+
+                ui.UpgradeCostServerRpc(newCost);
+                AddTierToUpgradeUIServerRpc(index, tier);
+
+            }
+
         }
 
         [ServerRpc(RequireOwnership = false)]
@@ -124,9 +156,19 @@ namespace Assets.CreditClicker
         [ServerRpc(RequireOwnership = false)]
         void SpawnPassiveCreditServerRpc(ulong playerID, int tier)
         {
-            GameObject spawner = Instantiate(passiveCreditObject, creditPlayer.gameState.sphereSpawnsParent.GetChild(tier-1).position, Quaternion.identity);
+            GameObject spawner = Instantiate(passiveCreditObject, creditPlayer.gameState.sphereSpawnsParent.GetChild(tier - 1).position, Quaternion.identity);
             spawner.GetComponent<PassiveCreditGain>().player = creditPlayer;
             spawner.GetComponent<NetworkObject>().SpawnWithOwnership(playerID);
+            AddPassiveGainersClientRpc(spawner.GetComponent<NetworkObject>().NetworkObjectId);
+        }
+
+        [ClientRpc]
+        void AddPassiveGainersClientRpc(ulong objectID)
+        {
+            if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(objectID, out var gainer))
+            {
+                passiveGainers.Add(gainer.gameObject);
+            }
         }
     }
 }

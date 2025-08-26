@@ -55,6 +55,8 @@ namespace Assets.CreditClicker
         {
             if (!IsOwner) return;
 
+            if (!game) return;
+
             if (game && game.netGameState.Value != CreditClickerGame.GameState.GAME) return;
 
             if (Input.GetKeyDown(KeyCode.Space) && !isPulsing)

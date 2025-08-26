@@ -20,7 +20,9 @@ namespace Assets.CreditClicker
         public TextMeshProUGUI descriptionText;
         public TextMeshProUGUI costText;
 
-        public Transform layout;
+        [HideInInspector] public int cost;
+
+        [HideInInspector] public Transform layout;
         public GameObject tierBlip;
 
         public int currentTier = 0;
@@ -51,6 +53,7 @@ namespace Assets.CreditClicker
         void UpgradeCostClientRpc(int newCost)
         {
             costText.text = $"${newCost}";
+            cost = newCost;
         }
 
         [ServerRpc(RequireOwnership = false)]
