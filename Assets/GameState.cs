@@ -66,11 +66,15 @@ namespace Assets.CreditClicker
                 upgradeParent = upgradePanel.transform.GetChild(1).GetChild(0).GetChild(0);
             }
 
-            for (int i = 0; i < upgradeParent.childCount; i++)
+            if (IsServer)
             {
-                upgradeParent.GetChild(i).GetComponent<UpgradeUI>().isSelected.Value = false;
+                for (int i = 0; i < upgradeParent.childCount; i++)
+                {
+                    upgradeParent.GetChild(i).GetComponent<UpgradeUI>().isSelected.Value = false;
+                }
+                upgradeParent.GetChild(0).GetComponent<UpgradeUI>().isSelected.Value = true;
             }
-            upgradeParent.GetChild(0).GetComponent<UpgradeUI>().isSelected.Value = true;
+
             player.upgradeSelectionIndex = 0;
         }
 
