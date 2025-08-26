@@ -13,6 +13,8 @@ namespace Assets.CreditClicker
         public UpgradeType upgradeType;
         public float value;
         public int tier;
+
+        public int maxTiers;
         public float costIncreasePerTier;
 
     }

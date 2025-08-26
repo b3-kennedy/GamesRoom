@@ -16,6 +16,7 @@ MonoBehaviour:
   upgradeDescription: Decreases the time between clicks by 10%
   cost: 10
   upgradeType: 2
-  value: 0.1
+  value: 0.9
   tier: 1
+  maxTiers: 10
   costIncreasePerTier: 2

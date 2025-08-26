@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Assets.CreditClicker
 {
@@ -81,20 +82,43 @@ namespace Assets.CreditClicker
             if (NetworkManager.Singleton.LocalClientId != playerID) return;
 
             var ui = creditPlayer.gameState.upgradeParent.GetChild(index).GetComponent<UpgradeUI>();
+            ui.currentTier = tier;
             Upgrade upgrade = ui.upgrade;
-            if (upgrade.upgradeType == Upgrade.UpgradeType.CLICK_SPEED)
+            if (upgrade.upgradeType == Upgrade.UpgradeType.CLICK_SPEED && upgrade.tier < upgrade.maxTiers)
             {
                 creditPlayer.game.incomeSpeed *= upgrade.value;
                 Debug.Log("Upgraded click speed");
                 ui.UpgradeCostServerRpc(newCost);
+                AddTierToUpgradeUIServerRpc(index, tier);
             }
-            else if (upgrade.upgradeType == Upgrade.UpgradeType.PASSIVE && upgrade.tier < 4)
+            else if (upgrade.upgradeType == Upgrade.UpgradeType.PASSIVE && upgrade.tier < upgrade.maxTiers)
             {
                 Debug.Log("Add passive income");
                 Debug.Log(creditPlayer.gameState.upgradeParent.parent.parent);
                 ui.UpgradeCostServerRpc(newCost);
                 SpawnPassiveCreditServerRpc(playerID, tier);
+                AddTierToUpgradeUIServerRpc(index, tier);
             }
+            else if (upgrade.upgradeType == Upgrade.UpgradeType.ACTIVE && upgrade.tier < upgrade.maxTiers)
+            {
+                creditPlayer.game.clickCredits += (int)upgrade.value;
+                ui.UpgradeCostServerRpc(newCost);
+                AddTierToUpgradeUIServerRpc(index, tier);
+            }
+            
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        void AddTierToUpgradeUIServerRpc(int index, int tier)
+        {
+            AddTierToUpgradeUIClientRpc(index, tier);
+        }
+
+        [ClientRpc]
+        void AddTierToUpgradeUIClientRpc(int index, int tier)
+        {
+            var ui = creditPlayer.gameState.upgradeParent.GetChild(index).GetComponent<UpgradeUI>();
+            ui.layout.GetChild(tier - 1).GetComponent<Image>().color = Color.white;
         }
 
         [ServerRpc(RequireOwnership = false)]

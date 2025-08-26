@@ -47,6 +47,7 @@ namespace Assets.CreditClicker
             }
             gameState.player = this;
             gameState.passiveUpgrades.SetActive(false);
+            steamPlayer.credits.OnValueChanged += gameState.OnCreditsChanged;
         }
 
         // Update is called once per frame

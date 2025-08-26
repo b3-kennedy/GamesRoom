@@ -2,6 +2,8 @@ using Unity.Netcode;
 using UnityEngine;
 using System.Collections;
 using System.Security.Cryptography.X509Certificates;
+using TMPro;
+using System;
 
 namespace Assets.CreditClicker
 {
@@ -14,6 +16,8 @@ namespace Assets.CreditClicker
         public GameObject activeUpgrades;
         public GameObject passiveUpgrades;
 
+        public TextMeshPro creditCountText;
+
         [HideInInspector] public Transform upgradeParent;
 
         public float lerpDuration = 0.5f;
@@ -21,6 +25,8 @@ namespace Assets.CreditClicker
         [HideInInspector] public NetworkVariable<bool> isUpgradePanelOpen;
 
         [HideInInspector] public Player player;
+
+        SteamPlayer steamPlayer;
 
         void Start()
         {
@@ -30,6 +36,14 @@ namespace Assets.CreditClicker
         public override void OnStateEnter()
         {
             gameObject.SetActive(true);
+            Debug.Log(player);
+
+        }
+
+        public void OnCreditsChanged(int previousValue, int newValue)
+        {
+            var credits = NetworkManager.Singleton.ConnectedClients[player.GetComponent<NetworkObject>().OwnerClientId].PlayerObject.GetComponent<SteamPlayer>().credits;
+            creditCountText.text = $"${credits.Value}";
         }
 
         [ServerRpc(RequireOwnership = false)]
