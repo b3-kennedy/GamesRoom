@@ -90,7 +90,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2380cb2a6daf24247a8e267c428c9d24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
   title: {fileID: 52266655471463495}
   clientID: 0
   otherClientID: 0
@@ -471,6 +470,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   orientation: {fileID: 6362777354288247608}
+  canJump: 1
 --- !u!136 &6431147292120187372
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -540,7 +540,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  playerName: 
+  playerName: 10000
+  credits:
+    m_InternalValue: 0
 --- !u!1 &3672231381911580843
 GameObject:
   m_ObjectHideFlags: 0
