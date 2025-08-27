@@ -252,6 +252,7 @@ namespace Assets.CreditClicker
                 {
                     activeUpgrades.Add(ui.upgrade, ui.currentTier);
                 }
+                Debug.Log($"Active Upgrade {i}: Name={ui.upgrade.name}, CurrentTier={ui.currentTier}");
             }
 
             for (int i = 0; i < passiveUpgradeParent.childCount; i++)
