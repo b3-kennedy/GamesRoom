@@ -11,8 +11,6 @@ public class ArcadeMachine : NetworkBehaviour
 
     public GameObject activePlayer;
 
-    private bool wasActivePlayerNearLastFrame = false;
-
 
     void Start()
     {
@@ -51,18 +49,10 @@ public class ArcadeMachine : NetworkBehaviour
             TurnOffScreenClientRpc();
         }
 
-        if (activePlayer)
+        if (activePlayer && !nearPlayers.Contains(activePlayer))
         {
-            bool isActivePlayerNear = nearPlayers.Contains(activePlayer);
-
-            if (wasActivePlayerNearLastFrame && !isActivePlayerNear)
-            {
-                // Player has just left the area
-                arcadeGame.ResetServerRpc();
-                activePlayer = null;
-            }
-
-            wasActivePlayerNearLastFrame = isActivePlayerNear;
+            arcadeGame.ResetServerRpc();
+            activePlayer = null;
         }
     }
 
@@ -70,6 +60,6 @@ public class ArcadeMachine : NetworkBehaviour
     void TurnOffScreenClientRpc()
     {
         screen.SetActive(false);
-        arcadeGame.ResetServerRpc();
+        //arcadeGame.ResetServerRpc();
     }
 }
