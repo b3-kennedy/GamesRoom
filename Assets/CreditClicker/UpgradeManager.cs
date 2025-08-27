@@ -72,7 +72,6 @@ namespace Assets.CreditClicker
 
         void NotUsingMoney(int upgradeCount, NetworkObject player, Upgrade upgrade, UpgradeUI upgradeUI, int index, ulong playerID, bool isActive)
         {
-            Debug.Log(upgrade);
             for (int i = 0; i < upgradeCount; i++)
             {
                 if (upgradeUI.currentTier <= upgrade.maxTiers)
@@ -155,7 +154,6 @@ namespace Assets.CreditClicker
             }
             ui.currentTier = tier;
             Upgrade upgrade = ui.upgrade;
-            Debug.Log(upgrade);
             if (upgrade.upgradeType == Upgrade.UpgradeType.CLICK_SPEED && ui.currentTier <= upgrade.maxTiers)
             {
                 creditPlayer.game.incomeSpeed *= upgrade.value;
@@ -166,7 +164,6 @@ namespace Assets.CreditClicker
             else if (upgrade.upgradeType == Upgrade.UpgradeType.PASSIVE && ui.currentTier <= upgrade.maxTiers)
             {
                 Debug.Log("Add passive income");
-                Debug.Log(creditPlayer.gameState.upgradeParent.parent.parent);
                 ui.UpgradeCostServerRpc(newCost);
                 SpawnPassiveCreditServerRpc(playerID, tier);
                 AddTierToUpgradeUIServerRpc(index, tier, false);
