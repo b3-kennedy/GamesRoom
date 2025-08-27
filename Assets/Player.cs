@@ -45,8 +45,10 @@ namespace Assets.CreditClicker
             {
                 gameState = g;
             }
+            
             gameState.player = this;
             gameState.passiveUpgrades.SetActive(false);
+            gameState.LoadGameState();
             steamPlayer.credits.OnValueChanged += gameState.OnCreditsChanged;
         }
 
@@ -99,7 +101,15 @@ namespace Assets.CreditClicker
 
                 if (Input.GetKeyDown(KeyCode.Return))
                 {
-                    GetComponent<UpgradeManager>().BuyUpgradeServerRpc(upgradeSelectionIndex, ownerID);
+                    if (gameState.activeUpgrades.activeSelf)
+                    {
+                        GetComponent<UpgradeManager>().BuyUpgradeServerRpc(upgradeSelectionIndex, ownerID, 1, true, true);
+                    }
+                    else
+                    {
+                        GetComponent<UpgradeManager>().BuyUpgradeServerRpc(upgradeSelectionIndex, ownerID, 1, true, false);
+                    }
+                    
                 }
                 if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.LeftArrow))
                 {

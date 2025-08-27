@@ -42,58 +42,126 @@ namespace Assets.CreditClicker
         }
 
         [ServerRpc(RequireOwnership = false)]
-        public void BuyUpgradeServerRpc(int index, ulong playerID)
+        public void BuyUpgradeServerRpc(int index, ulong playerID, int upgradeCount, bool useMoney, bool isActive)
         {
-            var upgradeUI = creditPlayer.gameState.upgradeParent.GetChild(index).GetComponent<UpgradeUI>();
+            UpgradeUI upgradeUI = null;
+            if (isActive)
+            {
+                upgradeUI = upgradePanel.transform.GetChild(0).GetChild(0).GetChild(0).GetChild(index).GetComponent<UpgradeUI>();
+            }
+            else
+            {
+                upgradeUI = upgradePanel.transform.GetChild(1).GetChild(0).GetChild(0).GetChild(index).GetComponent<UpgradeUI>();
+            }
+            
             Upgrade upgrade = upgradeUI.upgrade;
             var player = NetworkManager.Singleton.ConnectedClients[playerID].PlayerObject;
-            Debug.Log($"Credits: {player.GetComponent<SteamPlayer>().credits.Value} Cost: {upgradeUI.cost}");
-            if (player.GetComponent<SteamPlayer>().credits.Value >= upgradeUI.cost && upgradeUI.currentTier < upgrade.maxTiers)
+            if (useMoney)
             {
-                if (!upgrades.ContainsKey(upgrade))
-                {
-                    player.GetComponent<SteamPlayer>().credits.Value -= upgrade.cost;
-                    UpgradeValues values = new UpgradeValues
-                    {
-                        baseUpgrade = upgrade,
-                        cost = Mathf.RoundToInt(upgrade.cost * upgrade.costIncreasePerTier),
-                        tier = 1,
-                        value = upgrade.value
-                    };
-                    upgrades.Add(upgrade, values);
-                }
-                else
-                {
-                    player.GetComponent<SteamPlayer>().credits.Value -= upgrades[upgrade].cost;
-                    UpgradeValues values = upgrades[upgrade];
-                    values.tier++;
-                    values.cost = Mathf.RoundToInt(values.cost * upgrade.costIncreasePerTier);
-                    upgrades[upgrade] = values;
-                }
-
-                int currentCost = upgrades[upgrade].cost;
-
-
-                ApplyUpgradeClientRpc(index, playerID, currentCost, upgrades[upgrade].tier);
+                UsingMoney(upgradeCount, player, upgrade, upgradeUI, index, playerID, isActive);
             }
+            else
+            {
+                NotUsingMoney(upgradeCount, player, upgrade, upgradeUI, index, playerID, isActive);
+            }
+
+
 
 
         }
 
+        void NotUsingMoney(int upgradeCount, NetworkObject player, Upgrade upgrade, UpgradeUI upgradeUI, int index, ulong playerID, bool isActive)
+        {
+            Debug.Log(upgrade);
+            for (int i = 0; i < upgradeCount; i++)
+            {
+                if (upgradeUI.currentTier <= upgrade.maxTiers)
+                {
+                    if (!upgrades.ContainsKey(upgrade))
+                    {
+                        UpgradeValues values = new UpgradeValues
+                        {
+                            baseUpgrade = upgrade,
+                            cost = Mathf.RoundToInt(upgrade.cost * upgrade.costIncreasePerTier),
+                            tier = 1,
+                            value = upgrade.value
+                        };
+                        upgrades.Add(upgrade, values);
+                    }
+                    else
+                    {
+                        UpgradeValues values = upgrades[upgrade];
+                        values.tier++;
+                        values.cost = Mathf.RoundToInt(values.cost * upgrade.costIncreasePerTier);
+                        upgrades[upgrade] = values;
+                    }
+
+                    int currentCost = upgrades[upgrade].cost;
+
+
+                    ApplyUpgradeClientRpc(index, playerID, currentCost, upgrades[upgrade].tier, isActive);
+                }
+            }
+        }
+
+        void UsingMoney(int upgradeCount, NetworkObject player, Upgrade upgrade, UpgradeUI upgradeUI, int index, ulong playerID, bool isActive)
+        {
+            for (int i = 0; i < upgradeCount; i++)
+            {
+                if ((player.GetComponent<SteamPlayer>().credits.Value >= upgradeUI.cost) && upgradeUI.currentTier < upgrade.maxTiers)
+                {
+                    if (!upgrades.ContainsKey(upgrade))
+                    {
+                        player.GetComponent<SteamPlayer>().credits.Value -= upgrade.cost;
+                        UpgradeValues values = new UpgradeValues
+                        {
+                            baseUpgrade = upgrade,
+                            cost = Mathf.RoundToInt(upgrade.cost * upgrade.costIncreasePerTier),
+                            tier = 1,
+                            value = upgrade.value
+                        };
+                        upgrades.Add(upgrade, values);
+                    }
+                    else
+                    {
+                        player.GetComponent<SteamPlayer>().credits.Value -= upgrade.cost;
+                        UpgradeValues values = upgrades[upgrade];
+                        values.tier++;
+                        values.cost = Mathf.RoundToInt(values.cost * upgrade.costIncreasePerTier);
+                        upgrades[upgrade] = values;
+                    }
+
+                    int currentCost = upgrades[upgrade].cost;
+
+
+                    ApplyUpgradeClientRpc(index, playerID, currentCost, upgrades[upgrade].tier, isActive);
+                }
+            }
+        }
+
         [ClientRpc]
-        void ApplyUpgradeClientRpc(int index, ulong playerID, int newCost, int tier)
+        void ApplyUpgradeClientRpc(int index, ulong playerID, int newCost, int tier, bool isActive)
         {
             if (NetworkManager.Singleton.LocalClientId != playerID) return;
 
-            var ui = creditPlayer.gameState.upgradeParent.GetChild(index).GetComponent<UpgradeUI>();
+            UpgradeUI ui = null;
+            if (isActive)
+            {
+                ui = upgradePanel.transform.GetChild(0).GetChild(0).GetChild(0).GetChild(index).GetComponent<UpgradeUI>();
+            }
+            else
+            {
+                ui = upgradePanel.transform.GetChild(1).GetChild(0).GetChild(0).GetChild(index).GetComponent<UpgradeUI>();
+            }
             ui.currentTier = tier;
             Upgrade upgrade = ui.upgrade;
+            Debug.Log(upgrade);
             if (upgrade.upgradeType == Upgrade.UpgradeType.CLICK_SPEED && ui.currentTier <= upgrade.maxTiers)
             {
                 creditPlayer.game.incomeSpeed *= upgrade.value;
                 Debug.Log("Upgraded click speed");
                 ui.UpgradeCostServerRpc(newCost);
-                AddTierToUpgradeUIServerRpc(index, tier);
+                AddTierToUpgradeUIServerRpc(index, tier, true);
             }
             else if (upgrade.upgradeType == Upgrade.UpgradeType.PASSIVE && ui.currentTier <= upgrade.maxTiers)
             {
@@ -101,13 +169,13 @@ namespace Assets.CreditClicker
                 Debug.Log(creditPlayer.gameState.upgradeParent.parent.parent);
                 ui.UpgradeCostServerRpc(newCost);
                 SpawnPassiveCreditServerRpc(playerID, tier);
-                AddTierToUpgradeUIServerRpc(index, tier);
+                AddTierToUpgradeUIServerRpc(index, tier, false);
             }
             else if (upgrade.upgradeType == Upgrade.UpgradeType.ACTIVE && ui.currentTier <= upgrade.maxTiers)
             {
                 creditPlayer.game.clickCredits += (int)upgrade.value;
                 ui.UpgradeCostServerRpc(newCost);
-                AddTierToUpgradeUIServerRpc(index, tier);
+                AddTierToUpgradeUIServerRpc(index, tier, true);
             }
             else if (upgrade.upgradeType == Upgrade.UpgradeType.PASSIVE_INCREASE && ui.currentTier <= upgrade.maxTiers)
             {
@@ -120,7 +188,7 @@ namespace Assets.CreditClicker
                 }
 
                 ui.UpgradeCostServerRpc(newCost);
-                AddTierToUpgradeUIServerRpc(index, tier);
+                AddTierToUpgradeUIServerRpc(index, tier, false);
 
             }
             else if (upgrade.upgradeType == Upgrade.UpgradeType.PASSIVE_MONEY_INCREASE && ui.currentTier <= upgrade.maxTiers)
@@ -134,22 +202,30 @@ namespace Assets.CreditClicker
                 }
 
                 ui.UpgradeCostServerRpc(newCost);
-                AddTierToUpgradeUIServerRpc(index, tier);
+                AddTierToUpgradeUIServerRpc(index, tier, false);
 
             }
 
         }
 
         [ServerRpc(RequireOwnership = false)]
-        void AddTierToUpgradeUIServerRpc(int index, int tier)
+        void AddTierToUpgradeUIServerRpc(int index, int tier, bool active)
         {
-            AddTierToUpgradeUIClientRpc(index, tier);
+            AddTierToUpgradeUIClientRpc(index, tier, active);
         }
 
         [ClientRpc]
-        void AddTierToUpgradeUIClientRpc(int index, int tier)
+        void AddTierToUpgradeUIClientRpc(int index, int tier, bool active)
         {
-            var ui = creditPlayer.gameState.upgradeParent.GetChild(index).GetComponent<UpgradeUI>();
+            UpgradeUI ui;
+            if (active)
+            {
+                ui = upgradePanel.transform.GetChild(0).GetChild(0).GetChild(0).GetChild(index).GetComponent<UpgradeUI>();
+            }
+            else
+            {
+                ui = upgradePanel.transform.GetChild(1).GetChild(0).GetChild(0).GetChild(index).GetComponent<UpgradeUI>();
+            }
             ui.layout.GetChild(tier - 1).GetComponent<Image>().color = Color.white;
         }
 

@@ -52,6 +52,7 @@ public class ArcadeMachine : NetworkBehaviour
         if (activePlayer && !nearPlayers.Contains(activePlayer))
         {
             arcadeGame.ResetServerRpc();
+            activePlayer = null;
         }
     }
 

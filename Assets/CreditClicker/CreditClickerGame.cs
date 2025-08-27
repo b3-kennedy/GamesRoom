@@ -43,6 +43,7 @@ namespace Assets.CreditClicker
 
             if (netGameState.Value == GameState.MAIN_MENU)
             {
+
                 player.gameObject.GetComponent<NetworkObject>().ChangeOwnership(clientID);
                 ulong netObjID = NetworkManager.Singleton.ConnectedClients[clientID].PlayerObject.GetComponent<NetworkObject>().NetworkObjectId;
                 netGameState.Value = GameState.GAME;
@@ -60,10 +61,10 @@ namespace Assets.CreditClicker
                 player.playerObject.GetComponent<PlayerMovement>().canJump = false;
                 player.game = this;
                 player.OnPlayerAssigned();
-                
-                
+
+
             }
-            
+
 
         }
 
@@ -72,7 +73,15 @@ namespace Assets.CreditClicker
         {
             player.gameObject.GetComponent<NetworkObject>().ChangeOwnership(0);
             netGameState.Value = GameState.MAIN_MENU;
+            UpgradeManager upgradeManager = player.GetComponent<UpgradeManager>();
+            for (int i = upgradeManager.passiveGainers.Count - 1; i >= 0; i--)
+            {
+                Destroy(upgradeManager.passiveGainers[i].gameObject);
+            }
+            upgradeManager.passiveGainers.Clear();
+            player.GetComponent<UpgradeManager>().upgrades.Clear();
             ResetClientRpc();
+            Debug.Log("RESET");
         }
 
         [ClientRpc]
@@ -82,7 +91,10 @@ namespace Assets.CreditClicker
             {
                 player.playerObject.GetComponent<PlayerMovement>().canJump = true;
             }
-            
+            incomeSpeed = baseIncomeSpeed;
+            clickCredits = baseClickCredits;
+            gameState.OnReset();
+
         }
 
 
@@ -104,13 +116,13 @@ namespace Assets.CreditClicker
             switch (state)
             {
                 case GameState.MAIN_MENU:
-                    mainMenu.OnStateExit();                
+                    mainMenu.OnStateExit();
                     break;
                 case GameState.GAME:
-                    gameState.OnStateExit();                    
+                    gameState.OnStateExit();
                     break;
                 case GameState.GAME_OVER:
-                    
+
                     break;
             }
         }
@@ -132,9 +144,6 @@ namespace Assets.CreditClicker
                     break;
             }
         }
-    }
-            
-            
-            
+    }       
 }
         
