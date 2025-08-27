@@ -66,7 +66,7 @@ namespace Assets.CreditClicker
             for (int i = 0; i < passiveParent.childCount; i++)
             {
                 UpgradeUI ui = passiveParent.GetChild(i).GetComponent<UpgradeUI>();
-                ui.currentTier = 0;
+                //ui.currentTier = 0;
                 ui.cost = ui.upgrade.cost;
                 for (int j = 0; j < ui.layout.childCount; j++)
                 {
@@ -77,7 +77,7 @@ namespace Assets.CreditClicker
             for (int i = 0; i < activeParent.childCount; i++)
             {
                 UpgradeUI ui = activeParent.GetChild(i).GetComponent<UpgradeUI>();
-                ui.currentTier = 0;
+                //ui.currentTier = 0;
                 ui.cost = ui.upgrade.cost;
                 for (int j = 0; j < ui.layout.childCount; j++)
                 {
