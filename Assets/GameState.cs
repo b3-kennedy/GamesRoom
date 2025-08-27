@@ -62,7 +62,7 @@ namespace Assets.CreditClicker
         {
             var passiveParent = upgradePanel.transform.GetChild(1).GetChild(0).GetChild(0);
             var activeParent = upgradePanel.transform.GetChild(0).GetChild(0).GetChild(0);
-            if (!IsServer)
+            if (!IsServer && player.GetComponent<NetworkObject>().OwnerClientId == NetworkManager.Singleton.LocalClientId)
             {
                 SaveGameState();
             }
@@ -180,7 +180,7 @@ namespace Assets.CreditClicker
 
         public override void OnStateExit()
         {
-            if (IsServer)
+            if (IsServer && player.GetComponent<NetworkObject>().OwnerClientId == NetworkManager.Singleton.LocalClientId)
             {
                 SaveGameState();
             }
