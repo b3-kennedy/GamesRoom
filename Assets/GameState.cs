@@ -182,7 +182,7 @@ namespace Assets.CreditClicker
 
         public void LoadGameState()
         {
-
+            if (player.GetComponent<NetworkObject>().OwnerClientId != NetworkManager.Singleton.LocalClientId) return;
             Debug.Log("LOAD");
 
             string path = Path.Combine(Application.persistentDataPath, "savegame.json");
