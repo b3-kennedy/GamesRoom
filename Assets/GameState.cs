@@ -62,7 +62,11 @@ namespace Assets.CreditClicker
         {
             var passiveParent = upgradePanel.transform.GetChild(1).GetChild(0).GetChild(0);
             var activeParent = upgradePanel.transform.GetChild(0).GetChild(0).GetChild(0);
-            SaveGameState();
+            if (!IsServer)
+            {
+                SaveGameState();
+            }
+            
             for (int i = 0; i < passiveParent.childCount; i++)
             {
                 UpgradeUI ui = passiveParent.GetChild(i).GetComponent<UpgradeUI>();
@@ -176,7 +180,10 @@ namespace Assets.CreditClicker
 
         public override void OnStateExit()
         {
-            
+            if (IsServer)
+            {
+                SaveGameState();
+            }
             gameObject.SetActive(false);
         }
 
