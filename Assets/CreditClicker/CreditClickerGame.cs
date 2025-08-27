@@ -71,7 +71,7 @@ namespace Assets.CreditClicker
         [ServerRpc(RequireOwnership = false)]
         public override void ResetServerRpc()
         {
-            player.gameObject.GetComponent<NetworkObject>().ChangeOwnership(0);
+            //player.gameObject.GetComponent<NetworkObject>().ChangeOwnership(0);
             netGameState.Value = GameState.MAIN_MENU;
             UpgradeManager upgradeManager = player.GetComponent<UpgradeManager>();
             for (int i = upgradeManager.passiveGainers.Count - 1; i >= 0; i--)

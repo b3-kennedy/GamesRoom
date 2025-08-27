@@ -84,7 +84,7 @@ namespace Assets.CreditClicker
                     ui.layout.GetChild(j).GetComponent<Image>().color = Color.gray;
                 }
             }
-
+            
         }
 
         public void OnCreditsChanged(int previousValue, int newValue)
