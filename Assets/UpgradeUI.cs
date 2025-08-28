@@ -35,6 +35,7 @@ namespace Assets.CreditClicker
             titleText.text = $"{upgrade.upgradeName}:";
             descriptionText.text = upgrade.upgradeDescription;
             costText.text = $"${upgrade.cost}";
+            cost = upgrade.cost;
             layout = transform.GetChild(0).GetChild(3);
             for (int i = 0; i < upgrade.maxTiers; i++)
             {

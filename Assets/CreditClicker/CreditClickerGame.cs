@@ -27,7 +27,7 @@ namespace Assets.CreditClicker
         public float baseIncomeSpeed;
         public float incomeSpeed;
 
-        public int interestAmount;
+        public float interestAmount;
 
 
         void Start()

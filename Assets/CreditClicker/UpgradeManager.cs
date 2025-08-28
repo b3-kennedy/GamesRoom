@@ -100,11 +100,15 @@ namespace Assets.CreditClicker
         {
             for (int i = 0; i < upgradeCount; i++)
             {
-                if ((player.GetComponent<SteamPlayer>().credits.Value >= upgradeUI.cost) && upgradeUI.currentTier < upgrade.maxTiers)
+                Debug.Log(upgradeUI.cost);
+                if (player.GetComponent<SteamPlayer>().credits.Value >= upgradeUI.cost && upgradeUI.currentTier < upgrade.maxTiers)
                 {
                     if (!upgrades.ContainsKey(upgrade))
                     {
-                        player.GetComponent<SteamPlayer>().credits.Value -= upgrade.cost;
+                        Debug.Log("pre: " + player.GetComponent<SteamPlayer>().credits.Value);
+                        player.GetComponent<SteamPlayer>().credits.Value -= upgradeUI.cost;
+                        Debug.Log("post: " + player.GetComponent<SteamPlayer>().credits.Value);
+
                         UpgradeValues values = new UpgradeValues
                         {
                             baseUpgrade = upgrade,
@@ -116,7 +120,7 @@ namespace Assets.CreditClicker
                     }
                     else
                     {
-                        player.GetComponent<SteamPlayer>().credits.Value -= upgrade.cost;
+                        player.GetComponent<SteamPlayer>().credits.Value -= upgradeUI.cost;
                         UpgradeValues values = upgrades[upgrade];
                         values.tier++;
                         values.cost = Mathf.RoundToInt(values.cost * upgrade.costIncreasePerTier);
@@ -204,7 +208,7 @@ namespace Assets.CreditClicker
             }
             else if (upgrade.upgradeType == Upgrade.UpgradeType.INTEREST && ui.currentTier <= upgrade.maxTiers)
             {
-                creditPlayer.game.interestAmount += (int)upgrade.value;
+                creditPlayer.game.interestAmount += upgrade.value;
 
                 ui.UpgradeCostServerRpc(newCost);
                 AddTierToUpgradeUIServerRpc(index, tier, false);

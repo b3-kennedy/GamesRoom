@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgradeName: Interest
   upgradeDescription: A % of your credits gained every time
-  cost: 1
+  cost: 1000
   upgradeType: 6
-  value: 1
+  value: 0.5
   tier: 0
-  maxTiers: 10
-  costIncreasePerTier: 0
+  maxTiers: 5
+  costIncreasePerTier: 10

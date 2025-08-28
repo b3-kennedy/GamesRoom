@@ -33,6 +33,8 @@ namespace Assets.CreditClicker
 
         public int[] moneyTiers;
 
+        int percent = 0;
+
 
 
         // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -85,8 +87,9 @@ namespace Assets.CreditClicker
                 if (game.interestAmount > 0)
                 {
                     int credits = steamPlayer.credits.Value;
-                    int percent = Mathf.RoundToInt(credits * 0.1f);
+                    int percent = Mathf.RoundToInt(credits * (game.interestAmount / 100));
                     creditsToAdd += percent;
+                    Debug.Log(percent);
                 }
 
                 AddCreditsServerRpc(sphere.transform.position, creditsToAdd, OwnerClientId);
@@ -155,17 +158,26 @@ namespace Assets.CreditClicker
         [ServerRpc(RequireOwnership = false)]
         public void AddCreditsServerRpc(Vector3 spawnPos,int amount, ulong id)
         {
+            
+            if (game.interestAmount > 0)
+            {
+                int credits = steamPlayer.credits.Value;
+                percent = Mathf.RoundToInt(credits * (game.interestAmount / 100f));
+            }
 
-            NetworkManager.Singleton.ConnectedClients[id].PlayerObject.GetComponent<SteamPlayer>().credits.Value += amount;
+            int newAmount = amount + percent;
 
-            int remaining = amount;
+            Debug.Log(percent);
+
+            NetworkManager.Singleton.ConnectedClients[id].PlayerObject.GetComponent<SteamPlayer>().credits.Value += newAmount;
+
+            int remaining = newAmount;
 
             foreach (int tier in moneyTiers)
             {
                 while (remaining >= tier)
                 {
                     GameObject spawnedMoneyObject = Instantiate(moneyObjectPrefab, spawnPos, Quaternion.identity);
-                    Debug.Log(tier);
                     spawnedMoneyObject.GetComponent<MoneyObject>().tier = tier;
                     spawnedMoneyObject.GetComponent<NetworkObject>().Spawn();
                     remaining -= tier;

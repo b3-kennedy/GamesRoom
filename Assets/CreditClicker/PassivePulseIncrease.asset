@@ -18,5 +18,5 @@ MonoBehaviour:
   upgradeType: 4
   value: 1
   tier: 0
-  maxTiers: 10
+  maxTiers: 5
   costIncreasePerTier: 2
