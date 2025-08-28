@@ -105,9 +105,7 @@ namespace Assets.CreditClicker
                 {
                     if (!upgrades.ContainsKey(upgrade))
                     {
-                        Debug.Log("pre: " + player.GetComponent<SteamPlayer>().credits.Value);
                         player.GetComponent<SteamPlayer>().credits.Value -= upgradeUI.cost;
-                        Debug.Log("post: " + player.GetComponent<SteamPlayer>().credits.Value);
 
                         UpgradeValues values = new UpgradeValues
                         {
@@ -203,7 +201,7 @@ namespace Assets.CreditClicker
             {
                 creditPlayer.game.doubleChance += (int)upgrade.value;
                 ui.UpgradeCostServerRpc(newCost);
-                AddTierToUpgradeUIServerRpc(index, tier, false);
+                AddTierToUpgradeUIServerRpc(index, tier, true);
 
             }
             else if (upgrade.upgradeType == Upgrade.UpgradeType.INTEREST && ui.currentTier <= upgrade.maxTiers)

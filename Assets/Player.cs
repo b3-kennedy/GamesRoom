@@ -167,7 +167,6 @@ namespace Assets.CreditClicker
 
             int newAmount = amount + percent;
 
-            Debug.Log(percent);
 
             NetworkManager.Singleton.ConnectedClients[id].PlayerObject.GetComponent<SteamPlayer>().credits.Value += newAmount;
 
