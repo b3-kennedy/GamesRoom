@@ -1,3 +1,4 @@
+using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -7,12 +8,57 @@ namespace Assets.CreditClicker
     {
         public float force;
         Rigidbody rb;
+
+        [HideInInspector] public int tier;
+
+        TextMeshPro text;
+
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
+
+            text = GetComponent<TextMeshPro>();
+
             if (IsServer)
             {
                 Destroy(gameObject, 5f);
+            }
+
+            switch (tier)
+            {
+                case 1:
+                    text.text = "$";
+                    text.color = Color.white;
+                    break;
+                case 10:
+                    text.text = "$$";
+                    text.color = Color.green;
+                    break;
+                case 100:
+                    text.text = "$$$";
+                    text.color = Color.cyan;
+                    break;
+                case 1000:
+                    text.text = "$$$$";
+                    text.color = Color.yellow;
+                    break;
+                case 10000:
+                    text.text = "$$$$$";
+                    text.color = new Color(1f, 0.65f, 0f);
+                    break;
+                case 100000:
+                    text.text = "$$$$$$";
+                    text.color = Color.magenta;
+                    break;
+                case 1000000:
+                    text.text = "$$$$$$$";
+                    text.color = new Color(1f, 0.84f, 0f);
+                    break;
+                case 10000000:
+                    text.text = "$$$$$$$$";
+                    text.color = Color.red;
+                    break;
+
             }
             
             rb = GetComponent<Rigidbody>();

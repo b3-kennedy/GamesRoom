@@ -1376,6 +1376,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1695956847}
     m_Modifications:
+    - target: {fileID: 2218560894649789253, guid: 8c54c4e9c86d48e4b959988c24a0eb34, type: 3}
+      propertyPath: upgrade
+      value: 
+      objectReference: {fileID: 11400000, guid: a8bf49e4eebad18489f8c029aeaa8076, type: 2}
     - target: {fileID: 5093719730613442165, guid: 8c54c4e9c86d48e4b959988c24a0eb34, type: 3}
       propertyPath: m_Name
       value: UpgradePrefab (3)
@@ -1741,8 +1745,11 @@ MonoBehaviour:
   player: {fileID: 781721907}
   baseClickCredits: 1
   clickCredits: 0
+  baseDoubleChance: 0
+  doubleChance: 0
   baseIncomeSpeed: 0.5
   incomeSpeed: 0
+  interestAmount: 0
 --- !u!1 &350590181
 GameObject:
   m_ObjectHideFlags: 0
@@ -5404,6 +5411,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   playerObject: {fileID: 0}
+  steamPlayer: {fileID: 0}
   game: {fileID: 0}
   sphere: {fileID: 383863778}
   pulseScale: 0.9
@@ -5411,6 +5419,7 @@ MonoBehaviour:
   moneyObjectPrefab: {fileID: 4332951449207143838, guid: 6248ddd28f3c22347aee14d2d594e3fe, type: 3}
   upgradeSelectionIndex: 0
   gameState: {fileID: 0}
+  moneyTiers: 8096980040420f00a086010010270000e8030000640000000a00000001000000
 --- !u!114 &781721908
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11870,6 +11879,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1069320393}
     m_Modifications:
+    - target: {fileID: 2218560894649789253, guid: 8c54c4e9c86d48e4b959988c24a0eb34, type: 3}
+      propertyPath: upgrade
+      value: 
+      objectReference: {fileID: 11400000, guid: 020da42740adec44ba8abc00b8176101, type: 2}
     - target: {fileID: 5093719730613442165, guid: 8c54c4e9c86d48e4b959988c24a0eb34, type: 3}
       propertyPath: m_Name
       value: UpgradePrefab (2)
@@ -15911,6 +15924,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1069320393}
     m_Modifications:
+    - target: {fileID: 2218560894649789253, guid: 8c54c4e9c86d48e4b959988c24a0eb34, type: 3}
+      propertyPath: upgrade
+      value: 
+      objectReference: {fileID: 11400000, guid: 224b85a3b0b1ee745b7817b5c19367d2, type: 2}
     - target: {fileID: 5093719730613442165, guid: 8c54c4e9c86d48e4b959988c24a0eb34, type: 3}
       propertyPath: m_Name
       value: UpgradePrefab (3)

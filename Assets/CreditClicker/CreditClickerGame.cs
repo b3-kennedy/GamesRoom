@@ -21,8 +21,14 @@ namespace Assets.CreditClicker
         public int baseClickCredits;
         [HideInInspector] public int clickCredits;
 
+        public int baseDoubleChance;
+        [HideInInspector] public int doubleChance;
+
         public float baseIncomeSpeed;
         public float incomeSpeed;
+
+        public int interestAmount;
+
 
         void Start()
         {
@@ -93,6 +99,8 @@ namespace Assets.CreditClicker
             }
             incomeSpeed = baseIncomeSpeed;
             clickCredits = baseClickCredits;
+            doubleChance = baseDoubleChance;
+            interestAmount = 0;
             gameState.OnReset();
 
         }

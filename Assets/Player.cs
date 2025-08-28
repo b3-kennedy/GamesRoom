@@ -1,6 +1,8 @@
 using Unity.Netcode;
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using UnityEngine.Rendering;
 
 
 namespace Assets.CreditClicker
@@ -10,7 +12,7 @@ namespace Assets.CreditClicker
 
 
         [HideInInspector] public GameObject playerObject;
-        SteamPlayer steamPlayer;
+        [HideInInspector] public SteamPlayer steamPlayer;
         [HideInInspector] public CreditClickerGame game;
 
         public GameObject sphere;
@@ -28,6 +30,9 @@ namespace Assets.CreditClicker
         public int upgradeSelectionIndex;
 
         [HideInInspector] public GameState gameState;
+
+        public int[] moneyTiers;
+
 
 
         // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -65,7 +70,27 @@ namespace Assets.CreditClicker
             {
                 StartCoroutine(Pulse(OwnerClientId));
                 PulseServerRpc(OwnerClientId);
-                AddCreditsServerRpc(sphere.transform.position, game.clickCredits, OwnerClientId);
+
+                int creditsToAdd = game.clickCredits;
+
+                if (game.doubleChance > 0)
+                {
+                    int randomNum = Random.Range(0, 100);
+                    if (randomNum < game.doubleChance)
+                    {
+                        creditsToAdd *= 2;
+                    }
+                }
+
+                if (game.interestAmount > 0)
+                {
+                    int credits = steamPlayer.credits.Value;
+                    int percent = Mathf.RoundToInt(credits * 0.1f);
+                    creditsToAdd += percent;
+                }
+
+                AddCreditsServerRpc(sphere.transform.position, creditsToAdd, OwnerClientId);
+
             }
 
             if (Input.GetKeyDown(KeyCode.U))
@@ -130,14 +155,25 @@ namespace Assets.CreditClicker
         [ServerRpc(RequireOwnership = false)]
         public void AddCreditsServerRpc(Vector3 spawnPos,int amount, ulong id)
         {
+
             NetworkManager.Singleton.ConnectedClients[id].PlayerObject.GetComponent<SteamPlayer>().credits.Value += amount;
-            for (int i = 0; i < amount; i++)
+
+            int remaining = amount;
+
+            foreach (int tier in moneyTiers)
             {
-                GameObject spawnedMoneyObject = Instantiate(moneyObjectPrefab, spawnPos, Quaternion.identity);
-                spawnedMoneyObject.GetComponent<NetworkObject>().Spawn();
+                while (remaining >= tier)
+                {
+                    GameObject spawnedMoneyObject = Instantiate(moneyObjectPrefab, spawnPos, Quaternion.identity);
+                    Debug.Log(tier);
+                    spawnedMoneyObject.GetComponent<MoneyObject>().tier = tier;
+                    spawnedMoneyObject.GetComponent<NetworkObject>().Spawn();
+                    remaining -= tier;
+                }
             }
 
         }
+
 
         [ServerRpc(RequireOwnership = false)]
         void PulseServerRpc(ulong clientID)

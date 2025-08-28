@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d20e02fa1c098dd4181c34f1b8403b0e, type: 3}
-  m_Name: PassivePulseIncrease
+  m_Name: ClickIncreaseChance
   m_EditorClassIdentifier: 
-  upgradeName: Increase Value
-  upgradeDescription: Increase the money per passive pulse by 1
-  cost: 100
-  upgradeType: 4
-  value: 1
+  upgradeName: Double Credits Chance
+  upgradeDescription: Has a chance to double the amount of credits
+  cost: 1
+  upgradeType: 5
+  value: 5
   tier: 0
   maxTiers: 10
   costIncreasePerTier: 2

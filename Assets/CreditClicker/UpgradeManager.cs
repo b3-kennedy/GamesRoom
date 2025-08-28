@@ -14,13 +14,6 @@ namespace Assets.CreditClicker
         public int tier;
 
         public float value;
-
-        public string GetDescription()
-        {
-            return $"{baseUpgrade.upgradeDescription}\n" +
-                   $"Tier: {tier}\n" +
-                   $"Effect: x{baseUpgrade.value * tier}";
-        }
     }
     public class UpgradeManager : NetworkBehaviour
     {
@@ -197,6 +190,21 @@ namespace Assets.CreditClicker
                     gainer.GetComponent<PassiveCreditGain>().IncreaseValueServerRpc((int)upgrade.value);
 
                 }
+
+                ui.UpgradeCostServerRpc(newCost);
+                AddTierToUpgradeUIServerRpc(index, tier, false);
+
+            }
+            else if (upgrade.upgradeType == Upgrade.UpgradeType.DOUBLE_CREDIT_CHANCE && ui.currentTier <= upgrade.maxTiers)
+            {
+                creditPlayer.game.doubleChance += (int)upgrade.value;
+                ui.UpgradeCostServerRpc(newCost);
+                AddTierToUpgradeUIServerRpc(index, tier, false);
+
+            }
+            else if (upgrade.upgradeType == Upgrade.UpgradeType.INTEREST && ui.currentTier <= upgrade.maxTiers)
+            {
+                creditPlayer.game.interestAmount += (int)upgrade.value;
 
                 ui.UpgradeCostServerRpc(newCost);
                 AddTierToUpgradeUIServerRpc(index, tier, false);
