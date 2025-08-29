@@ -49,7 +49,6 @@ namespace Assets.CreditClicker
 
         CreditClickerGame creditClickerGame;
 
-        public NetworkVariable<bool> isRed = new NetworkVariable<bool>(false);
 
         float redTimer;
 
@@ -61,8 +60,6 @@ namespace Assets.CreditClicker
                 creditClickerGame = g;
             }
             backgroundMeshRenderer = background.GetComponent<MeshRenderer>();
-
-            isRed.OnValueChanged += BackgroundColourChange;
         }
 
 
@@ -190,18 +187,6 @@ namespace Assets.CreditClicker
             }
         }
 
-        private void BackgroundColourChange(bool previousValue, bool newValue)
-        {
-            if (newValue)
-            {
-                backgroundMeshRenderer.material.color = Color.red;
-            }
-            else
-            {
-                backgroundMeshRenderer.material.color = Color.black;
-            }
-        }
-
 
         public override void OnStateUpdate()
         {
@@ -219,26 +204,37 @@ namespace Assets.CreditClicker
 
         IEnumerator FlashRed(float duration)
         {
-            if (IsServer)
-            {
-                isRed.Value = true;
-            }
-            else
-            {
-                backgroundMeshRenderer.material.color = Color.red;
-            }
+
+            backgroundMeshRenderer.material.color = Color.red;
+            ChangeBackgroundColourServerRpc(true);
+
 
             yield return new WaitForSeconds(duration);
 
-            if (IsServer)
+
+            backgroundMeshRenderer.material.color = Color.black;
+            ChangeBackgroundColourServerRpc(false);
+
+
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        void ChangeBackgroundColourServerRpc(bool isRed)
+        {
+            ChangeBackgroundColourClientRpc(isRed);
+        }
+
+        [ClientRpc]
+        void ChangeBackgroundColourClientRpc(bool isRed)
+        {
+            if (isRed)
             {
-                isRed.Value = false;
+                backgroundMeshRenderer.material.color = Color.red;
             }
             else
             {
                 backgroundMeshRenderer.material.color = Color.black;
             }
-            
         }
 
         public void LoadGameState()
