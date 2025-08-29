@@ -1751,6 +1751,7 @@ MonoBehaviour:
   incomeSpeed: 0
   interestAmount: 0
   redInterval: 0
+  hasPlayerCountUpgrade: 0
 --- !u!1 &350590181
 GameObject:
   m_ObjectHideFlags: 0
@@ -5233,6 +5234,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1695956847}
     m_Modifications:
+    - target: {fileID: 2218560894649789253, guid: 8c54c4e9c86d48e4b959988c24a0eb34, type: 3}
+      propertyPath: upgrade
+      value: 
+      objectReference: {fileID: 11400000, guid: 959f0d2661adfac45a635e3ef40a53d8, type: 2}
     - target: {fileID: 5093719730613442165, guid: 8c54c4e9c86d48e4b959988c24a0eb34, type: 3}
       propertyPath: m_Name
       value: UpgradePrefab (4)
@@ -14916,8 +14921,6 @@ MonoBehaviour:
   isUpgradePanelOpen:
     m_InternalValue: 0
   player: {fileID: 0}
-  isRed:
-    m_InternalValue: 0
 --- !u!4 &1937415056
 Transform:
   m_ObjectHideFlags: 0
