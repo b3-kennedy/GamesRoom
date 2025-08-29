@@ -15,6 +15,8 @@ namespace Assets.CreditClicker
         [HideInInspector] public SteamPlayer steamPlayer;
         [HideInInspector] public CreditClickerGame game;
 
+        UpgradeManager upgradeManager;
+
         public GameObject sphere;
 
         public float pulseScale = 1.5f;   // How big the pulse gets
@@ -35,12 +37,17 @@ namespace Assets.CreditClicker
 
         int percent = 0;
 
+        public int activePassiveGainers = 0;
+
+        public bool noCap;
+
 
 
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
             originalScale = sphere.transform.localScale;
+            upgradeManager = GetComponent<UpgradeManager>();
 
         }
 
@@ -88,13 +95,30 @@ namespace Assets.CreditClicker
 
                 if (gameState.background.GetComponent<MeshRenderer>().material.color == Color.red)
                 {
-                    Debug.Log("double");
                     creditsToAdd *= 2;
                 }
 
                 if (game.hasPlayerCountUpgrade)
                 {
                     creditsToAdd *= 1 + (SteamManager.Instance.playerCount.Value/10);
+                }
+
+                if (game.hasTimeUpgrade)
+                {
+                    creditsToAdd *= 1 + (game.minutesInGameState.Value / 100); 
+                }
+
+                if (activePassiveGainers > 0)
+                {
+                    for (int i = 0; i < activePassiveGainers; i++)
+                    {
+                        upgradeManager.passiveGainers[i].GetComponent<PassiveCreditGain>().PulseServerRpc();
+                    }
+                }
+
+                if (noCap)
+                {
+                    game.incomeSpeed = 0;
                 }
 
                 AddCreditsServerRpc(sphere.transform.position, creditsToAdd, OwnerClientId);
@@ -191,8 +215,8 @@ namespace Assets.CreditClicker
                 while (remaining >= tier)
                 {
                     GameObject spawnedMoneyObject = Instantiate(moneyObjectPrefab, spawnPos, Quaternion.identity);
-                    spawnedMoneyObject.GetComponent<MoneyObject>().tier = tier;
                     spawnedMoneyObject.GetComponent<NetworkObject>().Spawn();
+                    spawnedMoneyObject.GetComponent<MoneyObject>().tier.Value = tier;
                     remaining -= tier;
                 }
             }

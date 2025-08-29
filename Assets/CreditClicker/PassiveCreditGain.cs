@@ -62,14 +62,28 @@ namespace Assets.CreditClicker
         }
 
         [ServerRpc(RequireOwnership = false)]
-        void PulseServerRpc()
+        public void PulseServerRpc()
         {
+            int total = moneyPerPulse;
+
             if (player.game.interestAmount > 0)
             {
                 int credits = player.steamPlayer.credits.Value;
-                percent = Mathf.RoundToInt(credits * (player.game.interestAmount / 100f));
+                total += Mathf.RoundToInt(credits * (player.game.interestAmount / 100f));
             }
-            player.AddCreditsServerRpc(transform.position, moneyPerPulse + percent, OwnerClientId);
+
+            if (player.game.hasPlayerCountUpgrade)
+            {
+                float multiplier = 1f + (SteamManager.Instance.playerCount.Value / 10f);
+                total = Mathf.RoundToInt(total * multiplier);
+            }
+
+            if (player.game.hasTimeUpgrade)
+            {
+                total *= 1 + (player.game.minutesInGameState.Value / 100);
+            }
+
+            player.AddCreditsServerRpc(transform.position, total, OwnerClientId);
             PulseClientRpc();
         }
 

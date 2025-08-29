@@ -1752,6 +1752,9 @@ MonoBehaviour:
   interestAmount: 0
   redInterval: 0
   hasPlayerCountUpgrade: 0
+  hasTimeUpgrade: 0
+  minutesInGameState:
+    m_InternalValue: 0
 --- !u!1 &350590181
 GameObject:
   m_ObjectHideFlags: 0
@@ -3790,6 +3793,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1695956847}
     m_Modifications:
+    - target: {fileID: 2218560894649789253, guid: 8c54c4e9c86d48e4b959988c24a0eb34, type: 3}
+      propertyPath: upgrade
+      value: 
+      objectReference: {fileID: 11400000, guid: 62050de5aa4ba7d49972d5e305680b73, type: 2}
     - target: {fileID: 5093719730613442165, guid: 8c54c4e9c86d48e4b959988c24a0eb34, type: 3}
       propertyPath: m_Name
       value: UpgradePrefab (5)
@@ -5426,6 +5433,8 @@ MonoBehaviour:
   upgradeSelectionIndex: 0
   gameState: {fileID: 0}
   moneyTiers: 8096980040420f00a086010010270000e8030000640000000a00000001000000
+  activePassiveGainers: 0
+  noCap: 0
 --- !u!114 &781721908
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5475,6 +5484,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1069320393}
     m_Modifications:
+    - target: {fileID: 2218560894649789253, guid: 8c54c4e9c86d48e4b959988c24a0eb34, type: 3}
+      propertyPath: upgrade
+      value: 
+      objectReference: {fileID: 11400000, guid: 7e13f6876356d4f469ca0f1a95902ec8, type: 2}
     - target: {fileID: 5093719730613442165, guid: 8c54c4e9c86d48e4b959988c24a0eb34, type: 3}
       propertyPath: m_Name
       value: UpgradePrefab (5)
@@ -13167,6 +13180,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1069320393}
     m_Modifications:
+    - target: {fileID: 2218560894649789253, guid: 8c54c4e9c86d48e4b959988c24a0eb34, type: 3}
+      propertyPath: upgrade
+      value: 
+      objectReference: {fileID: 11400000, guid: 112e424a8eb7d9c4593491bb2146f956, type: 2}
     - target: {fileID: 5093719730613442165, guid: 8c54c4e9c86d48e4b959988c24a0eb34, type: 3}
       propertyPath: m_Name
       value: UpgradePrefab (4)

@@ -32,6 +32,12 @@ namespace Assets.CreditClicker
 
         public bool hasPlayerCountUpgrade;
 
+        public bool hasTimeUpgrade;
+
+        public NetworkVariable<int> minutesInGameState;
+
+        float timer;
+
 
         void Start()
         {
@@ -106,6 +112,21 @@ namespace Assets.CreditClicker
             interestAmount = 0;
             gameState.OnReset();
 
+        }
+
+        void Update()
+        {
+            if (!IsServer) return;
+
+            if (netGameState.Value == GameState.GAME && hasTimeUpgrade)
+            {
+                timer += Time.deltaTime;
+                if (timer >= 60f)
+                {
+                    minutesInGameState.Value += 1;
+                    timer -= 60f;
+                }
+            }
         }
 
 

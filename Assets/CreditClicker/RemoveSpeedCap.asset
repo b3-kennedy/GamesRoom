@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d20e02fa1c098dd4181c34f1b8403b0e, type: 3}
-  m_Name: NumberOfPlayers
+  m_Name: RemoveSpeedCap
   m_EditorClassIdentifier: 
-  upgradeName: x Number of players
-  upgradeDescription: Increase income per player in lobby (+10%)
+  upgradeName: Remove Click Cap
+  upgradeDescription: No more cap on how fast you can click
   cost: 1
-  upgradeType: 8
-  value: 0.1
+  upgradeType: 11
+  value: 0
   tier: 0
   maxTiers: 1
   costIncreasePerTier: 0

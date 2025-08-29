@@ -13,7 +13,7 @@ namespace Assets.CreditClicker
         {
             ACTIVE, PASSIVE, CLICK_SPEED, PASSIVE_INCREASE,
             PASSIVE_MONEY_INCREASE, DOUBLE_CREDIT_CHANCE, INTEREST, BACKGROUND_FLASH,
-            PLAYER_COUNT
+            PLAYER_COUNT, TIME, ACTIVE_PASSIVE, NO_CAP
         };
         public UpgradeType upgradeType;
         public float value;

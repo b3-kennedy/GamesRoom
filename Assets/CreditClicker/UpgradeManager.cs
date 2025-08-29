@@ -227,6 +227,28 @@ namespace Assets.CreditClicker
                 AddTierToUpgradeUIServerRpc(index, tier, false);
 
             }
+            else if (upgrade.upgradeType == Upgrade.UpgradeType.TIME && ui.currentTier <= upgrade.maxTiers)
+            {
+                creditPlayer.game.hasTimeUpgrade = true;
+
+                ui.UpgradeCostServerRpc(newCost);
+                AddTierToUpgradeUIServerRpc(index, tier, false);
+
+            }
+            else if (upgrade.upgradeType == Upgrade.UpgradeType.ACTIVE_PASSIVE && ui.currentTier <= upgrade.maxTiers)
+            {
+                creditPlayer.activePassiveGainers++;
+
+                ui.UpgradeCostServerRpc(newCost);
+                AddTierToUpgradeUIServerRpc(index, tier, true);
+            }
+            else if (upgrade.upgradeType == Upgrade.UpgradeType.NO_CAP && ui.currentTier <= upgrade.maxTiers)
+            {
+                creditPlayer.noCap = true;
+
+                ui.UpgradeCostServerRpc(newCost);
+                AddTierToUpgradeUIServerRpc(index, tier, true);
+            }
 
         }
 

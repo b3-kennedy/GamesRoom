@@ -9,7 +9,7 @@ namespace Assets.CreditClicker
         public float force;
         Rigidbody rb;
 
-        [HideInInspector] public int tier;
+        [HideInInspector] public NetworkVariable<int> tier;
 
         TextMeshPro text;
 
@@ -24,7 +24,7 @@ namespace Assets.CreditClicker
                 Destroy(gameObject, 5f);
             }
 
-            switch (tier)
+            switch (tier.Value)
             {
                 case 1:
                     text.text = "$";
