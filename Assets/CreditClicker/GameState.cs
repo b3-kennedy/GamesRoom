@@ -1,7 +1,6 @@
 using Unity.Netcode;
 using UnityEngine;
 using System.Collections;
-using System.Security.Cryptography.X509Certificates;
 using TMPro;
 using System;
 using System.Collections.Generic;
@@ -32,6 +31,10 @@ namespace Assets.CreditClicker
         public GameObject activeUpgrades;
         public GameObject passiveUpgrades;
 
+        public GameObject background;
+
+        MeshRenderer backgroundMeshRenderer;
+
         public TextMeshPro creditCountText;
 
         [HideInInspector] public Transform upgradeParent;
@@ -44,10 +47,25 @@ namespace Assets.CreditClicker
 
         SteamPlayer steamPlayer;
 
+        CreditClickerGame creditClickerGame;
+
+        public NetworkVariable<bool> isRed = new NetworkVariable<bool>(false);
+
+        float redTimer;
+
         void Start()
         {
             upgradeParent = upgradePanel.transform.GetChild(0).GetChild(0).GetChild(0);
+            if (game is CreditClickerGame g)
+            {
+                creditClickerGame = g;
+            }
+            backgroundMeshRenderer = background.GetComponent<MeshRenderer>();
+
+            isRed.OnValueChanged += BackgroundColourChange;
         }
+
+
 
         public override void OnStateEnter()
         {
@@ -172,19 +190,55 @@ namespace Assets.CreditClicker
             }
         }
 
+        private void BackgroundColourChange(bool previousValue, bool newValue)
+        {
+            if (newValue)
+            {
+                backgroundMeshRenderer.material.color = Color.red;
+            }
+            else
+            {
+                backgroundMeshRenderer.material.color = Color.black;
+            }
+        }
+
 
         public override void OnStateUpdate()
         {
-            base.OnStateEnter();
+            if (creditClickerGame.redInterval > 0)
+            {
+                redTimer += Time.deltaTime;
+                if (redTimer >= UnityEngine.Random.Range(creditClickerGame.redInterval, creditClickerGame.redInterval * 5))
+                {
+                    StartCoroutine(FlashRed(UnityEngine.Random.Range(1, 5)));
+                    redTimer = 0;
+                }
+            }
         }
 
-        public override void OnStateExit()
+
+        IEnumerator FlashRed(float duration)
         {
-            if (IsServer && player.GetComponent<NetworkObject>().OwnerClientId == NetworkManager.Singleton.LocalClientId)
+            if (IsServer)
             {
-                SaveGameState();
+                isRed.Value = true;
             }
-            gameObject.SetActive(false);
+            else
+            {
+                backgroundMeshRenderer.material.color = Color.red;
+            }
+
+            yield return new WaitForSeconds(duration);
+
+            if (IsServer)
+            {
+                isRed.Value = false;
+            }
+            else
+            {
+                backgroundMeshRenderer.material.color = Color.black;
+            }
+            
         }
 
         public void LoadGameState()

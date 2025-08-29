@@ -212,6 +212,13 @@ namespace Assets.CreditClicker
                 AddTierToUpgradeUIServerRpc(index, tier, false);
 
             }
+            else if (upgrade.upgradeType == Upgrade.UpgradeType.BACKGROUND_FLASH && ui.currentTier <= upgrade.maxTiers)
+            {
+                creditPlayer.game.redInterval = 15;
+
+                ui.UpgradeCostServerRpc(newCost);
+                AddTierToUpgradeUIServerRpc(index, tier, true);
+            }
 
         }
 

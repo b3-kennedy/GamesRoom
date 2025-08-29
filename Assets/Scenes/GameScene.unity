@@ -1750,6 +1750,7 @@ MonoBehaviour:
   baseIncomeSpeed: 0.5
   incomeSpeed: 0
   interestAmount: 0
+  redInterval: 0
 --- !u!1 &350590181
 GameObject:
   m_ObjectHideFlags: 0
@@ -14908,12 +14909,15 @@ MonoBehaviour:
   sphereSpawnsParent: {fileID: 1820518910}
   activeUpgrades: {fileID: 995434621}
   passiveUpgrades: {fileID: 176263834}
+  background: {fileID: 865917849}
   creditCountText: {fileID: 1846721614}
   upgradeParent: {fileID: 0}
   lerpDuration: 0.25
   isUpgradePanelOpen:
     m_InternalValue: 0
   player: {fileID: 0}
+  isRed:
+    m_InternalValue: 0
 --- !u!4 &1937415056
 Transform:
   m_ObjectHideFlags: 0
@@ -15927,7 +15931,7 @@ PrefabInstance:
     - target: {fileID: 2218560894649789253, guid: 8c54c4e9c86d48e4b959988c24a0eb34, type: 3}
       propertyPath: upgrade
       value: 
-      objectReference: {fileID: 11400000, guid: c025cf74511c5be468ff14f1dfd2b4ba, type: 2}
+      objectReference: {fileID: 11400000, guid: 93e8a1b1f0fb52b4aa5bef37bf69c2c3, type: 2}
     - target: {fileID: 5093719730613442165, guid: 8c54c4e9c86d48e4b959988c24a0eb34, type: 3}
       propertyPath: m_Name
       value: UpgradePrefab (3)

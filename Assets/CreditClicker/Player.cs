@@ -59,21 +59,16 @@ namespace Assets.CreditClicker
             steamPlayer.credits.OnValueChanged += gameState.OnCreditsChanged;
         }
 
-        // Update is called once per frame
-        void Update()
+        void Space()
         {
-            if (!IsOwner) return;
-
-            if (!game) return;
-
-            if (game && game.netGameState.Value != CreditClickerGame.GameState.GAME) return;
-
             if (Input.GetKeyDown(KeyCode.Space) && !isPulsing)
             {
                 StartCoroutine(Pulse(OwnerClientId));
                 PulseServerRpc(OwnerClientId);
 
                 int creditsToAdd = game.clickCredits;
+
+
 
                 if (game.doubleChance > 0)
                 {
@@ -89,13 +84,21 @@ namespace Assets.CreditClicker
                     int credits = steamPlayer.credits.Value;
                     int percent = Mathf.RoundToInt(credits * (game.interestAmount / 100));
                     creditsToAdd += percent;
-                    Debug.Log(percent);
+                }
+
+                if (gameState.background.GetComponent<MeshRenderer>().material.color == Color.red)
+                {
+                    Debug.Log("double");
+                    creditsToAdd *= 2;
                 }
 
                 AddCreditsServerRpc(sphere.transform.position, creditsToAdd, OwnerClientId);
 
             }
+        }
 
+        void Upgrades()
+        {
             if (Input.GetKeyDown(KeyCode.U))
             {
                 if (!gameState.isUpgradePanelOpen.Value)
@@ -137,7 +140,7 @@ namespace Assets.CreditClicker
                     {
                         GetComponent<UpgradeManager>().BuyUpgradeServerRpc(upgradeSelectionIndex, ownerID, 1, true, false);
                     }
-                    
+
                 }
                 if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.LeftArrow))
                 {
@@ -151,6 +154,22 @@ namespace Assets.CreditClicker
                     }
                 }
             }
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+            if (!IsOwner) return;
+
+            if (!game) return;
+
+            if (game && game.netGameState.Value != CreditClickerGame.GameState.GAME) return;
+
+            Space();
+            Upgrades();
+
+
+
 
 
         }

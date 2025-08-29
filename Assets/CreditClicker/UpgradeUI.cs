@@ -53,6 +53,12 @@ namespace Assets.CreditClicker
         [ClientRpc]
         void UpgradeCostClientRpc(int newCost)
         {
+            if (currentTier >= upgrade.maxTiers)
+            {
+                costText.text = $"MAX";
+                cost = newCost;
+                return;
+            }
             costText.text = $"${newCost}";
             cost = newCost;
         }
