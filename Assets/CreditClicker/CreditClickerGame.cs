@@ -30,6 +30,8 @@ namespace Assets.CreditClicker
         public float interestAmount;
         public float redInterval;
 
+        public bool hasPlayerCountUpgrade;
+
 
         void Start()
         {

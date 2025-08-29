@@ -9,7 +9,12 @@ namespace Assets.CreditClicker
         public string upgradeName;
         public string upgradeDescription;
         public int cost;
-        public enum UpgradeType { ACTIVE, PASSIVE, CLICK_SPEED, PASSIVE_INCREASE, PASSIVE_MONEY_INCREASE, DOUBLE_CREDIT_CHANCE, INTEREST, BACKGROUND_FLASH};
+        public enum UpgradeType
+        {
+            ACTIVE, PASSIVE, CLICK_SPEED, PASSIVE_INCREASE,
+            PASSIVE_MONEY_INCREASE, DOUBLE_CREDIT_CHANCE, INTEREST, BACKGROUND_FLASH,
+            PLAYER_COUNT
+        };
         public UpgradeType upgradeType;
         public float value;
         public int tier;

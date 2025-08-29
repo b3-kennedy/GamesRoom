@@ -64,7 +64,12 @@ namespace Assets.CreditClicker
         [ServerRpc(RequireOwnership = false)]
         void PulseServerRpc()
         {
-            player.AddCreditsServerRpc(transform.position, moneyPerPulse, OwnerClientId);
+            if (player.game.interestAmount > 0)
+            {
+                int credits = player.steamPlayer.credits.Value;
+                percent = Mathf.RoundToInt(credits * (player.game.interestAmount / 100f));
+            }
+            player.AddCreditsServerRpc(transform.position, moneyPerPulse + percent, OwnerClientId);
             PulseClientRpc();
         }
 

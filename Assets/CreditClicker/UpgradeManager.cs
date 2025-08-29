@@ -219,8 +219,17 @@ namespace Assets.CreditClicker
                 ui.UpgradeCostServerRpc(newCost);
                 AddTierToUpgradeUIServerRpc(index, tier, true);
             }
+            else if (upgrade.upgradeType == Upgrade.UpgradeType.PLAYER_COUNT && ui.currentTier <= upgrade.maxTiers)
+            {
+                creditPlayer.game.hasPlayerCountUpgrade = true;
+
+                ui.UpgradeCostServerRpc(newCost);
+                AddTierToUpgradeUIServerRpc(index, tier, false);
+
+            }
 
         }
+
 
         [ServerRpc(RequireOwnership = false)]
         void AddTierToUpgradeUIServerRpc(int index, int tier, bool active)

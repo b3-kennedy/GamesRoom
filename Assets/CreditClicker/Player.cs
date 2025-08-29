@@ -92,6 +92,11 @@ namespace Assets.CreditClicker
                     creditsToAdd *= 2;
                 }
 
+                if (game.hasPlayerCountUpgrade)
+                {
+                    creditsToAdd *= 1 + (SteamManager.Instance.playerCount.Value/10);
+                }
+
                 AddCreditsServerRpc(sphere.transform.position, creditsToAdd, OwnerClientId);
 
             }
@@ -177,19 +182,9 @@ namespace Assets.CreditClicker
         [ServerRpc(RequireOwnership = false)]
         public void AddCreditsServerRpc(Vector3 spawnPos,int amount, ulong id)
         {
-            
-            if (game.interestAmount > 0)
-            {
-                int credits = steamPlayer.credits.Value;
-                percent = Mathf.RoundToInt(credits * (game.interestAmount / 100f));
-            }
+            NetworkManager.Singleton.ConnectedClients[id].PlayerObject.GetComponent<SteamPlayer>().credits.Value += amount;
 
-            int newAmount = amount + percent;
-
-
-            NetworkManager.Singleton.ConnectedClients[id].PlayerObject.GetComponent<SteamPlayer>().credits.Value += newAmount;
-
-            int remaining = newAmount;
+            int remaining = amount;
 
             foreach (int tier in moneyTiers)
             {
