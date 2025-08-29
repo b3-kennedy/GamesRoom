@@ -197,7 +197,6 @@ public class RythmDuel : Game
         hasPayedOut = false;
         isLeftPlayerLocked = false;
         winnerText.text = "";
-        Debug.Log(connectedPlayersCount.Value);
         ChangeStateServerRpc(GameState.MAIN_MENU);
 
     }

@@ -20,6 +20,13 @@ namespace Assets.CreditClicker
         public TextMeshProUGUI descriptionText;
         public TextMeshProUGUI costText;
 
+        [HideInInspector] public int cost;
+
+        [HideInInspector] public Transform layout;
+        public GameObject tierBlip;
+
+        public int currentTier = 0;
+
 
         void Start()
         {
@@ -28,6 +35,13 @@ namespace Assets.CreditClicker
             titleText.text = $"{upgrade.upgradeName}:";
             descriptionText.text = upgrade.upgradeDescription;
             costText.text = $"${upgrade.cost}";
+            cost = upgrade.cost;
+            layout = transform.GetChild(0).GetChild(3);
+            for (int i = 0; i < upgrade.maxTiers; i++)
+            {
+                Instantiate(tierBlip, layout);
+            }
+
         }
 
         [ServerRpc(RequireOwnership = false)]
@@ -39,7 +53,14 @@ namespace Assets.CreditClicker
         [ClientRpc]
         void UpgradeCostClientRpc(int newCost)
         {
+            if (currentTier >= upgrade.maxTiers)
+            {
+                costText.text = $"MAX";
+                cost = newCost;
+                return;
+            }
             costText.text = $"${newCost}";
+            cost = newCost;
         }
 
         [ServerRpc(RequireOwnership = false)]

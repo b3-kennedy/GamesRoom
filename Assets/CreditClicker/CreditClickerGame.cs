@@ -21,8 +21,23 @@ namespace Assets.CreditClicker
         public int baseClickCredits;
         [HideInInspector] public int clickCredits;
 
+        public int baseDoubleChance;
+        [HideInInspector] public int doubleChance;
+
         public float baseIncomeSpeed;
         public float incomeSpeed;
+
+        public float interestAmount;
+        public float redInterval;
+
+        public bool hasPlayerCountUpgrade;
+
+        public bool hasTimeUpgrade;
+
+        public NetworkVariable<int> minutesInGameState;
+
+        float timer;
+
 
         void Start()
         {
@@ -43,6 +58,7 @@ namespace Assets.CreditClicker
 
             if (netGameState.Value == GameState.MAIN_MENU)
             {
+
                 player.gameObject.GetComponent<NetworkObject>().ChangeOwnership(clientID);
                 ulong netObjID = NetworkManager.Singleton.ConnectedClients[clientID].PlayerObject.GetComponent<NetworkObject>().NetworkObjectId;
                 netGameState.Value = GameState.GAME;
@@ -60,19 +76,27 @@ namespace Assets.CreditClicker
                 player.playerObject.GetComponent<PlayerMovement>().canJump = false;
                 player.game = this;
                 player.OnPlayerAssigned();
-                
-                
+
+
             }
-            
+
 
         }
 
         [ServerRpc(RequireOwnership = false)]
         public override void ResetServerRpc()
         {
-            player.gameObject.GetComponent<NetworkObject>().ChangeOwnership(0);
+            //player.gameObject.GetComponent<NetworkObject>().ChangeOwnership(0);
             netGameState.Value = GameState.MAIN_MENU;
+            UpgradeManager upgradeManager = player.GetComponent<UpgradeManager>();
+            for (int i = upgradeManager.passiveGainers.Count - 1; i >= 0; i--)
+            {
+                Destroy(upgradeManager.passiveGainers[i].gameObject);
+            }
+            upgradeManager.passiveGainers.Clear();
+            player.GetComponent<UpgradeManager>().upgrades.Clear();
             ResetClientRpc();
+            Debug.Log("RESET");
         }
 
         [ClientRpc]
@@ -82,7 +106,27 @@ namespace Assets.CreditClicker
             {
                 player.playerObject.GetComponent<PlayerMovement>().canJump = true;
             }
-            
+            incomeSpeed = baseIncomeSpeed;
+            clickCredits = baseClickCredits;
+            doubleChance = baseDoubleChance;
+            interestAmount = 0;
+            gameState.OnReset();
+
+        }
+
+        void Update()
+        {
+            if (!IsServer) return;
+
+            if (netGameState.Value == GameState.GAME && hasTimeUpgrade)
+            {
+                timer += Time.deltaTime;
+                if (timer >= 60f)
+                {
+                    minutesInGameState.Value += 1;
+                    timer -= 60f;
+                }
+            }
         }
 
 
@@ -104,13 +148,13 @@ namespace Assets.CreditClicker
             switch (state)
             {
                 case GameState.MAIN_MENU:
-                    mainMenu.OnStateExit();                
+                    mainMenu.OnStateExit();
                     break;
                 case GameState.GAME:
-                    gameState.OnStateExit();                    
+                    gameState.OnStateExit();
                     break;
                 case GameState.GAME_OVER:
-                    
+
                     break;
             }
         }
@@ -132,9 +176,6 @@ namespace Assets.CreditClicker
                     break;
             }
         }
-    }
-            
-            
-            
+    }       
 }
         

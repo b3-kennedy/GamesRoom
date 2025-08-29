@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine.UI;
 using Netcode.Transports.Facepunch;
 using Unity.Netcode;
+using System;
 
 public class SteamManager : NetworkBehaviour
 {
@@ -23,6 +24,8 @@ public class SteamManager : NetworkBehaviour
     public Transform playerLobbyParent;
 
     ulong lobbyID;
+
+    public NetworkVariable<int> playerCount;
 
 
     void Awake()
@@ -48,7 +51,25 @@ public class SteamManager : NetworkBehaviour
         SteamMatchmaking.OnLobbyMemberLeave += LobbyLeft;
         SteamFriends.OnGameLobbyJoinRequested += GameLobbyJoinRequested;
         SteamMatchmaking.OnLobbyMemberJoined += OnLobbyMemberJoined;
+        NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
+        NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnected;
 
+    }
+
+    private void OnClientDisconnected(ulong obj)
+    {
+        if (IsServer)
+        {
+            playerCount.Value = NetworkManager.Singleton.ConnectedClients.Count;
+        }
+    }
+
+    private void OnClientConnected(ulong obj)
+    {
+        if (IsServer)
+        {
+            playerCount.Value = NetworkManager.Singleton.ConnectedClients.Count;
+        }
     }
 
     private void LobbyLeft(Lobby lobby, Friend friend)
@@ -69,6 +90,8 @@ public class SteamManager : NetworkBehaviour
         SteamMatchmaking.OnLobbyEntered -= LobbyEntered;
         SteamFriends.OnGameLobbyJoinRequested -= GameLobbyJoinRequested;
         SteamMatchmaking.OnLobbyMemberJoined -= OnLobbyMemberJoined;
+        NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnected;
+        NetworkManager.Singleton.OnClientDisconnectCallback -= OnClientDisconnected;
     }
 
     private void OnLobbyMemberJoined(Lobby lobby, Friend friend)

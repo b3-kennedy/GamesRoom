@@ -47,11 +47,18 @@ public class ArcadeMachine : NetworkBehaviour
         if (nearPlayers.Count == 0 && screen.activeSelf)
         {
             TurnOffScreenClientRpc();
+            // Only reset when the last player leaves, not when turning off screen
+            if (activePlayer != null)
+            {
+                arcadeGame.ResetServerRpc();
+                activePlayer = null;
+            }
         }
 
         if (activePlayer && !nearPlayers.Contains(activePlayer))
         {
             arcadeGame.ResetServerRpc();
+            activePlayer = null;
         }
     }
 
@@ -59,6 +66,6 @@ public class ArcadeMachine : NetworkBehaviour
     void TurnOffScreenClientRpc()
     {
         screen.SetActive(false);
-        arcadeGame.ResetServerRpc();
+        //arcadeGame.ResetServerRpc();
     }
 }
