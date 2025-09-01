@@ -8,7 +8,7 @@ namespace Assets.ArcherBattle
     public class ArcheryPlayer : NetworkBehaviour
     {
 
-        [HideInInspector] public ArcherBattleGame game;
+        public ArcherBattleGame game;
         public GameObject playerObject;
         public Transform rotater;
 
