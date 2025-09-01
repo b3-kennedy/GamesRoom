@@ -18,7 +18,7 @@ namespace Assets.ArcherBattle
 
         void Start()
         {
-
+            game = transform.parent.GetComponent<ArcherBattleGame>();
         }
 
         public void AssignPlayer()
