@@ -88,7 +88,6 @@ namespace Assets.ArcherBattle
 
         void Assign(ArcheryPlayer player)
         {
-            player.game = this;
             player.AssignPlayer();
         }
 
