@@ -57,18 +57,21 @@ namespace Assets.ArcherBattle
         }
 
 
-        [ServerRpc(RequireOwnership = false)]
-        public void AssignPlayersServerRpc()
+        public void AssignPlayers()
         {
             if (connectedPlayers.Count == 0) return;
 
-            leftPlayer.GetComponent<NetworkObject>().ChangeOwnership(connectedPlayers[0].OwnerClientId);
-            rightPlayer.GetComponent<NetworkObject>().ChangeOwnership(connectedPlayers[1].OwnerClientId);
+            if (IsServer)
+            {
+                leftPlayer.GetComponent<NetworkObject>().ChangeOwnership(connectedPlayers[0].OwnerClientId);
+                rightPlayer.GetComponent<NetworkObject>().ChangeOwnership(connectedPlayers[1].OwnerClientId);
+            }
+
+            int turn = Random.Range(0, 2);
+
 
             ArcheryPlayer left = leftPlayer.GetComponent<ArcheryPlayer>();
             ArcheryPlayer right = rightPlayer.GetComponent<ArcheryPlayer>();
-
-            int turn = Random.Range(0, 2);
             if (turn == 0)
             {
                 left.isTurn.Value = true;
@@ -79,32 +82,14 @@ namespace Assets.ArcherBattle
                 left.isTurn.Value = false;
                 right.isTurn.Value = true;
             }
-            AssignClientRpc(left.GetComponent<NetworkObject>().NetworkObjectId, right.GetComponent<NetworkObject>().NetworkObjectId);
+            Assign(left);
+            Assign(right);
         }
 
-        [ClientRpc]
-        void AssignClientRpc(ulong leftPlayerID, ulong rightPlayerID)
+        void Assign(ArcheryPlayer player)
         {
-            GameObject leftPlayer = null;
-            GameObject rightPlayer = null;
-
-            if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(leftPlayerID, out var left))
-            {
-                leftPlayer = left.gameObject;
-            }
-
-            if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(rightPlayerID, out var right))
-            {
-                rightPlayer = right.gameObject;
-            }
-
-
-
-            leftPlayer.GetComponent<ArcheryPlayer>().game = this;
-            leftPlayer.GetComponent<ArcheryPlayer>().AssignPlayer();
-
-            rightPlayer.GetComponent<ArcheryPlayer>().game = this;
-            rightPlayer.GetComponent<ArcheryPlayer>().AssignPlayer();
+            player.game = this;
+            player.AssignPlayer();
         }
 
         private void OnNetworkGameStateChanged(GameState oldState, GameState newState)

@@ -46,7 +46,7 @@ namespace Assets.ArcherBattle
         [ServerRpc(RequireOwnership = false)]
         public void SpawnPlayersServerRpc(bool isPlayer1, ulong clientID)
         {
-            GameObject spawnedPlayer = null;
+            GameObject spawnedPlayer;
             if (isPlayer1)
             {
                 spawnedPlayer = Instantiate(playerPrefab, player1SpawnPos.position, Quaternion.identity);
