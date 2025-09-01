@@ -88,9 +88,10 @@ namespace Assets.ArcherBattle
                 rightPlayerObject = player;
                 archerBattleGame.rightPlayer.GetComponent<ArcheryPlayer>().playerObject = player;
                 archerBattleGame.rightPlayer.GetComponent<ArcheryPlayer>().rotater = player.transform.GetChild(4);
+                MoveCameraClientRpc();
             }
 
-            MoveCameraClientRpc();
+            
 
         }
 
