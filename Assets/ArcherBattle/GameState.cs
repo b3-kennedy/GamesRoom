@@ -146,26 +146,57 @@ namespace Assets.ArcherBattle
         [ServerRpc(RequireOwnership = false)]
         public void LaunchArrowServerRpc(Vector3 spawn, Vector3 dir, float force)
         {
-            GameObject arrow = Instantiate(arrowPrefab, spawn, Quaternion.identity);
-            NetworkObject netObj = arrow.GetComponent<NetworkObject>();
+            // 1. Spawn the server arrow (for collisions / authority)
+            GameObject serverArrow = Instantiate(arrowPrefab, spawn, Quaternion.identity);
+            NetworkObject netObj = serverArrow.GetComponent<NetworkObject>();
             netObj.Spawn();
-            arrow.GetComponent<Arrow>().Hit.AddListener(OnArrowHit);
-            arrow.GetComponent<Rigidbody>().AddForce(dir * force, ForceMode.Impulse);
-            LaunchArrowClientRpc(netObj);
+
+            serverArrow.GetComponent<Arrow>().Hit.AddListener(OnArrowHit);
+
+            // Apply force on the server arrow
+            serverArrow.GetComponent<Rigidbody>().AddForce(dir * force, ForceMode.Impulse);
+
+            // 2. Make it invisible on clients
+            HideServerArrowClientRpc(serverArrow);
+
+            // 3. Spawn a visual arrow locally on the firing client
+            LaunchArrowClientRpc(spawn, dir, force);
         }
 
         [ClientRpc]
-        void LaunchArrowClientRpc(NetworkObjectReference arrowRef)
+        void HideServerArrowClientRpc(NetworkObjectReference arrowRef)
         {
             if (arrowRef.TryGet(out NetworkObject arrowNetObj))
             {
                 GameObject arrow = arrowNetObj.gameObject;
 
-                // Configure camera follow locally
-                cam.GetComponent<CameraFollow>().startPos = cam.transform.position;
-                cam.GetComponent<CameraFollow>().target = arrow.transform;
-                cam.GetComponent<CameraFollow>().isFollow = true;
+                // Hide all renderers
+                foreach (Renderer r in arrow.GetComponentsInChildren<Renderer>())
+                {
+                    r.enabled = false;
+                }
             }
+        }
+
+        [ClientRpc]
+        void LaunchArrowClientRpc(Vector3 spawn, Vector3 dir, float force)
+        {
+            // Spawn the visual arrow locally (for smooth camera follow)
+            GameObject visualArrow = Instantiate(arrowPrefab, spawn, Quaternion.identity);
+
+            // Add camera follow
+            cam.GetComponent<CameraFollow>().startPos = cam.transform.position;
+            cam.GetComponent<CameraFollow>().target = visualArrow.transform;
+            cam.GetComponent<CameraFollow>().isFollow = true;
+
+            // Apply force for visual motion
+            visualArrow.GetComponent<Rigidbody>().AddForce(dir * force, ForceMode.Impulse);
+
+            // Optional: local hit effects (particles, sounds)
+            visualArrow.GetComponent<Arrow>().Hit.AddListener(() =>
+            {
+                // Play particles / sound only
+            });
         }
 
 
