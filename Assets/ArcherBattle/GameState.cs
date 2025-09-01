@@ -132,6 +132,8 @@ namespace Assets.ArcherBattle
             MoveCameraClientRpc(cam.transform.position);
         }
 
+
+
         [ClientRpc]
         void MoveCameraClientRpc(Vector3 pos)
         {
@@ -155,19 +157,22 @@ namespace Assets.ArcherBattle
             arrow.GetComponent<Rigidbody>().AddForce(dir * force, ForceMode.Impulse);
         }
 
+
         void OnArrowHit()
         {
             Debug.Log("hit");
             cam.GetComponent<CameraFollow>().isFollow = false;
             OnTurnEndServerRpc();
-            //StartCoroutine(SwitchTurnAfterTime());
+            StartCoroutine(SwitchTurnAfterTime());
         }
 
-        // IEnumerator SwitchTurnAfterTime()
-        // {
-        //     yield return new WaitForSeconds(3f);
+
+
+        IEnumerator SwitchTurnAfterTime()
+        {
+            yield return new WaitForSeconds(3f);
             
-        // }
+        }
 
 
 

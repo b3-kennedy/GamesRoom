@@ -1,9 +1,11 @@
+using System.Runtime.Serialization;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
 
 namespace Assets.ArcherBattle
 {
-    public class Arrow : MonoBehaviour
+    public class Arrow : NetworkBehaviour
     {
 
         Rigidbody rb;
@@ -36,6 +38,8 @@ namespace Assets.ArcherBattle
 
         void OnCollisionEnter(Collision collision)
         {
+            if (!IsServer) return;
+            
             Hit.Invoke();
             rb.isKinematic = true;
             hasHit = true;
