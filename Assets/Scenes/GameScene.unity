@@ -6651,7 +6651,10 @@ MonoBehaviour:
   game: {fileID: 0}
   playerObject: {fileID: 0}
   rotater: {fileID: 0}
+  arrowSpawn: {fileID: 0}
   rotateSpeed: 50
+  maxCharge: 0
+  chargeSpeed: 0
   isTurn:
     m_InternalValue: 0
 --- !u!1 &880403569
@@ -9932,10 +9935,13 @@ MonoBehaviour:
   player1SpawnPos: {fileID: 810205507}
   minSpawnPos: {fileID: 2112499809}
   maxSpawnPos: {fileID: 1372167513}
+  arrowPrefab: {fileID: 5398460448635708262, guid: 3ecd8b41e2785244caab0df6a8f79f20, type: 3}
   playerPrefab: {fileID: 3562350127531333862, guid: e5509dffb3c824b4daae8e77cf2b1802, type: 3}
   cam: {fileID: 1957297958}
   leftPlayerObject: {fileID: 0}
   rightPlayerObject: {fileID: 0}
+  playerSpawnCount:
+    m_InternalValue: 0
   isLeftPlayerTurn:
     m_InternalValue: 0
 --- !u!1 &1183890548
@@ -14026,7 +14032,10 @@ MonoBehaviour:
   game: {fileID: 0}
   playerObject: {fileID: 0}
   rotater: {fileID: 0}
+  arrowSpawn: {fileID: 0}
   rotateSpeed: 50
+  maxCharge: 0
+  chargeSpeed: 0
   isTurn:
     m_InternalValue: 0
 --- !u!1 &1650133002
