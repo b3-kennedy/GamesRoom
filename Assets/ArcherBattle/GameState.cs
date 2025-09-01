@@ -154,6 +154,8 @@ namespace Assets.ArcherBattle
             if (IsServer)
             {
                 arrow.GetComponent<NetworkObject>().Spawn();
+                arrow.GetComponent<MeshRenderer>().enabled = false;
+                arrow.GetComponent<Collider>().enabled = false;
             }
             arrow.GetComponent<Arrow>().Hit.AddListener(OnArrowHit);
             cam.GetComponent<CameraFollow>().startPos = cam.transform.position;
