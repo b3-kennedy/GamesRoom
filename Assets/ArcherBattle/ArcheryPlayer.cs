@@ -22,7 +22,7 @@ namespace Assets.ArcherBattle
         public float chargeSpeed;
         public float charge;
 
-        bool hasShot;
+        public NetworkVariable<bool> hasShot;
 
         public NetworkVariable<bool> isTurn = new NetworkVariable<bool>(false);
 
@@ -42,7 +42,7 @@ namespace Assets.ArcherBattle
                 game.gameState.SpawnPlayersServerRpc(false, OwnerClientId);
             }
 
-            
+
         }
 
         void Update()
@@ -62,7 +62,7 @@ namespace Assets.ArcherBattle
                 }
             }
 
-            if (!hasShot)
+            if (!hasShot.Value)
             {
                 if (Input.GetKey(KeyCode.Space) && charge < maxCharge)
                 {
@@ -76,7 +76,7 @@ namespace Assets.ArcherBattle
                     game.gameState.LaunchArrowServerRpc(arrowSpawn.position, direction, charge);
                     charge = 0;
                     chargeBar.transform.localScale = new Vector3(0, chargeBar.transform.localScale.y, chargeBar.transform.localScale.z);
-                    hasShot = true;
+                    ChangeShotValueServerRpc(true);
                 }
             }
 
@@ -85,6 +85,12 @@ namespace Assets.ArcherBattle
 
             //game.gameState.OnTurnEndServerRpc();
 
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void ChangeShotValueServerRpc(bool value)
+        {
+            hasShot.Value = value;
         }
     }
 }
