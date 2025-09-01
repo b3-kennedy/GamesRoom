@@ -19,7 +19,7 @@ namespace Assets.ArcherBattle
         public float maxCharge;
 
         public float chargeSpeed;
-        float charge;
+        public float charge;
 
         public NetworkVariable<bool> isTurn = new NetworkVariable<bool>(false);
 
