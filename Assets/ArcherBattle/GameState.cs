@@ -21,6 +21,8 @@ namespace Assets.ArcherBattle
         public GameObject leftPlayerObject;
         public GameObject rightPlayerObject;
 
+        public NetworkVariable<int> playerSpawnCount;
+
         public NetworkVariable<bool> isLeftPlayerTurn = new NetworkVariable<bool>(false);
 
         void Start()
@@ -58,7 +60,13 @@ namespace Assets.ArcherBattle
                 spawnedPlayer = Instantiate(playerPrefab, spawn, Quaternion.Euler(0, 180, 0));
             }
             spawnedPlayer.GetComponent<NetworkObject>().SpawnWithOwnership(clientID);
+            playerSpawnCount.Value++;
             SpawnPlayerClientRpc(isPlayer1, spawnedPlayer.GetComponent<NetworkObject>().NetworkObjectId);
+
+            if (playerSpawnCount.Value == 2)
+            {
+                MoveCameraClientRpc();
+            }
         }
 
         [ClientRpc]
@@ -88,10 +96,9 @@ namespace Assets.ArcherBattle
                 rightPlayerObject = player;
                 archerBattleGame.rightPlayer.GetComponent<ArcheryPlayer>().playerObject = player;
                 archerBattleGame.rightPlayer.GetComponent<ArcheryPlayer>().rotater = player.transform.GetChild(4);
-                MoveCameraClientRpc();
             }
 
-            
+
 
         }
 
