@@ -63,7 +63,7 @@ namespace Assets.ArcherBattle
             if (IsServer)
             {
                 leftPlayer.GetComponent<NetworkObject>().ChangeOwnership(connectedPlayers[0].OwnerClientId);
-                //rightPlayer.GetComponent<NetworkObject>().ChangeOwnership(connectedPlayers[1].OwnerClientId);
+                rightPlayer.GetComponent<NetworkObject>().ChangeOwnership(connectedPlayers[1].OwnerClientId);
             }
 
             ArcheryPlayer left = leftPlayer.GetComponent<ArcheryPlayer>();
