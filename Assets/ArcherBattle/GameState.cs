@@ -36,7 +36,7 @@ namespace Assets.ArcherBattle
             gameObject.SetActive(true);
             if (IsServer)
             {
-                MoveCameraClientRpc();
+                
             }
 
 
@@ -89,6 +89,8 @@ namespace Assets.ArcherBattle
                 archerBattleGame.rightPlayer.GetComponent<ArcheryPlayer>().playerObject = player;
                 archerBattleGame.rightPlayer.GetComponent<ArcheryPlayer>().rotater = player.transform.GetChild(4);
             }
+
+            MoveCameraClientRpc();
 
         }
 
