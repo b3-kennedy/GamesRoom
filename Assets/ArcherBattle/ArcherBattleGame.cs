@@ -58,7 +58,7 @@ namespace Assets.ArcherBattle
 
 
         [ServerRpc(RequireOwnership = false)]
-        public void AssignPlayers()
+        public void AssignPlayersServerRpc()
         {
             if (connectedPlayers.Count == 0) return;
 
