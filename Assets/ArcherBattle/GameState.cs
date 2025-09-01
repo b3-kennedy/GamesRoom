@@ -148,6 +148,9 @@ namespace Assets.ArcherBattle
         void LaunchArrowClientRpc(Vector3 spawn, Vector3 dir, float force)
         {
             GameObject arrow = Instantiate(arrowPrefab, spawn, Quaternion.identity);
+            cam.GetComponent<CameraFollow>().startPos = cam.transform.position;
+            cam.GetComponent<CameraFollow>().target = arrow.transform;
+            cam.GetComponent<CameraFollow>().isFollow = true;
             arrow.GetComponent<Rigidbody>().AddForce(dir * force, ForceMode.Impulse);
         }
 
