@@ -137,6 +137,7 @@ namespace Assets.ArcherBattle
         [ClientRpc]
         void MoveCameraClientRpc(Vector3 pos)
         {
+            cam.GetComponent<CameraFollow>().isFollow = false;
             cam.transform.position = pos;
         }
 
@@ -165,8 +166,7 @@ namespace Assets.ArcherBattle
         void OnArrowHit()
         {
             Debug.Log("hit");
-            cam.GetComponent<CameraFollow>().isFollow = false;
-            OnTurnEndServerRpc();
+            
             StartCoroutine(SwitchTurnAfterTime());
         }
 
@@ -175,7 +175,8 @@ namespace Assets.ArcherBattle
         IEnumerator SwitchTurnAfterTime()
         {
             yield return new WaitForSeconds(3f);
-            
+            OnTurnEndServerRpc();
+
         }
 
 

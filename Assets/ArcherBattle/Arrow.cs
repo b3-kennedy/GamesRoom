@@ -39,7 +39,7 @@ namespace Assets.ArcherBattle
         void OnCollisionEnter(Collision collision)
         {
             if (!IsServer) return;
-            
+
             Hit.Invoke();
             rb.isKinematic = true;
             hasHit = true;
