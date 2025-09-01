@@ -1,28 +1,45 @@
 using UnityEngine;
+using UnityEngine.Events;
 
-public class Arrow : MonoBehaviour
+namespace Assets.ArcherBattle
 {
-
-    Rigidbody rb;
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public class Arrow : MonoBehaviour
     {
-        rb = GetComponent<Rigidbody>();
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        Vector3 velocity = rb.linearVelocity;
+        Rigidbody rb;
+        bool hasHit = false;
 
-        if (velocity != Vector3.zero)
+        [HideInInspector] public UnityEvent Hit;
+
+        // Start is called once before the first execution of Update after the MonoBehaviour is created
+        void Start()
         {
-            // Make +Z point in travel direction
-            Quaternion lookRot = Quaternion.LookRotation(velocity.normalized, Vector3.up);
+            rb = GetComponent<Rigidbody>();
+        }
 
-            // Rotate extra 90° so +X (right) becomes the forward nose
-            transform.rotation = lookRot * Quaternion.Euler(0f, -90f, 0f);
+        // Update is called once per frame
+        void Update()
+        {
+            if (hasHit) return;
+
+            Vector3 velocity = rb.linearVelocity;
+
+            if (velocity != Vector3.zero)
+            {
+                // Make +Z point in travel direction
+                Quaternion lookRot = Quaternion.LookRotation(velocity.normalized, Vector3.up);
+
+                // Rotate extra 90° so +X (right) becomes the forward nose
+                transform.rotation = lookRot * Quaternion.Euler(0f, -90f, 0f);
+            }
+        }
+
+        void OnCollisionEnter(Collision collision)
+        {
+            Hit.Invoke();
+            rb.isKinematic = true;
+            hasHit = true;
         }
     }
 }
+
