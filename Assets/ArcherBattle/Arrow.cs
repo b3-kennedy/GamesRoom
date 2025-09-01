@@ -18,7 +18,11 @@ public class Arrow : MonoBehaviour
 
         if (velocity != Vector3.zero)
         {
-            transform.rotation = Quaternion.LookRotation(velocity.normalized);
+            // Make +Z point in travel direction
+            Quaternion lookRot = Quaternion.LookRotation(velocity.normalized, Vector3.up);
+
+            // Rotate extra 90° so +X (right) becomes the forward nose
+            transform.rotation = lookRot * Quaternion.Euler(0f, -90f, 0f);
         }
     }
 }
