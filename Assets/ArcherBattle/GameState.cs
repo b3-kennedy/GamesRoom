@@ -34,6 +34,10 @@ namespace Assets.ArcherBattle
         public override void OnStateEnter()
         {
             gameObject.SetActive(true);
+            if (IsServer)
+            {
+                MoveCameraClientRpc();
+            }
 
 
 
