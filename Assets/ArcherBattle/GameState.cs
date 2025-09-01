@@ -101,13 +101,13 @@ namespace Assets.ArcherBattle
             isLeftPlayerTurn.Value = !isLeftPlayerTurn.Value;
             if (isLeftPlayerTurn.Value)
             {
-                leftPlayerObject.GetComponent<ArcheryPlayer>().isTurn.Value = true;
-                rightPlayerObject.GetComponent<ArcheryPlayer>().isTurn.Value = false;
+                archerBattleGame.leftPlayer.GetComponent<ArcheryPlayer>().isTurn.Value = true;
+                archerBattleGame.rightPlayer.GetComponent<ArcheryPlayer>().isTurn.Value = false;
             }
             else
             {
-                leftPlayerObject.GetComponent<ArcheryPlayer>().isTurn.Value = false;
-                rightPlayerObject.GetComponent<ArcheryPlayer>().isTurn.Value = true;
+                archerBattleGame.leftPlayer.GetComponent<ArcheryPlayer>().isTurn.Value = false;
+                archerBattleGame.rightPlayer.GetComponent<ArcheryPlayer>().isTurn.Value = true;
             }
 
 
