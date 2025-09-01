@@ -65,7 +65,8 @@ namespace Assets.ArcherBattle
             }
             else if (Input.GetKeyUp(KeyCode.Space))
             {
-                game.gameState.LaunchArrowServerRpc(arrowSpawn.position, rotater.eulerAngles.normalized, charge);
+                game.gameState.LaunchArrowServerRpc(arrowSpawn.position, -rotater.eulerAngles.normalized, charge);
+                charge = 0;
             }
 
 
