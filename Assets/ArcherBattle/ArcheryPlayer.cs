@@ -22,6 +22,8 @@ namespace Assets.ArcherBattle
         public float chargeSpeed;
         public float charge;
 
+        bool hasShot;
+
         public NetworkVariable<bool> isTurn = new NetworkVariable<bool>(false);
 
         void Start()
@@ -60,19 +62,25 @@ namespace Assets.ArcherBattle
                 }
             }
 
-            if (Input.GetKey(KeyCode.Space) && charge < maxCharge)
+            if (!hasShot)
             {
-                charge += Time.deltaTime * chargeSpeed;
-                float chargePercent = charge / maxCharge;
-                chargeBar.transform.localScale = new Vector3(chargePercent, chargeBar.transform.localScale.y, chargeBar.transform.localScale.z);
+                if (Input.GetKey(KeyCode.Space) && charge < maxCharge)
+                {
+                    charge += Time.deltaTime * chargeSpeed;
+                    float chargePercent = charge / maxCharge;
+                    chargeBar.transform.localScale = new Vector3(chargePercent, chargeBar.transform.localScale.y, chargeBar.transform.localScale.z);
+                }
+                else if (Input.GetKeyUp(KeyCode.Space))
+                {
+                    Vector3 direction = rotater.right;
+                    game.gameState.LaunchArrowServerRpc(arrowSpawn.position, direction, charge);
+                    charge = 0;
+                    chargeBar.transform.localScale = new Vector3(0, chargeBar.transform.localScale.y, chargeBar.transform.localScale.z);
+                    hasShot = true;
+                }
             }
-            else if (Input.GetKeyUp(KeyCode.Space))
-            {
-                Vector3 direction = rotater.right;
-                game.gameState.LaunchArrowServerRpc(arrowSpawn.position, direction, charge);
-                charge = 0;
-                chargeBar.transform.localScale = new Vector3(0, chargeBar.transform.localScale.y, chargeBar.transform.localScale.z);
-            }
+
+
 
 
             //game.gameState.OnTurnEndServerRpc();

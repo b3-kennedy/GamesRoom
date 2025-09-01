@@ -158,6 +158,7 @@ namespace Assets.ArcherBattle
         void OnArrowHit()
         {
             Debug.Log("hit");
+            cam.GetComponent<CameraFollow>().isFollow = false;
             StartCoroutine(SwitchTurnAfterTime());
         }
 
