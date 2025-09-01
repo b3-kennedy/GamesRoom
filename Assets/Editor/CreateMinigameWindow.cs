@@ -34,7 +34,7 @@ public class CreateMinigameWindow : EditorWindow
         }
 
         // Folder path
-        string folderPath = $"Assets/Scripts/{gameName}";
+        string folderPath = $"Assets/{gameName}";
         if (!Directory.Exists(folderPath))
             Directory.CreateDirectory(folderPath);
 
@@ -81,7 +81,7 @@ public class CreateMinigameWindow : EditorWindow
 
                 private void OnNetworkGameStateChanged(GameState oldState, GameState newState)
                 {{
-                    LeaveState(oldState)
+                    LeaveState(oldState);
                     Debug.Log($""Game state changed from {{oldState}} to {{newState}}"");
                     ApplyState(newState);
                 }}
