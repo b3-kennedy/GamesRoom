@@ -31,6 +31,8 @@ namespace Assets.ArcherBattle
             {
                 game.gameState.SpawnPlayersServerRpc(false, OwnerClientId);
             }
+
+            
         }
 
         void Update()

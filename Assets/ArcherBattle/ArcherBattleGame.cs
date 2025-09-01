@@ -65,6 +65,9 @@ namespace Assets.ArcherBattle
             {
                 leftPlayer.GetComponent<NetworkObject>().ChangeOwnership(connectedPlayers[0].OwnerClientId);
                 rightPlayer.GetComponent<NetworkObject>().ChangeOwnership(connectedPlayers[1].OwnerClientId);
+                var leftID = NetworkManager.Singleton.ConnectedClients[connectedPlayers[0].OwnerClientId].PlayerObject.GetComponent<NetworkObject>().NetworkObjectId;
+                var rightID = NetworkManager.Singleton.ConnectedClients[connectedPlayers[1].OwnerClientId].PlayerObject.GetComponent<NetworkObject>().NetworkObjectId;
+                DisableMovementClientRpc(leftID, rightID);
             }
 
             int turn = Random.Range(0, 2);
@@ -89,6 +92,26 @@ namespace Assets.ArcherBattle
         void Assign(ArcheryPlayer player)
         {
             player.AssignPlayer();
+        }
+
+        [ClientRpc]
+        void DisableMovementClientRpc(ulong leftID, ulong rightID)
+        {
+            GameObject leftPlayer = null;
+            GameObject rightPlayer = null;
+
+            if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(leftID, out var left))
+            {
+                leftPlayer = left.gameObject;
+            }
+
+            if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(rightID, out var right))
+            {
+                rightPlayer = right.gameObject;
+            }
+
+            leftPlayer.GetComponent<PlayerMovement>().canJump = false;
+            rightPlayer.GetComponent<PlayerMovement>().canJump = false;
         }
 
         private void OnNetworkGameStateChanged(GameState oldState, GameState newState)
