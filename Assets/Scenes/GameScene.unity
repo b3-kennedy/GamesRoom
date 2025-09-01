@@ -6653,8 +6653,8 @@ MonoBehaviour:
   rotater: {fileID: 0}
   arrowSpawn: {fileID: 0}
   rotateSpeed: 50
-  maxCharge: 0
-  chargeSpeed: 0
+  maxCharge: 100
+  chargeSpeed: 10
   isTurn:
     m_InternalValue: 0
 --- !u!1 &880403569
@@ -14034,8 +14034,8 @@ MonoBehaviour:
   rotater: {fileID: 0}
   arrowSpawn: {fileID: 0}
   rotateSpeed: 50
-  maxCharge: 0
-  chargeSpeed: 0
+  maxCharge: 100
+  chargeSpeed: 10
   isTurn:
     m_InternalValue: 0
 --- !u!1 &1650133002
