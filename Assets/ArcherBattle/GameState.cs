@@ -159,14 +159,15 @@ namespace Assets.ArcherBattle
         {
             Debug.Log("hit");
             cam.GetComponent<CameraFollow>().isFollow = false;
-            StartCoroutine(SwitchTurnAfterTime());
+            OnTurnEndServerRpc();
+            //StartCoroutine(SwitchTurnAfterTime());
         }
 
-        IEnumerator SwitchTurnAfterTime()
-        {
-            yield return new WaitForSeconds(3f);
-            OnTurnEndServerRpc();
-        }
+        // IEnumerator SwitchTurnAfterTime()
+        // {
+        //     yield return new WaitForSeconds(3f);
+            
+        // }
 
 
 
