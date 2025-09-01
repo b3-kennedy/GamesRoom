@@ -146,18 +146,26 @@ namespace Assets.ArcherBattle
         [ServerRpc(RequireOwnership = false)]
         public void LaunchArrowServerRpc(Vector3 spawn, Vector3 dir, float force)
         {
-            LaunchArrowClientRpc(spawn, dir, force);
+            GameObject arrow = Instantiate(arrowPrefab, spawn, Quaternion.identity);
+            NetworkObject netObj = arrow.GetComponent<NetworkObject>();
+            netObj.Spawn();
+            arrow.GetComponent<Arrow>().Hit.AddListener(OnArrowHit);
+            arrow.GetComponent<Rigidbody>().AddForce(dir * force, ForceMode.Impulse);
+            LaunchArrowClientRpc(netObj);
         }
 
         [ClientRpc]
-        void LaunchArrowClientRpc(Vector3 spawn, Vector3 dir, float force)
+        void LaunchArrowClientRpc(NetworkObjectReference arrowRef)
         {
-            GameObject arrow = Instantiate(arrowPrefab, spawn, Quaternion.identity);
-            arrow.GetComponent<Arrow>().Hit.AddListener(OnArrowHit);
-            cam.GetComponent<CameraFollow>().startPos = cam.transform.position;
-            cam.GetComponent<CameraFollow>().target = arrow.transform;
-            cam.GetComponent<CameraFollow>().isFollow = true;
-            arrow.GetComponent<Rigidbody>().AddForce(dir * force, ForceMode.Impulse);
+            if (arrowRef.TryGet(out NetworkObject arrowNetObj))
+            {
+                GameObject arrow = arrowNetObj.gameObject;
+
+                // Configure camera follow locally
+                cam.GetComponent<CameraFollow>().startPos = cam.transform.position;
+                cam.GetComponent<CameraFollow>().target = arrow.transform;
+                cam.GetComponent<CameraFollow>().isFollow = true;
+            }
         }
 
 
