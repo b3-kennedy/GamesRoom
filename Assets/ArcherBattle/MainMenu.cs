@@ -26,7 +26,7 @@ namespace Assets.ArcherBattle
         public override void OnStateUpdate()
         {
             connectedPlayersText.text = $"{archerBattleGame.connectedPlayersCount.Value}/2";
-            if (archerBattleGame.connectedPlayers.Count == 1)
+            if (archerBattleGame.connectedPlayers.Count == 2)
             {
                 archerBattleGame.AssignPlayers();
                 archerBattleGame.ChangeStateServerRpc(ArcherBattleGame.GameState.GAME);
