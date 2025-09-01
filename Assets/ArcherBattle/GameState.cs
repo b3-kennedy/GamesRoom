@@ -157,6 +157,7 @@ namespace Assets.ArcherBattle
 
         void OnArrowHit()
         {
+            Debug.Log("hit");
             StartCoroutine(SwitchTurnAfterTime());
         }
 
