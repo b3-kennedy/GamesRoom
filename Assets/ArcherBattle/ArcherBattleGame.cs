@@ -93,7 +93,7 @@ namespace Assets.ArcherBattle
                 leftPlayer = left.gameObject;
             }
 
-            if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(leftPlayerID, out var right))
+            if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(rightPlayerID, out var right))
             {
                 rightPlayer = right.gameObject;
             }
