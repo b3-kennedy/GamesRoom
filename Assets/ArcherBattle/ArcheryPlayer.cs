@@ -14,6 +14,8 @@ namespace Assets.ArcherBattle
 
         public float rotateSpeed = 5f;
 
+        public NetworkVariable<bool> isTurn = new NetworkVariable<bool>(false);
+
         void Start()
         {
 
@@ -33,6 +35,9 @@ namespace Assets.ArcherBattle
 
         void Update()
         {
+
+            if (!isTurn.Value || !IsOwner) return;
+
             if (rotater)
             {
                 if (Input.GetKey(KeyCode.UpArrow))
@@ -43,6 +48,11 @@ namespace Assets.ArcherBattle
                 {
                     rotater.Rotate(new Vector3(0, 0, -Time.deltaTime * rotateSpeed));
                 }
+            }
+
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                game.gameState.OnTurnEndServerRpc();
             }
 
         }

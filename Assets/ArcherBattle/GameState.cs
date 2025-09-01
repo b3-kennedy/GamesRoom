@@ -1,3 +1,4 @@
+using System.Collections;
 using Mono.Cecil.Cil;
 using Unity.Netcode;
 using UnityEngine;
@@ -14,6 +15,13 @@ namespace Assets.ArcherBattle
         public Transform maxSpawnPos;
 
         public GameObject playerPrefab;
+
+        public GameObject cam;
+
+        public GameObject leftPlayerObject;
+        public GameObject rightPlayerObject;
+
+        public NetworkVariable<bool> isLeftPlayerTurn = new NetworkVariable<bool>(false);
 
         void Start()
         {
@@ -67,16 +75,54 @@ namespace Assets.ArcherBattle
 
             if (isPlayer1)
             {
+                leftPlayerObject = player;
                 archerBattleGame.leftPlayer.GetComponent<ArcheryPlayer>().playerObject = player;
                 archerBattleGame.leftPlayer.GetComponent<ArcheryPlayer>().rotater = player.transform.GetChild(4);
             }
             else
             {
+                rightPlayerObject = player;
                 archerBattleGame.rightPlayer.GetComponent<ArcheryPlayer>().playerObject = player;
                 archerBattleGame.rightPlayer.GetComponent<ArcheryPlayer>().rotater = player.transform.GetChild(4);
             }
 
         }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void OnTurnEndServerRpc()
+        {
+            isLeftPlayerTurn.Value = !isLeftPlayerTurn.Value;
+            if (isLeftPlayerTurn.Value)
+            {
+                leftPlayerObject.GetComponent<ArcheryPlayer>().isTurn.Value = true;
+                rightPlayerObject.GetComponent<ArcheryPlayer>().isTurn.Value = false;
+            }
+            else
+            {
+                leftPlayerObject.GetComponent<ArcheryPlayer>().isTurn.Value = false;
+                rightPlayerObject.GetComponent<ArcheryPlayer>().isTurn.Value = true;
+            }
+
+
+            MoveCameraClientRpc();
+        }
+
+        [ClientRpc]
+        void MoveCameraClientRpc()
+        {
+            Vector3 leftPos = leftPlayerObject.transform.position;
+            Vector3 rightPos = rightPlayerObject.transform.position;
+            if (isLeftPlayerTurn.Value)
+            {
+                cam.transform.position = new Vector3(leftPos.x, leftPos.y, cam.transform.position.z);
+            }
+            else
+            {
+                cam.transform.position = new Vector3(rightPos.x, rightPos.y, cam.transform.position.z);
+            }
+        }
+
+
 
         public override void OnStateUpdate()
         {

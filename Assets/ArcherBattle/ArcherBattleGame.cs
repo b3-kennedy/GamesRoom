@@ -56,6 +56,8 @@ namespace Assets.ArcherBattle
 
         }
 
+
+
         public void AssignPlayers()
         {
             if (connectedPlayers.Count == 0) return;
@@ -66,8 +68,21 @@ namespace Assets.ArcherBattle
                 rightPlayer.GetComponent<NetworkObject>().ChangeOwnership(connectedPlayers[1].OwnerClientId);
             }
 
+            int turn = Random.Range(0, 2);
+
+
             ArcheryPlayer left = leftPlayer.GetComponent<ArcheryPlayer>();
             ArcheryPlayer right = rightPlayer.GetComponent<ArcheryPlayer>();
+            if (turn == 0)
+            {
+                left.isTurn.Value = true;
+                right.isTurn.Value = false;
+            }
+            else
+            {
+                left.isTurn.Value = false;
+                right.isTurn.Value = true;
+            }
             Assign(left);
             Assign(right);
         }
