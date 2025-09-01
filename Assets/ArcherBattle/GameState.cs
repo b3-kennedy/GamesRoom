@@ -65,7 +65,7 @@ namespace Assets.ArcherBattle
 
             if (playerSpawnCount.Value == 2)
             {
-                MoveCameraClientRpc();
+                OnTurnEndServerRpc();
             }
         }
 
