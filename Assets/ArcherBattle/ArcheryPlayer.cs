@@ -12,7 +12,14 @@ namespace Assets.ArcherBattle
         public GameObject playerObject;
         public Transform rotater;
 
+        public Transform arrowSpawn;
+
         public float rotateSpeed = 5f;
+
+        public float maxCharge;
+
+        public float chargeSpeed;
+        float charge;
 
         public NetworkVariable<bool> isTurn = new NetworkVariable<bool>(false);
 
@@ -52,10 +59,17 @@ namespace Assets.ArcherBattle
                 }
             }
 
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKey(KeyCode.Space) && charge < maxCharge)
             {
-                game.gameState.OnTurnEndServerRpc();
+                charge += Time.deltaTime * chargeSpeed;
             }
+            else if (Input.GetKeyUp(KeyCode.Space))
+            {
+                game.gameState.LaunchArrowServerRpc(arrowSpawn.position, rotater.eulerAngles.normalized, charge);
+            }
+
+
+            //game.gameState.OnTurnEndServerRpc();
 
         }
     }

@@ -14,6 +14,8 @@ namespace Assets.ArcherBattle
         public Transform minSpawnPos;
         public Transform maxSpawnPos;
 
+        public GameObject arrowPrefab;
+
         public GameObject playerPrefab;
 
         public GameObject cam;
@@ -90,12 +92,14 @@ namespace Assets.ArcherBattle
                 leftPlayerObject = player;
                 archerBattleGame.leftPlayer.GetComponent<ArcheryPlayer>().playerObject = player;
                 archerBattleGame.leftPlayer.GetComponent<ArcheryPlayer>().rotater = player.transform.GetChild(4);
+                archerBattleGame.leftPlayer.GetComponent<ArcheryPlayer>().arrowSpawn = player.transform.GetChild(4).GetChild(1);
             }
             else
             {
                 rightPlayerObject = player;
                 archerBattleGame.rightPlayer.GetComponent<ArcheryPlayer>().playerObject = player;
                 archerBattleGame.rightPlayer.GetComponent<ArcheryPlayer>().rotater = player.transform.GetChild(4);
+                archerBattleGame.rightPlayer.GetComponent<ArcheryPlayer>().arrowSpawn = player.transform.GetChild(4).GetChild(1);
             }
 
 
@@ -130,6 +134,19 @@ namespace Assets.ArcherBattle
         void MoveCameraClientRpc(Vector3 pos)
         {
             cam.transform.position = pos;
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void LaunchArrowServerRpc(Vector3 spawn, Vector3 dir, float force)
+        {
+            LaunchArrowClientRpc(spawn, dir, force);
+        }
+
+        [ClientRpc]
+        void LaunchArrowClientRpc(Vector3 spawn, Vector3 dir, float force)
+        {
+            GameObject arrow = Instantiate(arrowPrefab, spawn, Quaternion.identity);
+            arrow.GetComponent<Rigidbody>().AddForce(dir * force, ForceMode.Impulse);
         }
 
 
