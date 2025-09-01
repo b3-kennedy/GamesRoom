@@ -6653,8 +6653,8 @@ MonoBehaviour:
   rotater: {fileID: 0}
   arrowSpawn: {fileID: 0}
   rotateSpeed: 50
-  maxCharge: 100
-  chargeSpeed: 10
+  maxCharge: 50
+  chargeSpeed: 20
   charge: 0
   isTurn:
     m_InternalValue: 0

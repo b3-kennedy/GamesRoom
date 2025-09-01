@@ -10,9 +10,10 @@ namespace Assets.ArcherBattle
 
         public ArcherBattleGame game;
         public GameObject playerObject;
-        public Transform rotater;
+        [HideInInspector] public Transform rotater;
 
-        public Transform arrowSpawn;
+        [HideInInspector] public Transform chargeBar;
+        [HideInInspector] public Transform arrowSpawn;
 
         public float rotateSpeed = 5f;
 
@@ -62,12 +63,15 @@ namespace Assets.ArcherBattle
             if (Input.GetKey(KeyCode.Space) && charge < maxCharge)
             {
                 charge += Time.deltaTime * chargeSpeed;
+                float chargePercent = charge / maxCharge;
+                chargeBar.transform.localScale = new Vector3(chargePercent, chargeBar.transform.localScale.y, chargeBar.transform.localScale.z);
             }
             else if (Input.GetKeyUp(KeyCode.Space))
             {
                 Vector3 direction = rotater.right;
                 game.gameState.LaunchArrowServerRpc(arrowSpawn.position, direction, charge);
                 charge = 0;
+                chargeBar.transform.localScale = new Vector3(0, chargeBar.transform.localScale.y, chargeBar.transform.localScale.z);
             }
 
 

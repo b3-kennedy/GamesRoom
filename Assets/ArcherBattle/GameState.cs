@@ -93,6 +93,7 @@ namespace Assets.ArcherBattle
                 archerBattleGame.leftPlayer.GetComponent<ArcheryPlayer>().playerObject = player;
                 archerBattleGame.leftPlayer.GetComponent<ArcheryPlayer>().rotater = player.transform.GetChild(4);
                 archerBattleGame.leftPlayer.GetComponent<ArcheryPlayer>().arrowSpawn = player.transform.GetChild(4).GetChild(1);
+                archerBattleGame.leftPlayer.GetComponent<ArcheryPlayer>().chargeBar = player.transform.GetChild(5).GetChild(0).GetChild(0);
             }
             else
             {
@@ -100,6 +101,7 @@ namespace Assets.ArcherBattle
                 archerBattleGame.rightPlayer.GetComponent<ArcheryPlayer>().playerObject = player;
                 archerBattleGame.rightPlayer.GetComponent<ArcheryPlayer>().rotater = player.transform.GetChild(4);
                 archerBattleGame.rightPlayer.GetComponent<ArcheryPlayer>().arrowSpawn = player.transform.GetChild(4).GetChild(1);
+                archerBattleGame.rightPlayer.GetComponent<ArcheryPlayer>().chargeBar = player.transform.GetChild(5).GetChild(0).GetChild(0);
             }
 
 
