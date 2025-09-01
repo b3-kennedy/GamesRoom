@@ -151,12 +151,6 @@ namespace Assets.ArcherBattle
         void LaunchArrowClientRpc(Vector3 spawn, Vector3 dir, float force)
         {
             GameObject arrow = Instantiate(arrowPrefab, spawn, Quaternion.identity);
-            if (IsServer)
-            {
-                arrow.GetComponent<NetworkObject>().Spawn();
-                arrow.GetComponent<MeshRenderer>().enabled = false;
-                arrow.GetComponent<Collider>().enabled = false;
-            }
             arrow.GetComponent<Arrow>().Hit.AddListener(OnArrowHit);
             cam.GetComponent<CameraFollow>().startPos = cam.transform.position;
             cam.GetComponent<CameraFollow>().target = arrow.transform;
