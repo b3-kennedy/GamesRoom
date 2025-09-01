@@ -6651,6 +6651,7 @@ MonoBehaviour:
   game: {fileID: 0}
   playerObject: {fileID: 0}
   rotater: {fileID: 0}
+  chargeBar: {fileID: 0}
   arrowSpawn: {fileID: 0}
   rotateSpeed: 50
   maxCharge: 50
@@ -14033,6 +14034,7 @@ MonoBehaviour:
   game: {fileID: 0}
   playerObject: {fileID: 0}
   rotater: {fileID: 0}
+  chargeBar: {fileID: 0}
   arrowSpawn: {fileID: 0}
   rotateSpeed: 50
   maxCharge: 100
@@ -16465,6 +16467,7 @@ GameObject:
   - component: {fileID: 1957297961}
   - component: {fileID: 1957297959}
   - component: {fileID: 1957297960}
+  - component: {fileID: 1957297962}
   m_Layer: 0
   m_Name: Camera
   m_TagString: Untagged
@@ -16582,6 +16585,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1831894964}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1957297962
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1957297958}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ef8e7791fa51244a892282ba4f2dff4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  startPos: {x: 0, y: 0, z: 0}
+  target: {fileID: 0}
+  isFollow: 0
 --- !u!1 &1958530160
 GameObject:
   m_ObjectHideFlags: 0
