@@ -6649,6 +6649,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   game: {fileID: 0}
+  playerObject: {fileID: 0}
+  rotater: {fileID: 0}
+  rotateSpeed: 50
 --- !u!1 &880403569
 GameObject:
   m_ObjectHideFlags: 0
@@ -14014,6 +14017,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   game: {fileID: 0}
+  playerObject: {fileID: 0}
+  rotater: {fileID: 0}
+  rotateSpeed: 50
 --- !u!1 &1650133002
 GameObject:
   m_ObjectHideFlags: 0

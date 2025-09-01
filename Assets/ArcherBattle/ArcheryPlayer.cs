@@ -1,3 +1,4 @@
+using System.Threading;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -8,11 +9,14 @@ namespace Assets.ArcherBattle
     {
 
         [HideInInspector] public ArcherBattleGame game;
+        public GameObject playerObject;
+        public Transform rotater;
 
+        public float rotateSpeed = 5f;
 
         void Start()
         {
-            
+
         }
 
         public void AssignPlayer()
@@ -25,6 +29,22 @@ namespace Assets.ArcherBattle
             {
                 game.gameState.SpawnPlayersServerRpc(false, OwnerClientId);
             }
+        }
+
+        void Update()
+        {
+            if (rotater)
+            {
+                if (Input.GetKey(KeyCode.UpArrow))
+                {
+                    rotater.Rotate(new Vector3(0, 0, Time.deltaTime * rotateSpeed));
+                }
+                if (Input.GetKey(KeyCode.DownArrow))
+                {
+                    rotater.Rotate(new Vector3(0, 0, -Time.deltaTime * rotateSpeed));
+                }
+            }
+
         }
     }
 }

@@ -1,3 +1,4 @@
+using Mono.Cecil.Cil;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -45,6 +46,36 @@ namespace Assets.ArcherBattle
                 spawnedPlayer = Instantiate(playerPrefab, spawn, Quaternion.Euler(0, 180, 0));
             }
             spawnedPlayer.GetComponent<NetworkObject>().SpawnWithOwnership(clientID);
+            SpawnPlayerClientRpc(isPlayer1, spawnedPlayer.GetComponent<NetworkObject>().NetworkObjectId);
+        }
+
+        [ClientRpc]
+        void SpawnPlayerClientRpc(bool isPlayer1, ulong objectID)
+        {
+            GameObject player = null;
+            if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(objectID, out var playerObject))
+            {
+                player = playerObject.gameObject;
+            }
+
+            if (!player)
+            {
+                Debug.Log("Object not found");
+                return;
+            }
+
+
+            if (isPlayer1)
+            {
+                archerBattleGame.leftPlayer.GetComponent<ArcheryPlayer>().playerObject = player;
+                archerBattleGame.leftPlayer.GetComponent<ArcheryPlayer>().rotater = player.transform.GetChild(4);
+            }
+            else
+            {
+                archerBattleGame.rightPlayer.GetComponent<ArcheryPlayer>().playerObject = player;
+                archerBattleGame.rightPlayer.GetComponent<ArcheryPlayer>().rotater = player.transform.GetChild(4);
+            }
+
         }
 
         public override void OnStateUpdate()
