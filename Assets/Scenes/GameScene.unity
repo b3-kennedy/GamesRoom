@@ -6652,6 +6652,8 @@ MonoBehaviour:
   playerObject: {fileID: 0}
   rotater: {fileID: 0}
   rotateSpeed: 50
+  isTurn:
+    m_InternalValue: 0
 --- !u!1 &880403569
 GameObject:
   m_ObjectHideFlags: 0
@@ -9931,6 +9933,11 @@ MonoBehaviour:
   minSpawnPos: {fileID: 2112499809}
   maxSpawnPos: {fileID: 1372167513}
   playerPrefab: {fileID: 3562350127531333862, guid: e5509dffb3c824b4daae8e77cf2b1802, type: 3}
+  cam: {fileID: 1957297958}
+  leftPlayerObject: {fileID: 0}
+  rightPlayerObject: {fileID: 0}
+  isLeftPlayerTurn:
+    m_InternalValue: 0
 --- !u!1 &1183890548
 GameObject:
   m_ObjectHideFlags: 0
@@ -14020,6 +14027,8 @@ MonoBehaviour:
   playerObject: {fileID: 0}
   rotater: {fileID: 0}
   rotateSpeed: 50
+  isTurn:
+    m_InternalValue: 0
 --- !u!1 &1650133002
 GameObject:
   m_ObjectHideFlags: 0
