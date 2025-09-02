@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using Unity.Netcode;
 using UnityEngine;
@@ -29,6 +30,15 @@ namespace Assets.ArcherBattle
         void Start()
         {
             game = transform.parent.GetComponent<ArcherBattleGame>();
+            isTurn.OnValueChanged += OnTurnChange;
+        }
+
+        private void OnTurnChange(bool previousValue, bool newValue)
+        {
+            if (!newValue)
+            {
+                rotater.eulerAngles = Vector3.zero;
+            }
         }
 
         public void AssignPlayer()
@@ -43,6 +53,8 @@ namespace Assets.ArcherBattle
             }
 
         }
+
+
 
         void Update()
         {
