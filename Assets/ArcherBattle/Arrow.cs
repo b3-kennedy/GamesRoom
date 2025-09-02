@@ -41,12 +41,13 @@ namespace Assets.ArcherBattle
 
         void OnCollisionEnter(Collision other)
         {
+            rb.isKinematic = true;
+            hasHit = true;
             if (NetworkManager.LocalClientId == 0) //only do collision on the server so hit doesnt get invoked on clients as well
             {
                 Hit.Invoke();
-                rb.isKinematic = true;
-                hasHit = true;
-                
+
+
 
                 if (other.transform.CompareTag("Head"))
                 {
