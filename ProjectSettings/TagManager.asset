@@ -11,6 +11,9 @@ TagManager:
   - Zone3
   - KillZone
   - Table
+  - Head
+  - Torso
+  - Leg
   layers:
   - Default
   - TransparentFX

@@ -36,7 +36,7 @@ namespace Assets.ArcherBattle
             }
         }
 
-        void OnCollisionEnter(Collision collision)
+        void OnCollisionEnter(Collision other)
         {
             if (NetworkManager.LocalClientId == 0) //only do collision on the server so hit doesnt get invoked on clients as well
             {
@@ -44,6 +44,19 @@ namespace Assets.ArcherBattle
                 Hit.Invoke();
                 rb.isKinematic = true;
                 hasHit = true;
+
+                if (other.transform.CompareTag("Head"))
+                {
+                    other.transform.parent.GetComponent<Health>().TakeDamageServerRpc(100f);
+                }
+                else if (other.transform.CompareTag("Torso"))
+                {
+                    other.transform.parent.GetComponent<Health>().TakeDamageServerRpc(50f);
+                }
+                else if (other.transform.CompareTag("Leg"))
+                {
+                    other.transform.parent.GetComponent<Health>().TakeDamageServerRpc(25f);
+                }
             }
         }
     }

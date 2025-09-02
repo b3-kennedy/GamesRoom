@@ -42,7 +42,6 @@ namespace Assets.ArcherBattle
                 game.gameState.SpawnPlayersServerRpc(false, OwnerClientId);
             }
 
-
         }
 
         void Update()
@@ -68,6 +67,10 @@ namespace Assets.ArcherBattle
                 {
                     charge += Time.deltaTime * chargeSpeed;
                     float chargePercent = charge / maxCharge;
+                    if (!chargeBar.parent.gameObject.activeSelf)
+                    {
+                        chargeBar.parent.gameObject.SetActive(true);
+                    }
                     chargeBar.transform.localScale = new Vector3(chargePercent, chargeBar.transform.localScale.y, chargeBar.transform.localScale.z);
                 }
                 else if (Input.GetKeyUp(KeyCode.Space))
