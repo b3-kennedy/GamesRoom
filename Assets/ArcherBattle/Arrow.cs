@@ -38,11 +38,13 @@ namespace Assets.ArcherBattle
 
         void OnCollisionEnter(Collision collision)
         {
-            if (!IsServer) return;
-
-            Hit.Invoke();
-            rb.isKinematic = true;
-            hasHit = true;
+            if (NetworkManager.LocalClientId == 0) //only do collision on the server so hit doesnt get invoked on clients as well
+            {
+                Debug.Log("Is host");
+                Hit.Invoke();
+                rb.isKinematic = true;
+                hasHit = true;
+            }
         }
     }
 }
