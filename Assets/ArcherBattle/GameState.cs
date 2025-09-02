@@ -166,8 +166,11 @@ namespace Assets.ArcherBattle
         void OnArrowHit()
         {
             Debug.Log("hit");
+            if (gameObject.activeSelf)
+            {
+                StartCoroutine(SwitchTurnAfterTime());
+            }
             
-            StartCoroutine(SwitchTurnAfterTime());
         }
 
         public void OnGameOver(string playerName)

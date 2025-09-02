@@ -85,9 +85,9 @@ namespace Assets.ArcherBattle
 
             if (!hasShot.Value)
             {
-                if (Input.GetKey(KeyCode.Space) && charge < maxCharge)
+                if (Input.GetKeyDown(KeyCode.RightArrow) && charge < maxCharge)
                 {
-                    charge += Time.deltaTime * chargeSpeed;
+                    charge += 16.6666666667f;
                     float chargePercent = charge / maxCharge;
                     if (!chargeBar.parent.gameObject.activeSelf)
                     {
@@ -95,7 +95,18 @@ namespace Assets.ArcherBattle
                     }
                     chargeBar.transform.localScale = new Vector3(chargePercent, chargeBar.transform.localScale.y, chargeBar.transform.localScale.z);
                 }
-                else if (Input.GetKeyUp(KeyCode.Space))
+                else if (Input.GetKeyDown(KeyCode.LeftArrow) && charge > 16.6666666667f)
+                {
+                    charge -= 16.6666666667f;
+                    float chargePercent = charge / maxCharge;
+                    if (!chargeBar.parent.gameObject.activeSelf)
+                    {
+                        chargeBar.parent.gameObject.SetActive(true);
+                    }
+                    chargeBar.transform.localScale = new Vector3(chargePercent, chargeBar.transform.localScale.y, chargeBar.transform.localScale.z);
+                }
+
+                if (Input.GetKeyDown(KeyCode.Space))
                 {
                     Vector3 direction = rotater.right;
                     game.gameState.LaunchArrowServerRpc(arrowSpawn.position, direction, charge);

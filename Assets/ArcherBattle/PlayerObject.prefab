@@ -396,7 +396,7 @@ Transform:
   m_GameObject: {fileID: 2749789417271455839}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.29, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -802,6 +802,9 @@ MonoBehaviour:
   maxHealth: 100
   health:
     m_InternalValue: 0
+  Death:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &3882422381365105877
 GameObject:
   m_ObjectHideFlags: 0
