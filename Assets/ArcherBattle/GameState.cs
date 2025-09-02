@@ -186,14 +186,14 @@ namespace Assets.ArcherBattle
 
             if (client1.playerName == playerName)
             {
-                winningPlayer = client1;
-                losingPlayer = client2;
+                winningPlayer = client2;
+                losingPlayer = client1;
                 archerBattleGame.gameOverState.SetWinner(client1.playerName);
             }
             else
             {
-                winningPlayer = client2;
-                losingPlayer = client1;
+                winningPlayer = client1;
+                losingPlayer = client2;
                 archerBattleGame.gameOverState.SetWinner(client2.playerName);
             }
             
