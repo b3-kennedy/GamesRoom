@@ -85,44 +85,10 @@ namespace Assets.ArcherBattle
 
             if (!hasShot.Value)
             {
-                if (charge < 16.6666666667f)
-                {
-                    charge = 16.6666666667f;
-                }
-
-                if (charge > maxCharge)
-                {
-                    charge = maxCharge;
-                }
-
-                if (Input.GetKeyDown(KeyCode.RightArrow) && charge < maxCharge)
-                {
-                    charge += 16.6666666667f;
-                    float chargePercent = charge / maxCharge;
-                    if (!chargeBar.parent.gameObject.activeSelf)
-                    {
-                        chargeBar.parent.gameObject.SetActive(true);
-                    }
-                    chargeBar.transform.localScale = new Vector3(chargePercent, chargeBar.transform.localScale.y, chargeBar.transform.localScale.z);
-                }
-                else if (Input.GetKeyDown(KeyCode.LeftArrow) && charge > 16.6666666667f)
-                {
-                    charge -= 16.6666666667f;
-                    float chargePercent = charge / maxCharge;
-                    if (!chargeBar.parent.gameObject.activeSelf)
-                    {
-                        chargeBar.parent.gameObject.SetActive(true);
-                    }
-                    chargeBar.transform.localScale = new Vector3(chargePercent, chargeBar.transform.localScale.y, chargeBar.transform.localScale.z);
-                }
-
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
                     Vector3 direction = rotater.right;
-                    game.gameState.LaunchArrowServerRpc(arrowSpawn.position, direction, charge);
-                    charge = 16.6666666667f;
-                    float chargePercent = charge / maxCharge;
-                    chargeBar.transform.localScale = new Vector3(chargePercent, chargeBar.transform.localScale.y, chargeBar.transform.localScale.z);
+                    game.gameState.LaunchArrowServerRpc(arrowSpawn.position, direction, 50f);
                     ChangeShotValueServerRpc(true);
                 }
             }
@@ -132,6 +98,51 @@ namespace Assets.ArcherBattle
 
             //game.gameState.OnTurnEndServerRpc();
 
+        }
+
+        // function if i can think of a reason for charging to be necessary. Why would anyone not use full charge????
+        void Charge()
+        {
+            // if (charge < 16.6666666667f)
+            // {
+            //     charge = 16.6666666667f;
+            // }
+
+            // if (charge > maxCharge)
+            // {
+            //     charge = maxCharge;
+            // }
+
+            // if (Input.GetKeyDown(KeyCode.RightArrow) && charge < maxCharge)
+            // {
+            //     charge += 16.6666666667f;
+            //     float chargePercent = charge / maxCharge;
+            //     if (!chargeBar.parent.gameObject.activeSelf)
+            //     {
+            //         chargeBar.parent.gameObject.SetActive(true);
+            //     }
+            //     chargeBar.transform.localScale = new Vector3(chargePercent, chargeBar.transform.localScale.y, chargeBar.transform.localScale.z);
+            // }
+            // else if (Input.GetKeyDown(KeyCode.LeftArrow) && charge > 16.6666666667f)
+            // {
+            //     charge -= 16.6666666667f;
+            //     float chargePercent = charge / maxCharge;
+            //     if (!chargeBar.parent.gameObject.activeSelf)
+            //     {
+            //         chargeBar.parent.gameObject.SetActive(true);
+            //     }
+            //     chargeBar.transform.localScale = new Vector3(chargePercent, chargeBar.transform.localScale.y, chargeBar.transform.localScale.z);
+            // }
+
+            // if (Input.GetKeyDown(KeyCode.Space))
+            // {
+            //     Vector3 direction = rotater.right;
+            //     game.gameState.LaunchArrowServerRpc(arrowSpawn.position, direction, charge);
+            //     charge = 16.6666666667f;
+            //     float chargePercent = charge / maxCharge;
+            //     chargeBar.transform.localScale = new Vector3(chargePercent, chargeBar.transform.localScale.y, chargeBar.transform.localScale.z);
+            //     ChangeShotValueServerRpc(true);
+            // }
         }
 
         [ServerRpc(RequireOwnership = false)]
