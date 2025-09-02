@@ -157,6 +157,7 @@ namespace Assets.ArcherBattle
             cam.GetComponent<CameraFollow>().target = arrow.transform;
             cam.GetComponent<CameraFollow>().isFollow = true;
             arrow.GetComponent<Rigidbody>().AddForce(dir * force, ForceMode.Impulse);
+            arrow.GetComponent<Arrow>().Hit.AddListener(OnArrowHit);
         }
 
 
