@@ -37,7 +37,7 @@ namespace Assets.ArcherBattle
         {
             if (!newValue)
             {
-                rotater.localEulerAngles = Vector3.zero;                
+                //rotater.localEulerAngles = Vector3.zero;                
             }
         }
 
