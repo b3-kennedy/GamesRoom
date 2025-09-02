@@ -85,6 +85,16 @@ namespace Assets.ArcherBattle
 
             if (!hasShot.Value)
             {
+                if (charge < 16.6666666667f)
+                {
+                    charge = 16.6666666667f;
+                }
+
+                if (charge > maxCharge)
+                {
+                    charge = maxCharge;
+                }
+
                 if (Input.GetKeyDown(KeyCode.RightArrow) && charge < maxCharge)
                 {
                     charge += 16.6666666667f;
@@ -106,21 +116,13 @@ namespace Assets.ArcherBattle
                     chargeBar.transform.localScale = new Vector3(chargePercent, chargeBar.transform.localScale.y, chargeBar.transform.localScale.z);
                 }
 
-                if (charge < 16.6666666667f)
-                {
-                    charge = 16.6666666667f;
-                }
-                else if (charge > maxCharge)
-                {
-                    charge = maxCharge;
-                }
-
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
                     Vector3 direction = rotater.right;
                     game.gameState.LaunchArrowServerRpc(arrowSpawn.position, direction, charge);
-                    charge = 0;
-                    chargeBar.transform.localScale = new Vector3(0, chargeBar.transform.localScale.y, chargeBar.transform.localScale.z);
+                    charge = 16.6666666667f;
+                    float chargePercent = charge / maxCharge;
+                    chargeBar.transform.localScale = new Vector3(chargePercent, chargeBar.transform.localScale.y, chargeBar.transform.localScale.z);
                     ChangeShotValueServerRpc(true);
                 }
             }

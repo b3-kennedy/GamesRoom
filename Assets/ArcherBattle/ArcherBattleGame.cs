@@ -188,7 +188,7 @@ namespace Assets.ArcherBattle
                     break;
 
                 case GameState.GAME_OVER:
-                    gameState.OnStateEnter();
+                    gameOverState.OnStateEnter();
                     break;
             }
         }

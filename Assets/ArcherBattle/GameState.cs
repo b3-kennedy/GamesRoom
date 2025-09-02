@@ -196,7 +196,7 @@ namespace Assets.ArcherBattle
                 losingPlayer = client1;
                 archerBattleGame.gameOverState.SetWinner(client2.playerName);
             }
-
+            
             //payout wager
 
             StartCoroutine(EndGameAfterTime());
