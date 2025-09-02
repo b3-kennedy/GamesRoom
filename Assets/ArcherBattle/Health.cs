@@ -1,5 +1,6 @@
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.Events;
 
 
 namespace Assets.ArcherBattle
@@ -9,6 +10,8 @@ namespace Assets.ArcherBattle
 
         public float maxHealth = 100f;
         public NetworkVariable<float> health = new NetworkVariable<float>();
+
+        [HideInInspector] public UnityEvent Death;
 
 
         public override void OnNetworkSpawn()
@@ -26,6 +29,7 @@ namespace Assets.ArcherBattle
             if (health.Value <= 0)
             {
                 Debug.Log("player has died");
+                Death.Invoke();
             }
         }
     }

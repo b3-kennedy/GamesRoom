@@ -27,6 +27,9 @@ namespace Assets.ArcherBattle
 
         public NetworkVariable<bool> isLeftPlayerTurn = new NetworkVariable<bool>(false);
 
+        [HideInInspector] public GameObject winningPlayer;
+        [HideInInspector] public GameObject losingPlayer;
+
         void Start()
         {
             if (game is ArcherBattleGame g)
@@ -94,6 +97,7 @@ namespace Assets.ArcherBattle
                 archerBattleGame.leftPlayer.GetComponent<ArcheryPlayer>().rotater = player.transform.GetChild(4);
                 archerBattleGame.leftPlayer.GetComponent<ArcheryPlayer>().arrowSpawn = player.transform.GetChild(4).GetChild(1);
                 archerBattleGame.leftPlayer.GetComponent<ArcheryPlayer>().chargeBar = player.transform.GetChild(5).GetChild(0).GetChild(0);
+                archerBattleGame.leftPlayer.GetComponent<ArcheryPlayer>().AddListeners();
             }
             else
             {
@@ -102,10 +106,8 @@ namespace Assets.ArcherBattle
                 archerBattleGame.rightPlayer.GetComponent<ArcheryPlayer>().rotater = player.transform.GetChild(4);
                 archerBattleGame.rightPlayer.GetComponent<ArcheryPlayer>().arrowSpawn = player.transform.GetChild(4).GetChild(1);
                 archerBattleGame.rightPlayer.GetComponent<ArcheryPlayer>().chargeBar = player.transform.GetChild(5).GetChild(0).GetChild(0);
+                archerBattleGame.rightPlayer.GetComponent<ArcheryPlayer>().AddListeners();
             }
-
-
-
         }
 
         [ServerRpc(RequireOwnership = false)]
@@ -168,7 +170,17 @@ namespace Assets.ArcherBattle
             StartCoroutine(SwitchTurnAfterTime());
         }
 
+        public void OnGameOver(string playerName)
+        {
+            Debug.Log($"{playerName} has lost");
+            StartCoroutine(EndGameAfterTime());
+        }
 
+        IEnumerator EndGameAfterTime()
+        {
+            yield return new WaitForSeconds(3);
+            archerBattleGame.ChangeStateServerRpc(ArcherBattleGame.GameState.GAME_OVER);
+        }
 
         IEnumerator SwitchTurnAfterTime()
         {

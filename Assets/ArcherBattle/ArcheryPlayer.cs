@@ -54,6 +54,16 @@ namespace Assets.ArcherBattle
 
         }
 
+        public void AddListeners()
+        {
+            playerObject.GetComponent<Health>().Death.AddListener(OnDeath);
+        }
+
+        void OnDeath()
+        {
+            string steamName = NetworkManager.Singleton.ConnectedClients[OwnerClientId].PlayerObject.GetComponent<SteamPlayer>().playerName;
+            game.gameState.OnGameOver(steamName);
+        }
 
 
         void Update()
