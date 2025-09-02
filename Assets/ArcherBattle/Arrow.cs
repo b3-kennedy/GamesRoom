@@ -22,28 +22,31 @@ namespace Assets.ArcherBattle
         // Update is called once per frame
         void Update()
         {
-            if (hasHit) return;
 
-            Vector3 velocity = rb.linearVelocity;
-
-            if (velocity != Vector3.zero)
+            if (!hasHit && !rb.isKinematic)
             {
-                // Make +Z point in travel direction
-                Quaternion lookRot = Quaternion.LookRotation(velocity.normalized, Vector3.up);
+                Vector3 velocity = rb.linearVelocity;
 
-                // Rotate extra 90° so +X (right) becomes the forward nose
-                transform.rotation = lookRot * Quaternion.Euler(0f, -90f, 0f);
+                if (velocity != Vector3.zero)
+                {
+                    // Make +Z point in travel direction
+                    Quaternion lookRot = Quaternion.LookRotation(velocity.normalized, Vector3.up);
+
+                    // Rotate extra 90° so +X (right) becomes the forward nose
+                    transform.rotation = lookRot * Quaternion.Euler(0f, -90f, 0f);
+                }
             }
+
         }
 
         void OnCollisionEnter(Collision other)
         {
             if (NetworkManager.LocalClientId == 0) //only do collision on the server so hit doesnt get invoked on clients as well
             {
-                Debug.Log("Is host");
                 Hit.Invoke();
                 rb.isKinematic = true;
                 hasHit = true;
+                
 
                 if (other.transform.CompareTag("Head"))
                 {
