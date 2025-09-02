@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using Mono.Cecil.Cil;
 using Unity.Netcode;
 using UnityEngine;
@@ -27,8 +28,10 @@ namespace Assets.ArcherBattle
 
         public NetworkVariable<bool> isLeftPlayerTurn = new NetworkVariable<bool>(false);
 
-        [HideInInspector] public GameObject winningPlayer;
-        [HideInInspector] public GameObject losingPlayer;
+        [HideInInspector] public SteamPlayer winningPlayer;
+        [HideInInspector] public SteamPlayer losingPlayer;
+
+        [HideInInspector] public List<GameObject> firedArrows = new List<GameObject>();
 
         void Start()
         {
@@ -160,6 +163,7 @@ namespace Assets.ArcherBattle
             cam.GetComponent<CameraFollow>().isFollow = true;
             arrow.GetComponent<Rigidbody>().AddForce(dir * force, ForceMode.Impulse);
             arrow.GetComponent<Arrow>().Hit.AddListener(OnArrowHit);
+            firedArrows.Add(arrow);
         }
 
 
@@ -176,6 +180,25 @@ namespace Assets.ArcherBattle
         public void OnGameOver(string playerName)
         {
             Debug.Log($"{playerName} has lost");
+
+            SteamPlayer client1 = archerBattleGame.connectedPlayers[0].GetComponent<SteamPlayer>();
+            SteamPlayer client2 = archerBattleGame.connectedPlayers[1].GetComponent<SteamPlayer>();
+
+            if (client1.playerName == playerName)
+            {
+                winningPlayer = client1;
+                losingPlayer = client2;
+                archerBattleGame.gameOverState.SetWinner(client1.playerName);
+            }
+            else
+            {
+                winningPlayer = client2;
+                losingPlayer = client1;
+                archerBattleGame.gameOverState.SetWinner(client2.playerName);
+            }
+
+            //payout wager
+
             StartCoroutine(EndGameAfterTime());
         }
 

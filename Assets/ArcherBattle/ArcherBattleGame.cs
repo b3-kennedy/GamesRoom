@@ -14,6 +14,7 @@ namespace Assets.ArcherBattle
 
         public MainMenu mainMenuState;
         public ArcherBattle.GameState gameState;
+        public ArcherBattle.GameOver gameOverState;
 
         public NetworkVariable<GameState> netGameState = new NetworkVariable<GameState>(
             GameState.MAIN_MENU,
@@ -36,6 +37,7 @@ namespace Assets.ArcherBattle
         {
             mainMenuState.game = this;
             gameState.game = this;
+            gameOverState.game = this;
         }
 
         [ServerRpc(RequireOwnership = false)]
@@ -56,6 +58,34 @@ namespace Assets.ArcherBattle
 
         }
 
+
+        [ServerRpc(RequireOwnership = false)]
+        public override void ResetServerRpc()
+        {
+            leftPlayer.GetComponent<ArcheryPlayer>().playerObject.GetComponent<NetworkObject>().Despawn();
+            rightPlayer.GetComponent<ArcheryPlayer>().playerObject.GetComponent<NetworkObject>().Despawn();
+            leftPlayer.GetComponent<NetworkObject>().ChangeOwnership(0);
+            rightPlayer.GetComponent<NetworkObject>().ChangeOwnership(0);
+            connectedPlayers.Clear();
+            ResetClientRpc();
+            ChangeStateServerRpc(GameState.MAIN_MENU);
+
+        }
+
+        [ClientRpc]
+        void ResetClientRpc()
+        {
+            ClearArrows();
+        }
+
+        void ClearArrows()
+        {
+            for (int i = gameState.firedArrows.Count - 1; i >= 0; i--)
+            {
+                Destroy(gameState.firedArrows[i]);
+            }
+            gameState.firedArrows.Clear();
+        }
 
 
 
@@ -140,6 +170,7 @@ namespace Assets.ArcherBattle
                     gameState.OnStateExit();                    
                     break;
                 case GameState.GAME_OVER:
+                    gameOverState.OnStateExit();
                     break;
             }
         }
@@ -157,6 +188,7 @@ namespace Assets.ArcherBattle
                     break;
 
                 case GameState.GAME_OVER:
+                    gameState.OnStateEnter();
                     break;
             }
         }

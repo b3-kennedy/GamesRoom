@@ -106,6 +106,15 @@ namespace Assets.ArcherBattle
                     chargeBar.transform.localScale = new Vector3(chargePercent, chargeBar.transform.localScale.y, chargeBar.transform.localScale.z);
                 }
 
+                if (charge < 16.6666666667f)
+                {
+                    charge = 16.6666666667f;
+                }
+                else if (charge > maxCharge)
+                {
+                    charge = maxCharge;
+                }
+
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
                     Vector3 direction = rotater.right;
