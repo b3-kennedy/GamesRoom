@@ -188,13 +188,13 @@ namespace Assets.ArcherBattle
             {
                 winningPlayer = client2;
                 losingPlayer = client1;
-                archerBattleGame.gameOverState.SetWinner(client1.playerName);
+                archerBattleGame.gameOverState.SetWinner(client2.playerName);
             }
             else
             {
                 winningPlayer = client1;
                 losingPlayer = client2;
-                archerBattleGame.gameOverState.SetWinner(client2.playerName);
+                archerBattleGame.gameOverState.SetWinner(client1.playerName);
             }
             
             //payout wager
