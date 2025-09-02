@@ -37,7 +37,15 @@ namespace Assets.ArcherBattle
         {
             if (!newValue)
             {
-                rotater.eulerAngles = Vector3.zero;
+                if (OwnerClientId == game.connectedPlayers[0].OwnerClientId)
+                {
+                    rotater.eulerAngles = Vector3.zero;
+                }
+                else if(OwnerClientId == game.connectedPlayers[1].OwnerClientId)
+                {
+                    rotater.eulerAngles = new Vector3(0,180,0);
+                }
+                
             }
         }
 
