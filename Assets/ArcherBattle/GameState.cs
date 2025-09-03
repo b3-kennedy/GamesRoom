@@ -78,7 +78,7 @@ namespace Assets.ArcherBattle
 
             if (playerSpawnCount.Value == 2)
             {
-                OnTurnEndServerRpc();
+                //OnTurnEndServerRpc();
             }
         }
 
