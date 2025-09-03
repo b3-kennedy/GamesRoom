@@ -70,7 +70,11 @@ namespace Assets.ArcherBattle
 
         public override void OnStateExit()
         {
-            archerBattleGame.AssignPlayers();
+            if (IsServer)
+            {
+                archerBattleGame.AssignPlayers();
+            }
+            
             gameObject.SetActive(false);
 
         }
