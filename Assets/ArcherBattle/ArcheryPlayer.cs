@@ -69,31 +69,33 @@ namespace Assets.ArcherBattle
         void Update()
         {
 
-            if (!isTurn.Value || !IsOwner) return;
+            if (!IsOwner) return;
 
-            if (rotater)
+            if (isTurn.Value)
             {
-                if (Input.GetKey(KeyCode.UpArrow))
+                if (rotater)
                 {
-                    rotater.Rotate(new Vector3(0, 0, Time.deltaTime * rotateSpeed));
+                    if (Input.GetKey(KeyCode.UpArrow))
+                    {
+                        rotater.Rotate(new Vector3(0, 0, Time.deltaTime * rotateSpeed));
+                    }
+                    if (Input.GetKey(KeyCode.DownArrow))
+                    {
+                        rotater.Rotate(new Vector3(0, 0, -Time.deltaTime * rotateSpeed));
+                    }
                 }
-                if (Input.GetKey(KeyCode.DownArrow))
+
+                if (!hasShot.Value)
                 {
-                    rotater.Rotate(new Vector3(0, 0, -Time.deltaTime * rotateSpeed));
+                    if (Input.GetKeyDown(KeyCode.Space))
+                    {
+                        Vector3 direction = rotater.right;
+                        game.gameState.LaunchArrowServerRpc(arrowSpawn.position, direction, 50f);
+                        ChangeShotValueServerRpc(true);
+                    }
                 }
             }
 
-            if (!hasShot.Value)
-            {
-                if (Input.GetKeyDown(KeyCode.Space))
-                {
-                    Vector3 direction = rotater.right;
-                    game.gameState.LaunchArrowServerRpc(arrowSpawn.position, direction, 50f);
-                    ChangeShotValueServerRpc(true);
-                }
-            }
-
-            Debug.Log($"owner ID {OwnerClientId} - connected player 0 {game.connectedPlayers[0].OwnerClientId}");
 
             if (game.netGameState.Value == ArcherBattleGame.GameState.WAGER && OwnerClientId == game.connectedPlayers[0].OwnerClientId)
             {
