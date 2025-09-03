@@ -51,7 +51,7 @@ namespace Assets.ArcherBattle
             isGameOver = false;
             if (IsServer)
             {
-
+                playerSpawnCount.Value = 0;
             }
 
             floor.SetActive(true);
@@ -121,26 +121,30 @@ namespace Assets.ArcherBattle
         [ServerRpc(RequireOwnership = false)]
         public void OnTurnEndServerRpc()
         {
+            // Flip the turn state
             isLeftPlayerTurn.Value = !isLeftPlayerTurn.Value;
-            Vector3 leftPos = leftPlayerObject.transform.position;
-            Vector3 rightPos = rightPlayerObject.transform.position;
-            if (isLeftPlayerTurn.Value)
-            {
-                archerBattleGame.leftPlayer.GetComponent<ArcheryPlayer>().isTurn.Value = true;
-                archerBattleGame.leftPlayer.GetComponent<ArcheryPlayer>().ChangeShotValueServerRpc(false);
-                archerBattleGame.rightPlayer.GetComponent<ArcheryPlayer>().isTurn.Value = false;
-                cam.transform.position = new Vector3(leftPos.x, leftPos.y, cam.transform.position.z);
-            }
-            else
-            {
-                archerBattleGame.leftPlayer.GetComponent<ArcheryPlayer>().isTurn.Value = false;
-                archerBattleGame.rightPlayer.GetComponent<ArcheryPlayer>().isTurn.Value = true;
-                archerBattleGame.rightPlayer.GetComponent<ArcheryPlayer>().ChangeShotValueServerRpc(false);
-                cam.transform.position = new Vector3(rightPos.x, rightPos.y, cam.transform.position.z);
 
-            }
+            // Resolve who is the active and inactive player
+            ArcheryPlayer active = isLeftPlayerTurn.Value
+                ? archerBattleGame.leftPlayer.GetComponent<ArcheryPlayer>()
+                : archerBattleGame.rightPlayer.GetComponent<ArcheryPlayer>();
 
+            ArcheryPlayer inactive = isLeftPlayerTurn.Value
+                ? archerBattleGame.rightPlayer.GetComponent<ArcheryPlayer>()
+                : archerBattleGame.leftPlayer.GetComponent<ArcheryPlayer>();
 
+            // Update turn states
+            active.isTurn.Value = true;
+            inactive.isTurn.Value = false;
+
+            // Reset the "hasShot" flag on the new active player
+            active.ChangeShotValueServerRpc(false);
+
+            // Move camera to the active player's position
+            Vector3 pos = active.transform.position;
+            cam.transform.position = new Vector3(pos.x, pos.y, cam.transform.position.z);
+
+            // Sync camera for all clients
             MoveCameraClientRpc(cam.transform.position);
         }
 
