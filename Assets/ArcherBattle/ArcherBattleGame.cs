@@ -139,6 +139,7 @@ namespace Assets.ArcherBattle
                 left.isTurn.Value = false;
                 right.isTurn.Value = true;
             }
+            Debug.Log(turn);
             Assign(left);
             Assign(right);
         }
