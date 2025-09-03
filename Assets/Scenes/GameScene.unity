@@ -17386,7 +17386,7 @@ MonoBehaviour:
   mainMenuState: {fileID: 947169196}
   gameState: {fileID: 1182465792}
   gameOverState: {fileID: 1102268951}
-  cam: {fileID: 0}
+  cam: {fileID: 1957297958}
   wagerState: {fileID: 1489473574}
   netGameState:
     m_InternalValue: 0
