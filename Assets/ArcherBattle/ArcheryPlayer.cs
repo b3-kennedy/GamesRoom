@@ -93,6 +93,8 @@ namespace Assets.ArcherBattle
                 }
             }
 
+            Debug.Log($"owner ID {OwnerClientId} - connected player 0 {game.connectedPlayers[0].OwnerClientId}");
+
             if (game.netGameState.Value == ArcherBattleGame.GameState.WAGER && OwnerClientId == game.connectedPlayers[0].OwnerClientId)
             {
                 Debug.Log("wager button options");
