@@ -1,4 +1,5 @@
 using TMPro;
+using Unity.Netcode;
 using UnityEngine;
 
 
@@ -9,11 +10,13 @@ namespace Assets.ArcherBattle
 
         ArcherBattleGame archerBattleGame;
 
-        string winnerName;
+        public NetworkVariable<string> winnerName;
 
         public GameObject cam;
 
         public TextMeshPro winnerText;
+
+        public GameObject floor;
 
 
         void Start()
@@ -30,6 +33,7 @@ namespace Assets.ArcherBattle
             winnerText.text = $"{winnerName} has Won!";
             cam.GetComponent<CameraFollow>().isFollow = false;
             cam.transform.localPosition = new Vector3(0, 0, cam.transform.localPosition.z);
+            floor.SetActive(false);
         }
 
         public override void OnStateUpdate()
@@ -45,9 +49,10 @@ namespace Assets.ArcherBattle
             gameObject.SetActive(false);
         }
 
-        public void SetWinner(string playerName)
+        [ServerRpc(RequireOwnership = false)]
+        public void SetWinnerServerRpc(string playerName)
         {
-            winnerName = playerName;
+            winnerName.Value = playerName;
         }
 
     }

@@ -133,6 +133,7 @@ namespace Assets.ArcherBattle
 
                 if (Input.GetKeyDown(KeyCode.X))
                 {
+                    game.wagerState.ZeroWagerAmountServerRpc();
                     game.ChangeStateServerRpc(ArcherBattleGame.GameState.GAME);
                 }
             }

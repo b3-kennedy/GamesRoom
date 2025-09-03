@@ -16,6 +16,7 @@ namespace Assets.ArcherBattle
         public TextMeshPro wagerAmountText;
         public TextMeshPro chooseText;
         public TextMeshPro rightPlayerConfirmText;
+
         string player1Name;
         string player2Name;
 
@@ -51,7 +52,6 @@ namespace Assets.ArcherBattle
                 player2 = rightPlayerObject.GetComponent<SteamPlayer>();
                 SetTextValuesClientRpc(player1Name, player2Name);
             }
-
             gameObject.SetActive(true);
         }
 
@@ -102,6 +102,12 @@ namespace Assets.ArcherBattle
             wagerAmount.Value += amount;
 
             wagerAmount.Value = Mathf.Clamp(wagerAmount.Value, 0, maxWager);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void ZeroWagerAmountServerRpc()
+        {
+            wagerAmount.Value = 0;
         }
 
 

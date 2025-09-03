@@ -24,6 +24,8 @@ namespace Assets.ArcherBattle
         public GameObject leftPlayerObject;
         public GameObject rightPlayerObject;
 
+        public GameObject floor;
+
         public NetworkVariable<int> playerSpawnCount;
 
         public NetworkVariable<bool> isLeftPlayerTurn = new NetworkVariable<bool>(false);
@@ -52,7 +54,7 @@ namespace Assets.ArcherBattle
 
             }
 
-
+            floor.SetActive(true);
 
         }
 
@@ -192,13 +194,13 @@ namespace Assets.ArcherBattle
             {
                 winningPlayer = client2;
                 losingPlayer = client1;
-                archerBattleGame.gameOverState.SetWinner(client2.playerName);
+                archerBattleGame.gameOverState.SetWinnerServerRpc(client2.playerName);
             }
             else
             {
                 winningPlayer = client1;
                 losingPlayer = client2;
-                archerBattleGame.gameOverState.SetWinner(client1.playerName);
+                archerBattleGame.gameOverState.SetWinnerServerRpc(client1.playerName);
             }
 
             if (IsServer)

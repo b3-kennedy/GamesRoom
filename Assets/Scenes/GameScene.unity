@@ -8437,6 +8437,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   game: {fileID: 0}
   connectedPlayersText: {fileID: 386569050}
+  floor: {fileID: 2006560459}
 --- !u!1 &948173431
 GameObject:
   m_ObjectHideFlags: 0
@@ -10213,8 +10214,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   game: {fileID: 0}
+  winnerName:
+    m_InternalValue: 
   cam: {fileID: 1957297958}
   winnerText: {fileID: 865524454}
+  floor: {fileID: 2006560459}
 --- !u!4 &1102268952
 Transform:
   m_ObjectHideFlags: 0
@@ -11262,6 +11266,7 @@ MonoBehaviour:
   cam: {fileID: 1957297958}
   leftPlayerObject: {fileID: 0}
   rightPlayerObject: {fileID: 0}
+  floor: {fileID: 2006560459}
   playerSpawnCount:
     m_InternalValue: 0
   isLeftPlayerTurn:
