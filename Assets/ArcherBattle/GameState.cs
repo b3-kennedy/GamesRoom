@@ -207,6 +207,9 @@ namespace Assets.ArcherBattle
                 losingPlayer.credits.Value -= archerBattleGame.wagerState.wagerAmount.Value;
             }
 
+            archerBattleGame.leftPlayer.GetComponent<ArcheryPlayer>().OnGameEndServerRpc();
+            archerBattleGame.rightPlayer.GetComponent<ArcheryPlayer>().OnGameEndServerRpc();
+
             StartCoroutine(EndGameAfterTime());
         }
 

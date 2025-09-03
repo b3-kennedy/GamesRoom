@@ -167,6 +167,23 @@ namespace Assets.ArcherBattle
 
         }
 
+        [ServerRpc(RequireOwnership = false)]
+        public void OnGameEndServerRpc()
+        {
+            if (IsServer)
+            {
+                isTurn.Value = false;
+                isPlayer1.Value = false;
+                hasShot.Value = false;
+            }
+        }
+
+        [ClientRpc]
+        void OnGameEndClientRpc()
+        {
+            
+        }
+
         //function if i can think of a reason for charging to be necessary. Why would anyone not use full charge????
         void Charge()
         {
