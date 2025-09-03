@@ -10,7 +10,7 @@ namespace Assets.ArcherBattle
 
         ArcherBattleGame archerBattleGame;
 
-        public NetworkVariable<string> winnerName;
+        public string winnerName;
 
         public GameObject cam;
 
@@ -52,7 +52,13 @@ namespace Assets.ArcherBattle
         [ServerRpc(RequireOwnership = false)]
         public void SetWinnerServerRpc(string playerName)
         {
-            winnerName.Value = playerName;
+            SetWinnerClientRpc(playerName);
+        }
+
+        [ClientRpc]
+        void SetWinnerClientRpc(string winnerName)
+        {
+            winnerText.text = winnerName;
         }
 
     }
