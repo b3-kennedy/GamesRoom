@@ -10,6 +10,9 @@ namespace Assets.ArcherBattle
         ArcherBattleGame archerBattleGame;
         public NetworkVariable<int> wagerAmount;
 
+        public GameObject player1ButtonOptions;
+
+        public GameObject player2ButtonOptions;
         public TextMeshPro wagerAmountText;
         public TextMeshPro chooseText;
         public TextMeshPro rightPlayerConfirmText;
@@ -60,11 +63,15 @@ namespace Assets.ArcherBattle
             {
                 chooseText.gameObject.SetActive(false);
                 rightPlayerConfirmText.gameObject.SetActive(true);
+                player2ButtonOptions.SetActive(true);
+                player1ButtonOptions.SetActive(false);
             }
             else
             {
                 chooseText.gameObject.SetActive(true);
                 rightPlayerConfirmText.gameObject.SetActive(false);
+                player2ButtonOptions.SetActive(false);
+                player1ButtonOptions.SetActive(true);
             }
         }
 

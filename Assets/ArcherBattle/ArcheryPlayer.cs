@@ -99,9 +99,8 @@ namespace Assets.ArcherBattle
             }
 
 
-            if (game.netGameState.Value == ArcherBattleGame.GameState.WAGER && OwnerClientId == game.connectedPlayers[0].OwnerClientId)
+            if (game.netGameState.Value == ArcherBattleGame.GameState.WAGER && isPlayer1.Value)
             {
-                Debug.Log("wager button options");
                 if (Input.GetKeyDown(KeyCode.RightArrow))
                 {
                     game.wagerState.ChangeWagerAmountServerRpc(10);
@@ -123,10 +122,21 @@ namespace Assets.ArcherBattle
             }
 
 
+            if (game.netGameState.Value == ArcherBattleGame.GameState.WAGER && !isPlayer1.Value)
+            {
+                if (game.wagerState.isPlayer1Locked.Value)
+                {
+                    if (Input.GetKeyDown(KeyCode.Y))
+                    {
+                        game.ChangeStateServerRpc(ArcherBattleGame.GameState.GAME);
+                    }
 
-
-            //game.gameState.OnTurnEndServerRpc();
-
+                    if (Input.GetKeyDown(KeyCode.N))
+                    {
+                        game.wagerState.ChangePlayer1LockedInStateServerRpc();
+                    }
+                }
+            }
         }
 
         //function if i can think of a reason for charging to be necessary. Why would anyone not use full charge????
