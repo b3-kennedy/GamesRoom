@@ -135,6 +135,7 @@ namespace Assets.ArcherBattle
                 archerBattleGame.rightPlayer.GetComponent<ArcheryPlayer>().arrowSpawn = player.transform.GetChild(4).GetChild(1);
                 archerBattleGame.rightPlayer.GetComponent<ArcheryPlayer>().chargeBar = player.transform.GetChild(5).GetChild(0).GetChild(0);
                 archerBattleGame.rightPlayer.GetComponent<ArcheryPlayer>().playerNameText = player.transform.GetChild(5).GetChild(1).GetComponent<TextMeshProUGUI>();
+                archerBattleGame.rightPlayer.GetComponent<ArcheryPlayer>().playerNameText.transform.eulerAngles = new Vector3(0,180,0);
                 archerBattleGame.rightPlayer.GetComponent<ArcheryPlayer>().AddListeners();
                 
             }
