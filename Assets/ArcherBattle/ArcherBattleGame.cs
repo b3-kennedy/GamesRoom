@@ -108,6 +108,7 @@ namespace Assets.ArcherBattle
             {
                 leftPlayer.GetComponent<NetworkObject>().ChangeOwnership(connectedPlayers[0].OwnerClientId);
                 rightPlayer.GetComponent<NetworkObject>().ChangeOwnership(connectedPlayers[1].OwnerClientId);
+                leftPlayer.GetComponent<ArcheryPlayer>().isPlayer1.Value = true;
                 var leftID = NetworkManager.Singleton.ConnectedClients[connectedPlayers[0].OwnerClientId].PlayerObject.GetComponent<NetworkObject>().NetworkObjectId;
                 var rightID = NetworkManager.Singleton.ConnectedClients[connectedPlayers[1].OwnerClientId].PlayerObject.GetComponent<NetworkObject>().NetworkObjectId;
                 DisableMovementClientRpc(leftID, rightID);

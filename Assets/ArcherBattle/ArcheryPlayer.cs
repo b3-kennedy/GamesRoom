@@ -27,6 +27,8 @@ namespace Assets.ArcherBattle
 
         public NetworkVariable<bool> isTurn = new NetworkVariable<bool>(false);
 
+        public NetworkVariable<bool> isPlayer1 = new NetworkVariable<bool>(false);
+
         void Start()
         {
             game = transform.parent.GetComponent<ArcherBattleGame>();
