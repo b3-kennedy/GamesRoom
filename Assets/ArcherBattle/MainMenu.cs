@@ -29,7 +29,6 @@ namespace Assets.ArcherBattle
             connectedPlayersText.text = $"{archerBattleGame.connectedPlayersCount.Value}/2";
             if (archerBattleGame.connectedPlayers.Count == 2)
             {
-                archerBattleGame.AssignPlayers();
                 archerBattleGame.ChangeStateServerRpc(ArcherBattleGame.GameState.WAGER);
             }
         }

@@ -41,6 +41,10 @@ namespace Assets.ArcherBattle
             gameState.game = this;
             gameOverState.game = this;
             wagerState.game = this;
+
+            wagerState.gameObject.SetActive(false);
+            gameOverState.gameObject.SetActive(false);
+            mainMenuState.gameObject.SetActive(true);
         }
 
         [ServerRpc(RequireOwnership = false)]

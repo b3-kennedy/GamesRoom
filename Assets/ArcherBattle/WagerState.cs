@@ -70,7 +70,9 @@ namespace Assets.ArcherBattle
 
         public override void OnStateExit()
         {
+            archerBattleGame.AssignPlayers();
             gameObject.SetActive(false);
+
         }
 
         [ServerRpc(RequireOwnership = false)]
