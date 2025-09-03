@@ -19,6 +19,9 @@ namespace Assets.ArcherBattle
         string player1Name;
         string player2Name;
 
+        SteamPlayer player1;
+        SteamPlayer player2;
+
         public NetworkVariable<bool> isPlayer1Locked = new NetworkVariable<bool>(false);
 
         void Start()
@@ -42,8 +45,10 @@ namespace Assets.ArcherBattle
             {
                 var leftPlayerObject = NetworkManager.Singleton.ConnectedClients[archerBattleGame.leftPlayer.GetComponent<NetworkObject>().OwnerClientId].PlayerObject;
                 player1Name = leftPlayerObject.GetComponent<SteamPlayer>().playerName;
+                player1 = leftPlayerObject.GetComponent<SteamPlayer>();
                 var rightPlayerObject = NetworkManager.Singleton.ConnectedClients[archerBattleGame.rightPlayer.GetComponent<NetworkObject>().OwnerClientId].PlayerObject;
                 player2Name = rightPlayerObject.GetComponent<SteamPlayer>().playerName;
+                player2 = rightPlayerObject.GetComponent<SteamPlayer>();
                 SetTextValuesClientRpc(player1Name, player2Name);
             }
 
@@ -89,7 +94,14 @@ namespace Assets.ArcherBattle
         [ServerRpc(RequireOwnership = false)]
         public void ChangeWagerAmountServerRpc(int amount)
         {
+            int player1Credits = player1.credits.Value;
+            int player2Credits = player2.credits.Value;
+
+            int maxWager = Mathf.Min(player1Credits, player2Credits);
+
             wagerAmount.Value += amount;
+
+            wagerAmount.Value = Mathf.Clamp(wagerAmount.Value, 0, maxWager);
         }
 
 

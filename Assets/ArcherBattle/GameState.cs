@@ -200,8 +200,12 @@ namespace Assets.ArcherBattle
                 losingPlayer = client2;
                 archerBattleGame.gameOverState.SetWinner(client1.playerName);
             }
-            
-            //payout wager
+
+            if (IsServer)
+            {
+                winningPlayer.credits.Value += archerBattleGame.wagerState.wagerAmount.Value;
+                losingPlayer.credits.Value -= archerBattleGame.wagerState.wagerAmount.Value;
+            }
 
             StartCoroutine(EndGameAfterTime());
         }

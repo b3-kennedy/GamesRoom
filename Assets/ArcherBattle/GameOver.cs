@@ -29,7 +29,7 @@ namespace Assets.ArcherBattle
             gameObject.SetActive(true);
             winnerText.text = $"{winnerName} has Won!";
             cam.GetComponent<CameraFollow>().isFollow = false;
-            cam.transform.position = new Vector3(0, 0, cam.transform.position.z);
+            cam.transform.localPosition = new Vector3(0, 0, cam.transform.position.z);
         }
 
         public override void OnStateUpdate()
