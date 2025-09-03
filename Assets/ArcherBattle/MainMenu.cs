@@ -35,6 +35,7 @@ namespace Assets.ArcherBattle
 
         public override void OnStateExit()
         {
+            archerBattleGame.AssignPlayersForWager();
             gameObject.SetActive(false);
         }
     }

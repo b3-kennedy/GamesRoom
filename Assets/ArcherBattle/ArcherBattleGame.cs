@@ -33,6 +33,11 @@ namespace Assets.ArcherBattle
             netGameState.OnValueChanged += OnNetworkGameStateChanged;
             // Apply initial state locally
             ApplyState(netGameState.Value);
+
+            wagerState.gameObject.SetActive(false);
+            gameOverState.gameObject.SetActive(false);
+            gameState.gameObject.SetActive(false);
+            mainMenuState.gameObject.SetActive(true);
         }
 
         void Awake()
@@ -41,6 +46,7 @@ namespace Assets.ArcherBattle
             gameState.game = this;
             gameOverState.game = this;
             wagerState.game = this;
+            
 
 
         }
@@ -61,18 +67,8 @@ namespace Assets.ArcherBattle
                 }
             }
 
-            BeginClientRpc();
-
         }
 
-        [ClientRpc]
-        void BeginClientRpc()
-        {
-            wagerState.gameObject.SetActive(false);
-            gameOverState.gameObject.SetActive(false);
-            gameState.gameObject.SetActive(false);
-            mainMenuState.gameObject.SetActive(true);
-        }
 
 
         [ServerRpc(RequireOwnership = false)]
@@ -104,9 +100,7 @@ namespace Assets.ArcherBattle
             gameState.firedArrows.Clear();
         }
 
-
-
-        public void AssignPlayers()
+        public void AssignPlayersForWager()
         {
             if (connectedPlayers.Count == 0) return;
 
@@ -118,7 +112,12 @@ namespace Assets.ArcherBattle
                 var rightID = NetworkManager.Singleton.ConnectedClients[connectedPlayers[1].OwnerClientId].PlayerObject.GetComponent<NetworkObject>().NetworkObjectId;
                 DisableMovementClientRpc(leftID, rightID);
             }
+        }
 
+
+
+        public void AssignPlayers()
+        {
             int turn = Random.Range(0, 2);
 
 
