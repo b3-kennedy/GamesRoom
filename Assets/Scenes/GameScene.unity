@@ -1622,8 +1622,8 @@ Transform:
   m_GameObject: {fileID: 283511207}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 65.0152, y: 17.7557, z: 1.55}
-  m_LocalScale: {x: 374.38797, y: 258.5035, z: 1}
+  m_LocalPosition: {x: 72.1027, y: 17.7557, z: 1.55}
+  m_LocalScale: {x: 388.57727, y: 258.5035, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1831894964}
@@ -10214,8 +10214,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   game: {fileID: 0}
-  winnerName:
-    m_InternalValue: 
+  winnerName: 
   cam: {fileID: 1957297958}
   winnerText: {fileID: 865524454}
   floor: {fileID: 2006560459}
@@ -17354,7 +17353,7 @@ Transform:
   m_GameObject: {fileID: 1831894961}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 96.7, y: -120, z: 141.99368}
+  m_LocalPosition: {x: 96.7, y: -273, z: 141.99368}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -17387,6 +17386,7 @@ MonoBehaviour:
   mainMenuState: {fileID: 947169196}
   gameState: {fileID: 1182465792}
   gameOverState: {fileID: 1102268951}
+  cam: {fileID: 0}
   wagerState: {fileID: 1489473574}
   netGameState:
     m_InternalValue: 0
@@ -19560,8 +19560,8 @@ Transform:
   m_GameObject: {fileID: 2006560459}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 61.2817, y: -1.6435013, z: 1.300003}
-  m_LocalScale: {x: 381.71127, y: 0.3129, z: 1}
+  m_LocalPosition: {x: 68.3903, y: -1.6435013, z: 1.300003}
+  m_LocalScale: {x: 395.93265, y: 0.3129, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1831894964}

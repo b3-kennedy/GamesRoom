@@ -16,6 +16,8 @@ namespace Assets.ArcherBattle
         public ArcherBattle.GameState gameState;
         public GameOver gameOverState;
 
+        public GameObject cam;
+
         public ArcherBattle.WagerState wagerState;
 
         public NetworkVariable<GameState> netGameState = new NetworkVariable<GameState>(
@@ -89,6 +91,9 @@ namespace Assets.ArcherBattle
         void ResetClientRpc()
         {
             ClearArrows();
+            cam.GetComponent<CameraFollow>().isFollow = false;
+            cam.transform.localPosition = new Vector3(0, 0, cam.transform.localPosition.z);  
+            
         }
 
         void ClearArrows()
