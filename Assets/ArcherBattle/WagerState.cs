@@ -50,8 +50,10 @@ namespace Assets.ArcherBattle
                 var rightPlayerObject = NetworkManager.Singleton.ConnectedClients[archerBattleGame.rightPlayer.GetComponent<NetworkObject>().OwnerClientId].PlayerObject;
                 player2Name = rightPlayerObject.GetComponent<SteamPlayer>().playerName;
                 player2 = rightPlayerObject.GetComponent<SteamPlayer>();
+                isPlayer1Locked.Value = false;
                 SetTextValuesClientRpc(player1Name, player2Name);
             }
+            
             gameObject.SetActive(true);
         }
 
