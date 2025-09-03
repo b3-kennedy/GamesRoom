@@ -42,9 +42,7 @@ namespace Assets.ArcherBattle
             gameOverState.game = this;
             wagerState.game = this;
 
-            wagerState.gameObject.SetActive(false);
-            gameOverState.gameObject.SetActive(false);
-            mainMenuState.gameObject.SetActive(true);
+
         }
 
         [ServerRpc(RequireOwnership = false)]
@@ -63,6 +61,17 @@ namespace Assets.ArcherBattle
                 }
             }
 
+            BeginClientRpc();
+
+        }
+
+        [ClientRpc]
+        void BeginClientRpc()
+        {
+            wagerState.gameObject.SetActive(false);
+            gameOverState.gameObject.SetActive(false);
+            gameState.gameObject.SetActive(false);
+            mainMenuState.gameObject.SetActive(true);
         }
 
 
