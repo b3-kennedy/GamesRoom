@@ -1,5 +1,6 @@
 using System;
 using System.Threading;
+using Assets.Farkle;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -28,6 +29,8 @@ namespace Assets.ArcherBattle
         public NetworkVariable<bool> isTurn = new NetworkVariable<bool>(false);
 
         public NetworkVariable<bool> isPlayer1 = new NetworkVariable<bool>(false);
+
+        bool isAltModifierPressed = false;
 
         void Start()
         {
@@ -67,38 +70,51 @@ namespace Assets.ArcherBattle
             game.gameState.OnGameOver(steamName);
         }
 
-
-        void Update()
+        void GameInput()
         {
+            if (!isTurn.Value) return;
 
-            if (!IsOwner) return;
-
-            if (isTurn.Value)
+            if (Input.GetKey(KeyCode.LeftAlt))
             {
-                if (rotater)
-                {
-                    if (Input.GetKey(KeyCode.UpArrow))
-                    {
-                        rotater.Rotate(new Vector3(0, 0, Time.deltaTime * rotateSpeed));
-                    }
-                    if (Input.GetKey(KeyCode.DownArrow))
-                    {
-                        rotater.Rotate(new Vector3(0, 0, -Time.deltaTime * rotateSpeed));
-                    }
-                }
+                isAltModifierPressed = true;
 
-                if (!hasShot.Value)
+            }
+            else if (Input.GetKeyUp(KeyCode.LeftAlt))
+            {
+                isAltModifierPressed = false;
+            }
+
+            float currentRotateSpeed = rotateSpeed;
+            if (isAltModifierPressed)
+            {
+                currentRotateSpeed *= 0.5f; // halve the rotate speed
+            }
+
+            if (rotater)
+            {
+                if (Input.GetKey(KeyCode.UpArrow))
                 {
-                    if (Input.GetKeyDown(KeyCode.Space))
-                    {
-                        Vector3 direction = rotater.right;
-                        game.gameState.LaunchArrowServerRpc(arrowSpawn.position, direction, 50f);
-                        ChangeShotValueServerRpc(true);
-                    }
+                    rotater.Rotate(new Vector3(0, 0, Time.deltaTime * currentRotateSpeed));
+                }
+                if (Input.GetKey(KeyCode.DownArrow))
+                {
+                    rotater.Rotate(new Vector3(0, 0, -Time.deltaTime * currentRotateSpeed));
                 }
             }
 
+            if (!hasShot.Value)
+            {
+                if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    Vector3 direction = rotater.right;
+                    game.gameState.LaunchArrowServerRpc(arrowSpawn.position, direction, 50f);
+                    ChangeShotValueServerRpc(true);
+                }
+            }
+        }
 
+        void WagerInput()
+        {
             if (game.netGameState.Value == ArcherBattleGame.GameState.WAGER && isPlayer1.Value)
             {
                 if (Input.GetKeyDown(KeyCode.RightArrow))
@@ -137,6 +153,18 @@ namespace Assets.ArcherBattle
                     }
                 }
             }
+        }
+
+        void Update()
+        {
+
+            if (!IsOwner) return;
+
+            GameInput();
+            WagerInput();
+
+
+
         }
 
         //function if i can think of a reason for charging to be necessary. Why would anyone not use full charge????
