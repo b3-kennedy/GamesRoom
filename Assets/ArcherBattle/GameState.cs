@@ -78,8 +78,25 @@ namespace Assets.ArcherBattle
 
             if (playerSpawnCount.Value == 2)
             {
-                OnTurnEndServerRpc();
+                SetTurnServerRpc();
             }
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        void SetTurnServerRpc()
+        {
+            int turn = Random.Range(0, 2);
+            if (turn == 0)
+            {
+                archerBattleGame.leftPlayer.GetComponent<ArcheryPlayer>().isTurn.Value = true;
+                archerBattleGame.rightPlayer.GetComponent<ArcheryPlayer>().isTurn.Value = false;
+            }
+            else
+            {
+                archerBattleGame.leftPlayer.GetComponent<ArcheryPlayer>().isTurn.Value = false;
+                archerBattleGame.rightPlayer.GetComponent<ArcheryPlayer>().isTurn.Value = true;
+            }
+            OnTurnEndServerRpc();
         }
 
         [ClientRpc]

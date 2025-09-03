@@ -124,22 +124,8 @@ namespace Assets.ArcherBattle
 
         public void AssignPlayers()
         {
-            int turn = Random.Range(0, 2);
-
-
             ArcheryPlayer left = leftPlayer.GetComponent<ArcheryPlayer>();
             ArcheryPlayer right = rightPlayer.GetComponent<ArcheryPlayer>();
-            if (turn == 0)
-            {
-                left.isTurn.Value = true;
-                right.isTurn.Value = false;
-            }
-            else
-            {
-                left.isTurn.Value = false;
-                right.isTurn.Value = true;
-            }
-            Debug.Log(turn);
             Assign(left);
             Assign(right);
         }
