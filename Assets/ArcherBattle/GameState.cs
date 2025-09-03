@@ -145,14 +145,14 @@ namespace Assets.ArcherBattle
                 archerBattleGame.leftPlayer.GetComponent<ArcheryPlayer>().isTurn.Value = false;
                 archerBattleGame.rightPlayer.GetComponent<ArcheryPlayer>().isTurn.Value = true;
                 archerBattleGame.leftPlayer.GetComponent<ArcheryPlayer>().ChangeShotValueServerRpc(false);
-                cam.transform.position = new Vector3(leftPos.x, leftPos.y, cam.transform.position.z);
+                cam.transform.position = new Vector3(rightPos.x, rightPos.y, cam.transform.position.z);
             }
             else
             {
                 archerBattleGame.leftPlayer.GetComponent<ArcheryPlayer>().isTurn.Value = true;
                 archerBattleGame.rightPlayer.GetComponent<ArcheryPlayer>().isTurn.Value = false;
                 archerBattleGame.rightPlayer.GetComponent<ArcheryPlayer>().ChangeShotValueServerRpc(false);
-                cam.transform.position = new Vector3(rightPos.x, rightPos.y, cam.transform.position.z);
+                cam.transform.position = new Vector3(leftPos.x, leftPos.y, cam.transform.position.z);
             }
             MoveCameraClientRpc(cam.transform.position);
         }
