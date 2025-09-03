@@ -26,6 +26,8 @@ namespace Assets.ArcherBattle
         {
             gameObject.SetActive(true);
             winnerText.text = $"{winnerName} has Won!";
+            GameObject cam = archerBattleGame.gameState.cam;
+            cam.transform.position = new Vector3(0, 0, cam.transform.position.z);
         }
 
         public override void OnStateUpdate()

@@ -33,6 +33,8 @@ namespace Assets.ArcherBattle
 
         [HideInInspector] public List<GameObject> firedArrows = new List<GameObject>();
 
+        bool isGameOver;
+
         void Start()
         {
             if (game is ArcherBattleGame g)
@@ -44,9 +46,10 @@ namespace Assets.ArcherBattle
         public override void OnStateEnter()
         {
             gameObject.SetActive(true);
+            isGameOver = false;
             if (IsServer)
             {
-                
+
             }
 
 
@@ -180,6 +183,7 @@ namespace Assets.ArcherBattle
         public void OnGameOver(string playerName)
         {
             Debug.Log($"{playerName} has lost");
+            isGameOver = true;
 
             SteamPlayer client1 = archerBattleGame.connectedPlayers[0].GetComponent<SteamPlayer>();
             SteamPlayer client2 = archerBattleGame.connectedPlayers[1].GetComponent<SteamPlayer>();
@@ -211,7 +215,11 @@ namespace Assets.ArcherBattle
         IEnumerator SwitchTurnAfterTime()
         {
             yield return new WaitForSeconds(3f);
-            OnTurnEndServerRpc();
+            if (!isGameOver)
+            {
+                OnTurnEndServerRpc();
+            }
+            
 
         }
 
