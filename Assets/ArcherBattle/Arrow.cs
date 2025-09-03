@@ -43,6 +43,7 @@ namespace Assets.ArcherBattle
         {
             rb.isKinematic = true;
             hasHit = true;
+            GetComponent<Collider>().enabled = false;
             if (NetworkManager.LocalClientId == 0) //only do collision on the server so hit doesnt get invoked on clients as well
             {
                 Hit.Invoke();
