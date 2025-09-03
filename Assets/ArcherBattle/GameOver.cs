@@ -58,6 +58,7 @@ namespace Assets.ArcherBattle
         [ClientRpc]
         void SetWinnerClientRpc(string winnerName)
         {
+            Debug.Log(winnerName);
             winnerText.text = winnerName;
         }
 
