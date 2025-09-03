@@ -7222,6 +7222,8 @@ MonoBehaviour:
     m_InternalValue: 0
   isTurn:
     m_InternalValue: 0
+  isPlayer1:
+    m_InternalValue: 0
 --- !u!1 &880403569
 GameObject:
   m_ObjectHideFlags: 0
@@ -14592,6 +14594,8 @@ MonoBehaviour:
   game: {fileID: 0}
   wagerAmount:
     m_InternalValue: 0
+  player1ButtonOptions: {fileID: 81777073}
+  player2ButtonOptions: {fileID: 1294467238}
   wagerAmountText: {fileID: 465338203}
   chooseText: {fileID: 1110178269}
   rightPlayerConfirmText: {fileID: 1374278305}
@@ -15800,6 +15804,8 @@ MonoBehaviour:
   hasShot:
     m_InternalValue: 0
   isTurn:
+    m_InternalValue: 0
+  isPlayer1:
     m_InternalValue: 0
 --- !u!1 &1650133002
 GameObject:
