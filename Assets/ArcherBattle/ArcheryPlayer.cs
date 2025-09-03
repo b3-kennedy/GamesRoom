@@ -93,6 +93,28 @@ namespace Assets.ArcherBattle
                 }
             }
 
+            if (game.netGameState.Value == ArcherBattleGame.GameState.WAGER && OwnerClientId == game.connectedPlayers[0].OwnerClientId)
+            {
+                if (Input.GetKeyDown(KeyCode.RightArrow))
+                {
+                    game.wagerState.ChangeWagerAmountServerRpc(10);
+                }
+                if (Input.GetKeyDown(KeyCode.LeftArrow))
+                {
+                    game.wagerState.ChangeWagerAmountServerRpc(-10);
+                }
+
+                if (Input.GetKeyDown(KeyCode.Return))
+                {
+                    game.wagerState.ChangePlayer1LockedInStateServerRpc();
+                }
+
+                if (Input.GetKeyDown(KeyCode.X))
+                {
+                    game.ChangeStateServerRpc(ArcherBattleGame.GameState.GAME);
+                }
+            }
+
 
 
 

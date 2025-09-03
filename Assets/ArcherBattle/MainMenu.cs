@@ -21,6 +21,7 @@ namespace Assets.ArcherBattle
         public override void OnStateEnter()
         {
             gameObject.SetActive(true);
+            connectedPlayersText.text = "0/2";
         }
 
         public override void OnStateUpdate()
@@ -29,7 +30,7 @@ namespace Assets.ArcherBattle
             if (archerBattleGame.connectedPlayers.Count == 2)
             {
                 archerBattleGame.AssignPlayers();
-                archerBattleGame.ChangeStateServerRpc(ArcherBattleGame.GameState.GAME);
+                archerBattleGame.ChangeStateServerRpc(ArcherBattleGame.GameState.WAGER);
             }
         }
 

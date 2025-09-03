@@ -7,14 +7,16 @@ namespace Assets.ArcherBattle
 {
     public class ArcherBattleGame : Game
     {
-        public enum GameState { MAIN_MENU, GAME, GAME_OVER }
+        public enum GameState { MAIN_MENU, GAME, GAME_OVER, WAGER }
 
         public GameObject leftPlayer;
         public GameObject rightPlayer;
 
         public MainMenu mainMenuState;
         public ArcherBattle.GameState gameState;
-        public ArcherBattle.GameOver gameOverState;
+        public GameOver gameOverState;
+
+        public ArcherBattle.WagerState wagerState;
 
         public NetworkVariable<GameState> netGameState = new NetworkVariable<GameState>(
             GameState.MAIN_MENU,
@@ -38,6 +40,7 @@ namespace Assets.ArcherBattle
             mainMenuState.game = this;
             gameState.game = this;
             gameOverState.game = this;
+            wagerState.game = this;
         }
 
         [ServerRpc(RequireOwnership = false)]
@@ -67,6 +70,7 @@ namespace Assets.ArcherBattle
             leftPlayer.GetComponent<NetworkObject>().ChangeOwnership(0);
             rightPlayer.GetComponent<NetworkObject>().ChangeOwnership(0);
             connectedPlayers.Clear();
+            connectedPlayersCount.Value = 0;
             ResetClientRpc();
             ChangeStateServerRpc(GameState.MAIN_MENU);
 
@@ -164,13 +168,16 @@ namespace Assets.ArcherBattle
             switch (state)
             {
                 case GameState.MAIN_MENU:
-                    mainMenuState.OnStateExit();                    
+                    mainMenuState.OnStateExit();
                     break;
                 case GameState.GAME:
-                    gameState.OnStateExit();                    
+                    gameState.OnStateExit();
                     break;
                 case GameState.GAME_OVER:
                     gameOverState.OnStateExit();
+                    break;
+                case GameState.WAGER:
+                    wagerState.OnStateExit();
                     break;
             }
         }
@@ -189,6 +196,9 @@ namespace Assets.ArcherBattle
 
                 case GameState.GAME_OVER:
                     gameOverState.OnStateEnter();
+                    break;
+                case GameState.WAGER:
+                    wagerState.OnStateEnter();
                     break;
             }
         }
