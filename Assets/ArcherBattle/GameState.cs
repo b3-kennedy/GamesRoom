@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Mono.Cecil.Cil;
+using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -122,7 +123,9 @@ namespace Assets.ArcherBattle
                 archerBattleGame.leftPlayer.GetComponent<ArcheryPlayer>().rotater = player.transform.GetChild(4);
                 archerBattleGame.leftPlayer.GetComponent<ArcheryPlayer>().arrowSpawn = player.transform.GetChild(4).GetChild(1);
                 archerBattleGame.leftPlayer.GetComponent<ArcheryPlayer>().chargeBar = player.transform.GetChild(5).GetChild(0).GetChild(0);
+                archerBattleGame.leftPlayer.GetComponent<ArcheryPlayer>().playerNameText = player.transform.GetChild(5).GetChild(1).GetComponent<TextMeshProUGUI>();
                 archerBattleGame.leftPlayer.GetComponent<ArcheryPlayer>().AddListeners();
+                
             }
             else
             {
@@ -131,7 +134,9 @@ namespace Assets.ArcherBattle
                 archerBattleGame.rightPlayer.GetComponent<ArcheryPlayer>().rotater = player.transform.GetChild(4);
                 archerBattleGame.rightPlayer.GetComponent<ArcheryPlayer>().arrowSpawn = player.transform.GetChild(4).GetChild(1);
                 archerBattleGame.rightPlayer.GetComponent<ArcheryPlayer>().chargeBar = player.transform.GetChild(5).GetChild(0).GetChild(0);
+                archerBattleGame.rightPlayer.GetComponent<ArcheryPlayer>().playerNameText = player.transform.GetChild(5).GetChild(1).GetComponent<TextMeshProUGUI>();
                 archerBattleGame.rightPlayer.GetComponent<ArcheryPlayer>().AddListeners();
+                
             }
         }
 

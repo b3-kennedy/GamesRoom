@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using Assets.Farkle;
+using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -16,6 +17,8 @@ namespace Assets.ArcherBattle
 
         [HideInInspector] public Transform chargeBar;
         [HideInInspector] public Transform arrowSpawn;
+
+        [HideInInspector] public TextMeshProUGUI playerNameText;
 
         public float rotateSpeed = 5f;
 
@@ -62,6 +65,7 @@ namespace Assets.ArcherBattle
         public void AddListeners()
         {
             playerObject.GetComponent<Health>().Death.AddListener(OnDeath);
+            playerNameText.text = NetworkManager.Singleton.ConnectedClients[OwnerClientId].PlayerObject.GetComponent<SteamPlayer>().playerName;
         }
 
         void OnDeath()
