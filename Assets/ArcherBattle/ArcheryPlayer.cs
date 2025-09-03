@@ -95,6 +95,7 @@ namespace Assets.ArcherBattle
 
             if (game.netGameState.Value == ArcherBattleGame.GameState.WAGER && OwnerClientId == game.connectedPlayers[0].OwnerClientId)
             {
+                Debug.Log("wager button options");
                 if (Input.GetKeyDown(KeyCode.RightArrow))
                 {
                     game.wagerState.ChangeWagerAmountServerRpc(10);
