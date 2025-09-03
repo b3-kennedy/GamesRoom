@@ -10198,7 +10198,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1102268951
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10213,6 +10213,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   game: {fileID: 0}
+  cam: {fileID: 1957297958}
   winnerText: {fileID: 865524454}
 --- !u!4 &1102268952
 Transform:
