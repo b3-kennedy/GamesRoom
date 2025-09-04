@@ -53,7 +53,7 @@ public class LeaderboardHolder : NetworkBehaviour
         if (!leaderboard.ContainsKey(playerName))
         {
             leaderboard.Add(playerName, score);
+            Debug.Log($"Added to leaderboard: {playerName} with score {score}");
         }
-        Debug.Log(leaderboard.Count);
     }
 }
