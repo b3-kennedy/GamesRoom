@@ -153,10 +153,14 @@ public class FlappyBird : Game
         
 
         if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(objectID, out var player))
-        {            
+        {
             if (score.Value > LeaderboardHolder.Instance.GetHighScore())
             {
                 BeatServerHighScoreServerRpc(objectID, score.Value);
+                if (IsServer)
+                {
+                    player.GetComponent<PlayerSaver>().fbHighScore.Value = score.Value;
+                }
             }
             else if (score.Value > player.GetComponent<PlayerSaver>().fbHighScore.Value)
             {
@@ -164,7 +168,7 @@ public class FlappyBird : Game
                 {
                     player.GetComponent<PlayerSaver>().fbHighScore.Value = score.Value;
                 }
-                
+
                 BeatPersonalHighScoreServerRpc(objectID, player.GetComponent<PlayerSaver>().fbHighScore.Value);
             }
 
