@@ -1,19 +1,32 @@
+using System;
 using System.Collections.Generic;
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
 
 
-[System.Serializable]
-public class LeaderboardEntry
-{
-    public string playerName;
-    public int highScore;
-}
 
-public class LeaderboardHolder : MonoBehaviour
+
+public class LeaderboardHolder : NetworkBehaviour
 {
     public static LeaderboardHolder Instance;
-    public List<LeaderboardEntry> leaderboard;
+    public Dictionary<string, int> leaderboard = new Dictionary<string, int>();
+
+
+    [ServerRpc(RequireOwnership = false)]
+    public void UpdateLeaderboardServerRpc()
+    {
+        foreach (var pair in NetworkManager.Singleton.ConnectedClients)
+        {
+            ulong id = pair.Key;
+            NetworkClient client = pair.Value;
+            NetworkObject playerObject = client.PlayerObject;
+            string playerName = playerObject.GetComponent<SteamPlayer>().playerName;
+            int score = playerObject.GetComponent<PlayerSaver>().fbHighScore;
+            AddEntryClientRpc(playerName, score);
+        }
+        
+    }
 
     void Awake()
     {
@@ -27,6 +40,7 @@ public class LeaderboardHolder : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
+
     [ServerRpc(RequireOwnership = false)]
     public void AddEntryServerRpc(string playerName, int score)
     {
@@ -36,11 +50,10 @@ public class LeaderboardHolder : MonoBehaviour
     [ClientRpc]
     void AddEntryClientRpc(string playerName, int score)
     {
-        LeaderboardEntry entry = new LeaderboardEntry
+        if (!leaderboard.ContainsKey(playerName))
         {
-            playerName = playerName,
-            highScore = score
-        };
-        leaderboard.Add(entry);
+            leaderboard.Add(playerName, score);
+        }
+        Debug.Log(leaderboard.Count);
     }
 }

@@ -1,6 +1,7 @@
 using UnityEngine;
 using Unity.Netcode;
 using System.IO;
+using System.Collections;
 
 public class PlayerSaver : NetworkBehaviour
 {
@@ -58,10 +59,13 @@ public class PlayerSaver : NetworkBehaviour
         }
 
         fbHighScore = saveDataWrapper.playerData.flappyBirdHighScore;
-        string playerName = GetComponent<SteamPlayer>().playerName;
-        LeaderboardHolder.Instance.AddEntryServerRpc(playerName, fbHighScore);
-        
+        StartCoroutine(Wait());
+    }
 
+    IEnumerator Wait()
+    {
+        yield return new WaitForSeconds(3);
+        LeaderboardHolder.Instance.UpdateLeaderboardServerRpc();
     }
 
     [ServerRpc(RequireOwnership = false)]
