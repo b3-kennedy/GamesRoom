@@ -3453,6 +3453,8 @@ MonoBehaviour:
   startGameButton: {fileID: 2090545801}
   playerCardPrefab: {fileID: 7149310824740424313, guid: 49e7d1e13e0ccd4499609970ff783f49, type: 3}
   playerLobbyParent: {fileID: 1555767230}
+  playerCount:
+    m_InternalValue: 0
 --- !u!4 &2109121084
 Transform:
   m_ObjectHideFlags: 0

@@ -21,7 +21,7 @@ namespace Assets.CreditClicker
 
             if (IsServer)
             {
-                Destroy(gameObject, 5f);
+                Destroy(gameObject, 2.5f);
             }
 
             switch (tier.Value)
