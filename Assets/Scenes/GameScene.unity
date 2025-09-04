@@ -11274,7 +11274,7 @@ MonoBehaviour:
   winningPlayer: {fileID: 0}
   losingPlayer: {fileID: 0}
   firedArrows: []
-  turnText: {fileID: 0}
+  turnText: {fileID: 1210438750}
 --- !u!1 &1183890548
 GameObject:
   m_ObjectHideFlags: 0
