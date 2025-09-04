@@ -87,6 +87,21 @@ public class LeaderboardHolder : NetworkBehaviour
         SortLeaderboardUI();
     }
 
+    public int GetHighScore()
+    {
+        TextMeshProUGUI scoreText = layout.GetChild(0).GetChild(2).GetComponent<TextMeshProUGUI>();
+        if (int.TryParse(scoreText.text, out int highScore))
+        {
+            return highScore;
+        }
+        else
+        {
+            Debug.LogWarning($"Failed to parse high score from text: {scoreText.text}");
+            return 0; // fallback if parsing fails
+        }
+
+    }
+
     private void SortLeaderboardUI()
     {
         // Get all child entries

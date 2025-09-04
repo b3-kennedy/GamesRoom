@@ -152,12 +152,37 @@ public class FlappyBird : Game
     {
         if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(objectID, out var player))
         {
-            if (score.Value > player.GetComponent<PlayerSaver>().fbHighScore)
+            if (score.Value > LeaderboardHolder.Instance.GetHighScore())
+            {
+                BeatServerHighScoreServerRpc(objectID, score.Value);
+            }
+            else if (score.Value > player.GetComponent<PlayerSaver>().fbHighScore)
             {
                 player.GetComponent<PlayerSaver>().fbHighScore = score.Value;
+                BeatPersonalHighScoreServerRpc(objectID, player.GetComponent<PlayerSaver>().fbHighScore);
             }
+
+            
         }
         LeaderboardHolder.Instance.UpdateLeaderboardServerRpc();
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    void BeatPersonalHighScoreServerRpc(ulong objectID, int score)
+    {
+        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(objectID, out var player))
+        {
+            player.GetComponent<SteamPlayer>().credits.Value += score * 2;
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    void BeatServerHighScoreServerRpc(ulong objectID, int score)
+    {
+        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(objectID, out var player))
+        {
+            player.GetComponent<SteamPlayer>().credits.Value += score * 5;
+        }
     }
 
 
