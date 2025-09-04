@@ -1,8 +1,8 @@
 using TMPro;
-using Unity.Burst;
+using System.IO;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.InputSystem.LowLevel;
+
 
 public class FlappyBird : Game
 {
@@ -35,6 +35,8 @@ public class FlappyBird : Game
     public TextMeshPro speedText;
 
     Vector3 birdPosition;
+
+    ulong playerID;
 
     void Start()
     {
@@ -87,14 +89,15 @@ public class FlappyBird : Game
             bird.transform.position = birdPosition;
             var netObj = bird.GetComponent<NetworkObject>();
             netObj.SpawnWithOwnership(clientID);
-            HookBirdEventsClientRpc(netObj.NetworkObjectId);
+            
+            HookBirdEventsClientRpc(clientID,netObj.NetworkObjectId);
         }
 
 
     }
 
     [ClientRpc]
-    void HookBirdEventsClientRpc(ulong birdNetId)
+    void HookBirdEventsClientRpc(ulong clientID,ulong birdNetId)
     {
         if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(birdNetId, out var netObj))
         {
@@ -102,6 +105,7 @@ public class FlappyBird : Game
             b.hitPipe.AddListener(HitPipe);
             b.increaseScore.AddListener(IncreaseScore);
         }
+        playerID = clientID;
     }
 
     void HitPipe()
@@ -117,6 +121,7 @@ public class FlappyBird : Game
     [ServerRpc(RequireOwnership = false)]    
     public override void ResetServerRpc()
     {
+
         score.Value = 0;
         netGameState.Value = GameState.MAIN_MENU;
         ResetClientRpc();
@@ -136,7 +141,24 @@ public class FlappyBird : Game
 
     }
 
+    [ServerRpc(RequireOwnership = false)]
+    void CheckScoreServerRpc(ulong playerID)
+    {
+        var playerObj = NetworkManager.Singleton.ConnectedClients[playerID].PlayerObject;
+        CheckScoreClientRpc(playerObj.GetComponent<NetworkObject>().NetworkObjectId);
+    }
 
+    [ClientRpc]
+    void CheckScoreClientRpc(ulong objectID)
+    {
+        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(objectID, out var player))
+        {
+            if (score.Value > player.GetComponent<PlayerSaver>().fbHighScore)
+            {
+                player.GetComponent<PlayerSaver>().fbHighScore = score.Value;
+            }
+        }
+    }
 
 
 
@@ -197,6 +219,7 @@ public class FlappyBird : Game
         {
             case GameState.MAIN_MENU:
                 musicAudioSource.Stop();
+
                 ResetServerRpc();
                 mainMenu.SetActive(true);
                 gameScene.SetActive(false);
@@ -216,6 +239,7 @@ public class FlappyBird : Game
                 mainMenu.SetActive(false);
                 gameScene.SetActive(false);
                 gameOverScoreText.text = $"SCORE: {score.Value}";
+                CheckScoreServerRpc(playerID);
                 break;
         }
     }

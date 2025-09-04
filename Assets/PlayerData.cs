@@ -6,6 +6,7 @@ using System.IO;
 public class PlayerData
 {
     public int creditCount;
+    public int flappyBirdHighScore;
 }
 
 

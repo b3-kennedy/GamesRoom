@@ -541,7 +541,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  playerName: 10000
+  playerName: 
   credits:
     m_InternalValue: 0
 --- !u!114 &7261460326656470147
@@ -556,6 +556,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b833085dfbce0244cad0a92c56f5e7f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  fbHighScore: 0
 --- !u!1 &3672231381911580843
 GameObject:
   m_ObjectHideFlags: 0

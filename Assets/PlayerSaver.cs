@@ -4,10 +4,13 @@ using System.IO;
 
 public class PlayerSaver : NetworkBehaviour
 {
+
+    public int fbHighScore;
+
     public override void OnNetworkSpawn()
     {
         if (!IsOwner) return;
-
+        Debug.Log("load data");
         Load();
     }
     public override void OnNetworkDespawn()
@@ -45,7 +48,19 @@ public class PlayerSaver : NetworkBehaviour
 
         Debug.Log("Loaded creditCount = " + creditCount);
 
-        SetPlayerCreditsServerRpc(NetworkManager.Singleton.LocalClientId, creditCount);
+        if (IsServer && IsOwner)
+        {
+            GetComponent<SteamPlayer>().credits.Value = creditCount;
+        }
+        else
+        {
+            SetPlayerCreditsServerRpc(NetworkManager.Singleton.LocalClientId, creditCount);
+        }
+
+        fbHighScore = saveDataWrapper.playerData.flappyBirdHighScore;
+        string playerName = GetComponent<SteamPlayer>().playerName;
+        LeaderboardHolder.Instance.AddEntryServerRpc(playerName, fbHighScore);
+        
 
     }
 
@@ -80,7 +95,9 @@ public class PlayerSaver : NetworkBehaviour
         // Update playerData
         saveDataWrapper.playerData = new PlayerData
         {
-            creditCount = GetComponent<SteamPlayer>().credits.Value
+            creditCount = GetComponent<SteamPlayer>().credits.Value,
+            flappyBirdHighScore = fbHighScore
+            
         };
 
         // Write back to file
