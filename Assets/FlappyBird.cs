@@ -176,22 +176,24 @@ public class FlappyBird : Game
         }
         else if (Input.GetKeyDown(KeyCode.E) && netGameState.Value == GameState.LEADERBOARDS)
         {
-            if (IsServer)
-            {
-                if (bird != null)
-                {
-                    Destroy(bird);
-                }
-                bird = Instantiate(birdPrefab);
-                bird.transform.position = birdPosition;
-                var netObj = bird.GetComponent<NetworkObject>();
-                netObj.SpawnWithOwnership(serverPlayerID);
-
-                HookBirdEventsClientRpc(serverPlayerID, netObj.NetworkObjectId);
-
-            }
+            SpawnBirdServerRpc();
             ChangeStateServerRpc(GameState.GAME);
         }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    void SpawnBirdServerRpc()
+    {
+        if (bird != null)
+        {
+            Destroy(bird);
+        }
+        bird = Instantiate(birdPrefab);
+        bird.transform.position = birdPosition;
+        var netObj = bird.GetComponent<NetworkObject>();
+        netObj.SpawnWithOwnership(serverPlayerID);
+
+        HookBirdEventsClientRpc(serverPlayerID, netObj.NetworkObjectId);
     }
 
     [ServerRpc(RequireOwnership = false)]
