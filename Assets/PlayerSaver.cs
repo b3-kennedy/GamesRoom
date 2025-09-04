@@ -65,7 +65,7 @@ public class PlayerSaver : NetworkBehaviour
     //hacky way to ensure object is spawned, for some reason it didnt work without waiting even though this script is on the player object :)
     IEnumerator Wait()
     {
-        yield return new WaitForSeconds(0.5f); 
+        yield return new WaitForSeconds(3f); 
         LeaderboardHolder.Instance.UpdateLeaderboardServerRpc();
     }
 
