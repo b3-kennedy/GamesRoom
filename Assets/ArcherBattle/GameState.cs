@@ -135,7 +135,6 @@ namespace Assets.ArcherBattle
                 archerBattleGame.rightPlayer.GetComponent<ArcheryPlayer>().rotater = player.transform.GetChild(4);
                 archerBattleGame.rightPlayer.GetComponent<ArcheryPlayer>().arrowSpawn = player.transform.GetChild(4).GetChild(1);
                 archerBattleGame.rightPlayer.GetComponent<ArcheryPlayer>().chargeBar = player.transform.GetChild(5).GetChild(0).GetChild(0);
-                archerBattleGame.rightPlayer.GetComponent<ArcheryPlayer>().playerNameText = player.transform.GetChild(5).GetChild(1).GetComponent<TextMeshProUGUI>();
                 archerBattleGame.rightPlayer.GetComponent<ArcheryPlayer>().AddListeners();
                 
             }
@@ -154,7 +153,7 @@ namespace Assets.ArcherBattle
                 archerBattleGame.rightPlayer.GetComponent<ArcheryPlayer>().isTurn.Value = true;
                 archerBattleGame.leftPlayer.GetComponent<ArcheryPlayer>().ChangeShotValueServerRpc(false);
                 cam.transform.position = new Vector3(rightPos.x, rightPos.y, cam.transform.position.z);
-                SetTurnTextClientRpc(client1.playerName);
+                SetTurnTextClientRpc(client2.playerName);
             }
             else
             {
@@ -162,7 +161,7 @@ namespace Assets.ArcherBattle
                 archerBattleGame.rightPlayer.GetComponent<ArcheryPlayer>().isTurn.Value = false;
                 archerBattleGame.rightPlayer.GetComponent<ArcheryPlayer>().ChangeShotValueServerRpc(false);
                 cam.transform.position = new Vector3(leftPos.x, leftPos.y, cam.transform.position.z);
-                SetTurnTextClientRpc(client2.playerName);
+                SetTurnTextClientRpc(client1.playerName);
             }
             MoveCameraClientRpc(cam.transform.position);
 
