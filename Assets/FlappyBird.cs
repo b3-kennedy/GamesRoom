@@ -11,6 +11,8 @@ public class FlappyBird : Game
 
     public GameObject gameOverScene;
 
+    public GameObject leaderboardScene;
+
     public FlappyBirdLevel level;
 
     public GameObject birdPrefab;
@@ -20,7 +22,7 @@ public class FlappyBird : Game
 
     public NetworkVariable<int> score = new NetworkVariable<int>();
 
-    public enum GameState { MAIN_MENU, GAME, GAME_OVER }
+    public enum GameState { MAIN_MENU, GAME, GAME_OVER, LEADERBOARDS}
 
     // Network variable for syncing game state across clients
     public NetworkVariable<GameState> netGameState = new NetworkVariable<GameState>(
@@ -38,6 +40,8 @@ public class FlappyBird : Game
 
     ulong playerID;
 
+    ulong serverPlayerID;
+
     void Start()
     {
         // Listen for state changes
@@ -53,6 +57,11 @@ public class FlappyBird : Game
         score.OnValueChanged += OnScoreChanged;
 
         birdPosition = new Vector3(-97.4796448f, -120f, 143.583679f);
+
+        leaderboardScene.SetActive(false);
+        gameOverScene.SetActive(false);
+        gameScene.SetActive(false);
+        
         
 
     }
@@ -79,18 +88,8 @@ public class FlappyBird : Game
     {
         if (netGameState.Value == GameState.MAIN_MENU)
         {
-            netGameState.Value = GameState.GAME;
-            if (bird != null)
-            {
-                Destroy(bird);
-            }
-            bird = Instantiate(birdPrefab);
-
-            bird.transform.position = birdPosition;
-            var netObj = bird.GetComponent<NetworkObject>();
-            netObj.SpawnWithOwnership(clientID);
-            
-            HookBirdEventsClientRpc(clientID,netObj.NetworkObjectId);
+            netGameState.Value = GameState.LEADERBOARDS;
+            serverPlayerID = clientID;
         }
 
 
@@ -169,10 +168,27 @@ public class FlappyBird : Game
         {
             level.Move();
         }
-        else if (Input.GetKeyDown(KeyCode.E) && netGameState.Value == GameState.GAME_OVER)
+        else if (Input.GetKeyDown(KeyCode.R) && netGameState.Value == GameState.GAME_OVER)
         {
-            
+
             ChangeStateServerRpc(GameState.MAIN_MENU);
+        }
+        else if (Input.GetKeyDown(KeyCode.E) && netGameState.Value == GameState.LEADERBOARDS)
+        {
+            if (IsServer)
+            {
+                if (bird != null)
+                {
+                    Destroy(bird);
+                }
+                bird = Instantiate(birdPrefab);
+                bird.transform.position = birdPosition;
+                var netObj = bird.GetComponent<NetworkObject>();
+                netObj.SpawnWithOwnership(serverPlayerID);
+
+                HookBirdEventsClientRpc(serverPlayerID, netObj.NetworkObjectId);
+                ChangeStateServerRpc(GameState.GAME);
+            }
         }
     }
 
@@ -222,12 +238,14 @@ public class FlappyBird : Game
 
                 ResetServerRpc();
                 mainMenu.SetActive(true);
+                leaderboardScene.SetActive(false);
                 gameScene.SetActive(false);
                 gameOverScene.SetActive(false);
                 break;
 
             case GameState.GAME:
                 gameOverScene.SetActive(false);
+                leaderboardScene.SetActive(false);
                 musicAudioSource.Play();
                 mainMenu.SetActive(false);
                 gameScene.SetActive(true);
@@ -235,11 +253,23 @@ public class FlappyBird : Game
 
             case GameState.GAME_OVER:
                 musicAudioSource.Stop();
+                leaderboardScene.SetActive(false);
                 gameOverScene.SetActive(true);
                 mainMenu.SetActive(false);
                 gameScene.SetActive(false);
                 gameOverScoreText.text = $"SCORE: {score.Value}";
+                if (IsServer)
+                {
+                    bird.GetComponent<NetworkObject>().Despawn(true);
+                }
                 CheckScoreServerRpc(playerID);
+                break;
+
+            case GameState.LEADERBOARDS:
+                leaderboardScene.SetActive(true);
+                gameOverScene.SetActive(false);
+                mainMenu.SetActive(false);
+                gameScene.SetActive(false);
                 break;
         }
     }
