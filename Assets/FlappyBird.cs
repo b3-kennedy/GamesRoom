@@ -153,9 +153,7 @@ public class FlappyBird : Game
         
 
         if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(objectID, out var player))
-        {
-            if (NetworkManager.Singleton.LocalClientId != player.GetComponent<NetworkObject>().OwnerClientId) return;
-            
+        {            
             if (score.Value > LeaderboardHolder.Instance.GetHighScore())
             {
                 BeatServerHighScoreServerRpc(objectID, score.Value);
