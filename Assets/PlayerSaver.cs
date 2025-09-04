@@ -6,10 +6,13 @@ public class PlayerSaver : NetworkBehaviour
 {
     public override void OnNetworkSpawn()
     {
+        if (!IsOwner) return;
+
         Load();
     }
     public override void OnNetworkDespawn()
     {
+        if (!IsOwner) return;
         SaveOnDisconnect();
     }
 
@@ -42,16 +45,17 @@ public class PlayerSaver : NetworkBehaviour
 
         Debug.Log("Loaded creditCount = " + creditCount);
 
-        // Apply it back to your game
-        // Example: if you have a PlayerWallet or PlayerData component in the scene:
-        if (IsServer)
-        {
-            GetComponent<SteamPlayer>().credits.Value = creditCount;
-        }
-
-
+        SetPlayerCreditsServerRpc(NetworkManager.Singleton.LocalClientId, creditCount);
 
     }
+
+    [ServerRpc(RequireOwnership = false)]
+    void SetPlayerCreditsServerRpc(ulong playerID, int credits)
+    {
+        var playerObject = NetworkManager.Singleton.ConnectedClients[playerID].PlayerObject;
+        playerObject.GetComponent<SteamPlayer>().credits.Value = credits;
+    }
+
 
 
     public void SaveOnDisconnect()
