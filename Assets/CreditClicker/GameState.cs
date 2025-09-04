@@ -9,6 +9,13 @@ using UnityEngine.UI;
 
 namespace Assets.CreditClicker
 {
+
+    [System.Serializable]
+    public class CreditClickerSaveData
+    {
+        public GameSaveData creditClicker;
+    }
+
     [System.Serializable]
     public class UpgradeSaveData
     {
@@ -77,7 +84,7 @@ namespace Assets.CreditClicker
         {
             var passiveParent = upgradePanel.transform.GetChild(1).GetChild(0).GetChild(0);
             var activeParent = upgradePanel.transform.GetChild(0).GetChild(0).GetChild(0);
-            if (!IsServer && player.GetComponent<NetworkObject>().OwnerClientId == NetworkManager.Singleton.LocalClientId)
+            if (player.GetComponent<NetworkObject>().OwnerClientId == NetworkManager.Singleton.LocalClientId)
             {
                 SaveGameState();
             }
@@ -240,7 +247,6 @@ namespace Assets.CreditClicker
         public void LoadGameState()
         {
             if (player.GetComponent<NetworkObject>().OwnerClientId != NetworkManager.Singleton.LocalClientId) return;
-            Debug.Log("LOAD");
 
             string path = Path.Combine(Application.persistentDataPath, "savegame.json");
 
@@ -251,7 +257,14 @@ namespace Assets.CreditClicker
             }
 
             string json = File.ReadAllText(path);
-            GameSaveData saveData = JsonUtility.FromJson<GameSaveData>(json);
+            CreditClickerSaveData wrapper = JsonUtility.FromJson<CreditClickerSaveData>(json);
+
+            GameSaveData saveData = wrapper.creditClicker;
+            if (saveData == null)
+            {
+                Debug.LogWarning("Save file is invalid or missing creditclicker data.");
+                return;
+            }
             // Clear current upgrades in the UI (optional, depending on your setup)
             Transform activeUpgradeParent = upgradePanel.transform.GetChild(0).GetChild(0).GetChild(0);
             Transform passiveUpgradeParent = upgradePanel.transform.GetChild(1).GetChild(0).GetChild(0);
@@ -295,54 +308,58 @@ namespace Assets.CreditClicker
 
         public void SaveGameState()
         {
-            if (player.GetComponent<NetworkObject>().OwnerClientId != NetworkManager.Singleton.LocalClientId) return; //only save local client game state
+            if (player.GetComponent<NetworkObject>().OwnerClientId != NetworkManager.Singleton.LocalClientId) return;
 
-            Dictionary<Upgrade, int> activeUpgrades = new Dictionary<Upgrade, int>();
-            Dictionary<Upgrade, int> passiveUpgrades = new Dictionary<Upgrade, int>();
+            string path = Path.Combine(Application.persistentDataPath, "savegame.json");
+            SaveData saveDataWrapper;
+
+            // If file exists, load it so we don’t overwrite other sections
+            if (File.Exists(path))
+            {
+                string existingJson = File.ReadAllText(path);
+                saveDataWrapper = JsonUtility.FromJson<SaveData>(existingJson);
+                if (saveDataWrapper == null) saveDataWrapper = new SaveData();
+            }
+            else
+            {
+                saveDataWrapper = new SaveData();
+            }
+
+            // Build your creditClicker section
+            GameSaveData creditClickerSave = new GameSaveData
+            {
+                activeUpgrades = new List<UpgradeSaveData>(),
+                passiveUpgrades = new List<UpgradeSaveData>()
+            };
+
             Transform activeUpgradeParent = upgradePanel.transform.GetChild(0).GetChild(0).GetChild(0);
             Transform passiveUpgradeParent = upgradePanel.transform.GetChild(1).GetChild(0).GetChild(0);
 
             for (int i = 0; i < activeUpgradeParent.childCount; i++)
             {
                 UpgradeUI ui = activeUpgradeParent.GetChild(i).GetComponent<UpgradeUI>();
-                if (!activeUpgrades.ContainsKey(ui.upgrade))
+                creditClickerSave.activeUpgrades.Add(new UpgradeSaveData
                 {
-                    activeUpgrades.Add(ui.upgrade, ui.currentTier);
-                }
-                Debug.Log($"Active Upgrade {i}: Name={ui.upgrade.name}, CurrentTier={ui.currentTier}");
+                    upgradeName = ui.upgrade.name,
+                    tier = ui.currentTier
+                });
             }
 
             for (int i = 0; i < passiveUpgradeParent.childCount; i++)
             {
                 UpgradeUI ui = passiveUpgradeParent.GetChild(i).GetComponent<UpgradeUI>();
-                if (!passiveUpgrades.ContainsKey(ui.upgrade))
+                creditClickerSave.passiveUpgrades.Add(new UpgradeSaveData
                 {
-                    passiveUpgrades.Add(ui.upgrade, ui.currentTier);
-                }
+                    upgradeName = ui.upgrade.name,
+                    tier = ui.currentTier
+                });
             }
 
-            // Convert dictionaries to serializable lists
-            GameSaveData saveData = new GameSaveData
-            {
-                activeUpgrades = new List<UpgradeSaveData>(),
-                passiveUpgrades = new List<UpgradeSaveData>()
-            };
+            // Assign to wrapper
+            saveDataWrapper.creditClicker = creditClickerSave;
 
-            foreach (var kvp in activeUpgrades)
-            {
-                saveData.activeUpgrades.Add(new UpgradeSaveData { upgradeName = kvp.Key.name, tier = kvp.Value });
-            }
-
-            foreach (var kvp in passiveUpgrades)
-            {
-                saveData.passiveUpgrades.Add(new UpgradeSaveData { upgradeName = kvp.Key.name, tier = kvp.Value });
-            }
-
-            // Serialize to JSON
-            string json = JsonUtility.ToJson(saveData, true);
-
-            // Write to file
-            string path = Path.Combine(Application.persistentDataPath, "savegame.json");
+            // Save whole wrapper back to file
+            string json = JsonUtility.ToJson(saveDataWrapper, true);
             File.WriteAllText(path, json);
 
             Debug.Log("Game saved to: " + path);

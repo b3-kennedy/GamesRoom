@@ -89,7 +89,7 @@ namespace Assets.ArcherBattle
             float currentRotateSpeed = rotateSpeed;
             if (isAltModifierPressed)
             {
-                currentRotateSpeed *= 0.5f; // halve the rotate speed
+                currentRotateSpeed *= 0.25f; // halve the rotate speed
             }
 
             if (rotater)
