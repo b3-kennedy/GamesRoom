@@ -188,8 +188,9 @@ public class FlappyBird : Game
                 netObj.SpawnWithOwnership(serverPlayerID);
 
                 HookBirdEventsClientRpc(serverPlayerID, netObj.NetworkObjectId);
-                ChangeStateServerRpc(GameState.GAME);
+
             }
+            ChangeStateServerRpc(GameState.GAME);
         }
     }
 
