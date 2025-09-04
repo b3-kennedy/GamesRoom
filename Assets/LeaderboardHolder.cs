@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using TMPro;
 using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -11,6 +12,10 @@ public class LeaderboardHolder : NetworkBehaviour
 {
     public static LeaderboardHolder Instance;
     public Dictionary<string, int> leaderboard = new Dictionary<string, int>();
+
+    public GameObject leaderboardEntryPrefab;
+
+    public Transform layout;
 
 
     [ServerRpc(RequireOwnership = false)]
@@ -54,6 +59,11 @@ public class LeaderboardHolder : NetworkBehaviour
         {
             leaderboard.Add(playerName, score);
             Debug.Log($"Added to leaderboard: {playerName} with score {score}");
+            GameObject spawnedEntry = Instantiate(leaderboardEntryPrefab, layout);
+            TextMeshProUGUI playerNameText = spawnedEntry.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+            TextMeshProUGUI scoreText = spawnedEntry.transform.GetChild(2).GetComponent<TextMeshProUGUI>();
+            playerNameText.text = $"{playerName}:";
+            scoreText.text = score.ToString();
         }
     }
 }
