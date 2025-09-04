@@ -173,30 +173,7 @@ namespace Assets.ArcherBattle
         {
             turnText.gameObject.SetActive(true);
             turnText.text = $"{playerName}'s Turn";
-            StartCoroutine(HideTurnText());
         }
-
-        IEnumerator HideTurnText()
-        {
-            yield return new WaitForSeconds(2.5f);
-
-            float duration = 1f;
-            float elapsed = 0f;
-
-            Color originalColor = turnText.color;
-
-            while (elapsed < duration)
-            {
-                elapsed += Time.deltaTime;
-                float alpha = Mathf.Lerp(1f, 0f, elapsed / duration);
-                turnText.color = new Color(originalColor.r, originalColor.g, originalColor.b, alpha);
-                yield return null;
-            }
-
-            turnText.color = new Color(originalColor.r, originalColor.g, originalColor.b, 0f);
-            turnText.gameObject.SetActive(false);
-        }
-
 
         [ClientRpc]
         void MoveCameraClientRpc(Vector3 pos)
