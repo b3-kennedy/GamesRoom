@@ -42,7 +42,6 @@ public class LeaderboardHolder : NetworkBehaviour
         }
 
         Instance = this;
-        DontDestroyOnLoad(gameObject);
     }
 
 
