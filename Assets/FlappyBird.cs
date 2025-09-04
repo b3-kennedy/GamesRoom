@@ -158,10 +158,14 @@ public class FlappyBird : Game
             {
                 BeatServerHighScoreServerRpc(objectID, score.Value);
             }
-            else if (score.Value > player.GetComponent<PlayerSaver>().fbHighScore)
+            else if (score.Value > player.GetComponent<PlayerSaver>().fbHighScore.Value)
             {
-                player.GetComponent<PlayerSaver>().fbHighScore = score.Value;
-                BeatPersonalHighScoreServerRpc(objectID, player.GetComponent<PlayerSaver>().fbHighScore);
+                if (IsServer)
+                {
+                    player.GetComponent<PlayerSaver>().fbHighScore.Value = score.Value;
+                }
+                
+                BeatPersonalHighScoreServerRpc(objectID, player.GetComponent<PlayerSaver>().fbHighScore.Value);
             }
 
 

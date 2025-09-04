@@ -27,7 +27,7 @@ public class LeaderboardHolder : NetworkBehaviour
             NetworkClient client = pair.Value;
             NetworkObject playerObject = client.PlayerObject;
             string playerName = playerObject.GetComponent<SteamPlayer>().playerName;
-            int score = playerObject.GetComponent<PlayerSaver>().fbHighScore;
+            int score = playerObject.GetComponent<PlayerSaver>().fbHighScore.Value;
             AddEntryClientRpc(playerName, score);
         }
 

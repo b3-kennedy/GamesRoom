@@ -6,7 +6,7 @@ using System.Collections;
 public class PlayerSaver : NetworkBehaviour
 {
 
-    public int fbHighScore;
+    public NetworkVariable<int> fbHighScore;
 
     public override void OnNetworkSpawn()
     {
@@ -58,8 +58,14 @@ public class PlayerSaver : NetworkBehaviour
             SetPlayerCreditsServerRpc(NetworkManager.Singleton.LocalClientId, creditCount);
         }
 
-        fbHighScore = saveDataWrapper.playerData.flappyBirdHighScore;
+        LoadScoreServerRpc(saveDataWrapper.playerData.flappyBirdHighScore);
         StartCoroutine(Wait());
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    void LoadScoreServerRpc(int score)
+    {
+        fbHighScore.Value = score;
     }
 
     //hacky way to ensure object is spawned, for some reason it didnt work without waiting even though this script is on the player object :)
@@ -101,7 +107,7 @@ public class PlayerSaver : NetworkBehaviour
         saveDataWrapper.playerData = new PlayerData
         {
             creditCount = GetComponent<SteamPlayer>().credits.Value,
-            flappyBirdHighScore = fbHighScore
+            flappyBirdHighScore = fbHighScore.Value
             
         };
 
