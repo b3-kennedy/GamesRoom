@@ -30,7 +30,7 @@ public class LeaderboardHolder : NetworkBehaviour
             int score = playerObject.GetComponent<PlayerSaver>().fbHighScore;
             AddEntryClientRpc(playerName, score);
         }
-        
+
     }
 
     void Awake()
@@ -82,6 +82,30 @@ public class LeaderboardHolder : NetworkBehaviour
             TextMeshProUGUI scoreText = spawnedEntry.transform.GetChild(2).GetComponent<TextMeshProUGUI>();
             playerNameText.text = $"{playerName}:";
             scoreText.text = score.ToString();
+        }
+
+        SortLeaderboardUI();
+    }
+
+    private void SortLeaderboardUI()
+    {
+        // Get all child entries
+        List<Transform> entries = new List<Transform>();
+        foreach (Transform child in layout)
+            entries.Add(child);
+
+        // Sort by the score in descending order
+        entries.Sort((a, b) =>
+        {
+            int scoreA = int.Parse(a.GetChild(2).GetComponent<TextMeshProUGUI>().text);
+            int scoreB = int.Parse(b.GetChild(2).GetComponent<TextMeshProUGUI>().text);
+            return scoreB.CompareTo(scoreA); // descending
+        });
+
+        // Re-assign sibling index to rearrange in hierarchy
+        for (int i = 0; i < entries.Count; i++)
+        {
+            entries[i].SetSiblingIndex(i);
         }
     }
 }
