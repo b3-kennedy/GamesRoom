@@ -36,6 +36,8 @@ namespace Assets.ArcherBattle
 
         [HideInInspector] public List<GameObject> firedArrows = new List<GameObject>();
 
+        public TextMeshPro turnText;
+
         bool isGameOver;
 
         void Start()
@@ -123,7 +125,6 @@ namespace Assets.ArcherBattle
                 archerBattleGame.leftPlayer.GetComponent<ArcheryPlayer>().rotater = player.transform.GetChild(4);
                 archerBattleGame.leftPlayer.GetComponent<ArcheryPlayer>().arrowSpawn = player.transform.GetChild(4).GetChild(1);
                 archerBattleGame.leftPlayer.GetComponent<ArcheryPlayer>().chargeBar = player.transform.GetChild(5).GetChild(0).GetChild(0);
-                archerBattleGame.leftPlayer.GetComponent<ArcheryPlayer>().playerNameText = player.transform.GetChild(5).GetChild(1).GetComponent<TextMeshProUGUI>();
                 archerBattleGame.leftPlayer.GetComponent<ArcheryPlayer>().AddListeners();
                 
             }
@@ -135,7 +136,6 @@ namespace Assets.ArcherBattle
                 archerBattleGame.rightPlayer.GetComponent<ArcheryPlayer>().arrowSpawn = player.transform.GetChild(4).GetChild(1);
                 archerBattleGame.rightPlayer.GetComponent<ArcheryPlayer>().chargeBar = player.transform.GetChild(5).GetChild(0).GetChild(0);
                 archerBattleGame.rightPlayer.GetComponent<ArcheryPlayer>().playerNameText = player.transform.GetChild(5).GetChild(1).GetComponent<TextMeshProUGUI>();
-                archerBattleGame.rightPlayer.GetComponent<ArcheryPlayer>().playerNameText.transform.eulerAngles = new Vector3(0,180,0);
                 archerBattleGame.rightPlayer.GetComponent<ArcheryPlayer>().AddListeners();
                 
             }
@@ -146,12 +146,15 @@ namespace Assets.ArcherBattle
         {
             Vector3 leftPos = leftPlayerObject.transform.position;
             Vector3 rightPos = rightPlayerObject.transform.position;
+            SteamPlayer client1 = archerBattleGame.connectedPlayers[0].GetComponent<SteamPlayer>();
+            SteamPlayer client2 = archerBattleGame.connectedPlayers[1].GetComponent<SteamPlayer>();
             if (archerBattleGame.leftPlayer.GetComponent<ArcheryPlayer>().isTurn.Value)
             {
                 archerBattleGame.leftPlayer.GetComponent<ArcheryPlayer>().isTurn.Value = false;
                 archerBattleGame.rightPlayer.GetComponent<ArcheryPlayer>().isTurn.Value = true;
                 archerBattleGame.leftPlayer.GetComponent<ArcheryPlayer>().ChangeShotValueServerRpc(false);
                 cam.transform.position = new Vector3(rightPos.x, rightPos.y, cam.transform.position.z);
+                SetTurnTextClientRpc(client1.playerName);
             }
             else
             {
@@ -159,10 +162,41 @@ namespace Assets.ArcherBattle
                 archerBattleGame.rightPlayer.GetComponent<ArcheryPlayer>().isTurn.Value = false;
                 archerBattleGame.rightPlayer.GetComponent<ArcheryPlayer>().ChangeShotValueServerRpc(false);
                 cam.transform.position = new Vector3(leftPos.x, leftPos.y, cam.transform.position.z);
+                SetTurnTextClientRpc(client2.playerName);
             }
             MoveCameraClientRpc(cam.transform.position);
+
         }
 
+
+        [ClientRpc]
+        void SetTurnTextClientRpc(string playerName)
+        {
+            turnText.gameObject.SetActive(true);
+            turnText.text = $"{playerName}'s Turn";
+            StartCoroutine(HideTurnText());
+        }
+
+        IEnumerator HideTurnText()
+        {
+            yield return new WaitForSeconds(2.5f);
+
+            float duration = 1f;
+            float elapsed = 0f;
+
+            Color originalColor = turnText.color;
+
+            while (elapsed < duration)
+            {
+                elapsed += Time.deltaTime;
+                float alpha = Mathf.Lerp(1f, 0f, elapsed / duration);
+                turnText.color = new Color(originalColor.r, originalColor.g, originalColor.b, alpha);
+                yield return null;
+            }
+
+            turnText.color = new Color(originalColor.r, originalColor.g, originalColor.b, 0f);
+            turnText.gameObject.SetActive(false);
+        }
 
 
         [ClientRpc]

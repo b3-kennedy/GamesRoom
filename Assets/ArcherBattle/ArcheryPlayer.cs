@@ -189,7 +189,7 @@ namespace Assets.ArcherBattle
             
         }
 
-        //function if i can think of a reason for charging to be necessary. Why would anyone not use full charge????
+        //function for if i can think of a reason for charging to be necessary. Why would anyone not use full charge????
         void Charge()
         {
             // if (charge < 16.6666666667f)
