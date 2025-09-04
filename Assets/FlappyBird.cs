@@ -150,8 +150,12 @@ public class FlappyBird : Game
     [ClientRpc]
     void CheckScoreClientRpc(ulong objectID)
     {
+        
+
         if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(objectID, out var player))
         {
+            if (NetworkManager.Singleton.LocalClientId != player.GetComponent<NetworkObject>().OwnerClientId) return;
+            
             if (score.Value > LeaderboardHolder.Instance.GetHighScore())
             {
                 BeatServerHighScoreServerRpc(objectID, score.Value);
@@ -162,7 +166,7 @@ public class FlappyBird : Game
                 BeatPersonalHighScoreServerRpc(objectID, player.GetComponent<PlayerSaver>().fbHighScore);
             }
 
-            
+
         }
         LeaderboardHolder.Instance.UpdateLeaderboardServerRpc();
     }
