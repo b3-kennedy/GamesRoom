@@ -54,8 +54,27 @@ public class LeaderboardHolder : NetworkBehaviour
     [ClientRpc]
     void AddEntryClientRpc(string playerName, int score)
     {
-        if (!leaderboard.ContainsKey(playerName))
+        if (leaderboard.ContainsKey(playerName))
         {
+            // Update the dictionary
+            leaderboard[playerName] = score;
+            Debug.Log($"Updated leaderboard: {playerName} with new score {score}");
+
+            // Update the existing UI
+            foreach (Transform entry in layout)
+            {
+                TextMeshProUGUI playerNameText = entry.GetChild(1).GetComponent<TextMeshProUGUI>();
+                if (playerNameText.text.StartsWith(playerName))
+                {
+                    TextMeshProUGUI scoreText = entry.GetChild(2).GetComponent<TextMeshProUGUI>();
+                    scoreText.text = score.ToString();
+                    break;
+                }
+            }
+        }
+        else
+        {
+            // Add new entry
             leaderboard.Add(playerName, score);
             Debug.Log($"Added to leaderboard: {playerName} with score {score}");
             GameObject spawnedEntry = Instantiate(leaderboardEntryPrefab, layout);

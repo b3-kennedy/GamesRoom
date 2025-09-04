@@ -157,6 +157,7 @@ public class FlappyBird : Game
                 player.GetComponent<PlayerSaver>().fbHighScore = score.Value;
             }
         }
+        LeaderboardHolder.Instance.UpdateLeaderboardServerRpc();
     }
 
 
