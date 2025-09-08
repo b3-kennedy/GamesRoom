@@ -9,13 +9,18 @@ public class SteamPlayer : NetworkBehaviour
 
     public void Start()
     {
+
+
+    }
+
+    public override void OnNetworkSpawn()
+    {
         if (!IsOwner) return;
         if (SteamClient.IsLoggedOn && SteamClient.IsValid)
         {
             playerName = SteamClient.Name;
             SetPlayerNameServerRpc(GetComponent<NetworkObject>().NetworkObjectId, playerName);
         }
-        
     }
 
     [ServerRpc(RequireOwnership = false)]

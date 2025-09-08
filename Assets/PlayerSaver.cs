@@ -1,15 +1,22 @@
 using UnityEngine;
 using Unity.Netcode;
 using System.IO;
+using System.Collections;
 
 public class PlayerSaver : NetworkBehaviour
 {
+
+    public NetworkVariable<int> fbHighScore;
+
     public override void OnNetworkSpawn()
     {
+        if (!IsOwner) return;
+        Debug.Log("load data");
         Load();
     }
     public override void OnNetworkDespawn()
     {
+        if (!IsOwner) return;
         SaveOnDisconnect();
     }
 
@@ -42,16 +49,39 @@ public class PlayerSaver : NetworkBehaviour
 
         Debug.Log("Loaded creditCount = " + creditCount);
 
-        // Apply it back to your game
-        // Example: if you have a PlayerWallet or PlayerData component in the scene:
-        if (IsServer)
+        if (IsServer && IsOwner)
         {
             GetComponent<SteamPlayer>().credits.Value = creditCount;
         }
+        else
+        {
+            SetPlayerCreditsServerRpc(NetworkManager.Singleton.LocalClientId, creditCount);
+        }
 
-
-
+        LoadScoreServerRpc(saveDataWrapper.playerData.flappyBirdHighScore);
+        StartCoroutine(Wait());
     }
+
+    [ServerRpc(RequireOwnership = false)]
+    void LoadScoreServerRpc(int score)
+    {
+        fbHighScore.Value = score;
+    }
+
+    //hacky way to ensure object is spawned, for some reason it didnt work without waiting even though this script is on the player object :)
+    IEnumerator Wait()
+    {
+        yield return new WaitForSeconds(3f); 
+        LeaderboardHolder.Instance.UpdateLeaderboardServerRpc();
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    void SetPlayerCreditsServerRpc(ulong playerID, int credits)
+    {
+        var playerObject = NetworkManager.Singleton.ConnectedClients[playerID].PlayerObject;
+        playerObject.GetComponent<SteamPlayer>().credits.Value = credits;
+    }
+
 
 
     public void SaveOnDisconnect()
@@ -76,7 +106,9 @@ public class PlayerSaver : NetworkBehaviour
         // Update playerData
         saveDataWrapper.playerData = new PlayerData
         {
-            creditCount = GetComponent<SteamPlayer>().credits.Value
+            creditCount = GetComponent<SteamPlayer>().credits.Value,
+            flappyBirdHighScore = fbHighScore.Value
+            
         };
 
         // Write back to file
