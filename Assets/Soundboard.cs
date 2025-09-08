@@ -81,9 +81,9 @@ public class Soundboard : NetworkBehaviour
         Transform playerObject = NetworkManager.Singleton.ConnectedClients[clientID].PlayerObject.transform;
         GameObject audioObject = Instantiate(audioPrefab, playerObject.position, Quaternion.identity);
         AudioSource source = audioObject.GetComponent<AudioSource>();
-        source.clip = audioClips[index];
         NetworkObject netObj = audioObject.GetComponent<NetworkObject>();
         netObj.Spawn();
+        source.clip = audioClips[index];
         audioObject.transform.SetParent(playerObject);
         source.Play();
         Destroy(audioObject, source.clip.length);
