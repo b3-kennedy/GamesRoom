@@ -8,6 +8,7 @@ using UnityEngine.Networking;
 public class Soundboard : NetworkBehaviour
 {
     public List<AudioClip> audioClips;
+    public GameObject audioPrefab;
 
     void Start()
     {
@@ -78,12 +79,12 @@ public class Soundboard : NetworkBehaviour
     void PlayAudioAtPointServerRpc(int index, ulong clientID)
     {
         Transform playerObject = NetworkManager.Singleton.ConnectedClients[clientID].PlayerObject.transform;
-        GameObject audioObject = new GameObject();
-        audioObject.transform.position = playerObject.position;
-        audioObject.transform.parent = playerObject;
-        AudioSource source = audioObject.AddComponent<AudioSource>();
+        GameObject audioObject = Instantiate(audioPrefab, playerObject.position, Quaternion.identity);
+        AudioSource source = audioObject.GetComponent<AudioSource>();
         source.clip = audioClips[index];
-        source.spatialBlend = 1f;
+        NetworkObject netObj = audioObject.GetComponent<NetworkObject>();
+        netObj.Spawn();
+        audioObject.transform.SetParent(playerObject);
         source.Play();
         Destroy(audioObject, source.clip.length);
     }
