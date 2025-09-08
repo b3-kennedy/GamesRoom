@@ -24,7 +24,7 @@ public class Soundboard : NetworkBehaviour
 
         // Load all audio files in the folder
         string[] audioFiles = Directory.GetFiles(folderPath);
-
+        Debug.Log(audioFiles.Length);
         foreach (string file in audioFiles)
         {
             string ext = Path.GetExtension(file).ToLower();
@@ -32,7 +32,6 @@ public class Soundboard : NetworkBehaviour
             {
                 Debug.Log("Found audio: " + file);
                 StartCoroutine(AddAudioToList(file));
-                break; // just play the first one for now
             }
         }
     }
@@ -45,7 +44,8 @@ public class Soundboard : NetworkBehaviour
         {
             if (Input.GetKeyDown(i.ToString()))
             {
-                PlaySoundAtIndex(i);
+                int index = (i == 0) ? audioClips.Count - 1 : i - 1;
+                PlaySoundAtIndex(index);
             }
         }
     }
