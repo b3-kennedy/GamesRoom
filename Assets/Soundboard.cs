@@ -45,13 +45,11 @@ public class Soundboard : NetworkBehaviour
         {
             if (Input.GetKeyDown(i.ToString()))
             {
-                PlaySoundAtIndexServerRpc(i);
+                PlaySoundAtIndex(i);
             }
         }
     }
-
-    [ServerRpc(RequireOwnership = false)]
-    void PlaySoundAtIndexServerRpc(int index)
+    void PlaySoundAtIndex(int index)
     {
         if (audioClips == null || audioClips.Count == 0)
         {
@@ -80,13 +78,25 @@ public class Soundboard : NetworkBehaviour
     {
         Transform playerObject = NetworkManager.Singleton.ConnectedClients[clientID].PlayerObject.transform;
         GameObject audioObject = Instantiate(audioPrefab, playerObject.position, Quaternion.identity);
-        AudioSource source = audioObject.GetComponent<AudioSource>();
-        NetworkObject netObj = audioObject.GetComponent<NetworkObject>();
-        netObj.Spawn();
-        source.clip = audioClips[index];
+        audioObject.GetComponent<NetworkObject>().Spawn();
         audioObject.transform.SetParent(playerObject);
+        ulong audioObjectID = audioObject.GetComponent<NetworkObject>().NetworkObjectId;
+        PlayAudioAtClientRpc(index, audioObjectID);
+        Destroy(audioObject, audioClips[index].length);
+    }
+
+    [ClientRpc]
+    void PlayAudioAtClientRpc(int index, ulong id)
+    {
+        AudioSource source = null;
+        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(id, out var audioObject))
+        {
+            source = audioObject.GetComponent<AudioSource>();
+        }
+
+        source.clip = audioClips[index];
         source.Play();
-        Destroy(audioObject, source.clip.length);
+        
     }
 
     private IEnumerator AddAudioToList(string path)
