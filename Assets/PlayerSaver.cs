@@ -3,6 +3,7 @@ using Unity.Netcode;
 using System.IO;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using Steamworks;
 
 public class PlayerSaver : NetworkBehaviour
 {
@@ -22,7 +23,12 @@ public class PlayerSaver : NetworkBehaviour
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         NetworkManager.Singleton.Shutdown();
+        if (SteamClient.IsValid && SteamClient.IsLoggedOn)
+        {
+            SteamClient.Shutdown();
+        }
         SceneManager.LoadScene("LobbyAndMainMenu", LoadSceneMode.Single);
+
     }
 
     public void Load()
