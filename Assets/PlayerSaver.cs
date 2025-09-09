@@ -21,7 +21,7 @@ public class PlayerSaver : NetworkBehaviour
         SaveOnDisconnect();
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-        NetworkManager.Singleton.DisconnectClient(NetworkManager.Singleton.LocalClientId);
+        NetworkManager.Singleton.Shutdown();
         SceneManager.LoadScene("LobbyAndMainMenu", LoadSceneMode.Single);
     }
 
