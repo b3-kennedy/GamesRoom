@@ -3446,6 +3446,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  hostButton: {fileID: 294300180}
+  joinButton: {fileID: 933935725}
   input: {fileID: 1163553810}
   lobbyIDText: {fileID: 237407377}
   lobbyUI: {fileID: 865809550}

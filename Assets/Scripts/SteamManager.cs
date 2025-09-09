@@ -13,6 +13,9 @@ public class SteamManager : NetworkBehaviour
 
     public static SteamManager Instance;
 
+    public Button hostButton;
+    public Button joinButton;
+
     public TMP_InputField input;
 
     public TextMeshProUGUI lobbyIDText;
@@ -43,6 +46,8 @@ public class SteamManager : NetworkBehaviour
 
         lobbyUI.SetActive(false);
         mainMenuUI.SetActive(true);
+        hostButton.onClick.AddListener(HostLobby);
+        joinButton.onClick.AddListener(JoinLobbyWithID);
     }
 
     void OnEnable()

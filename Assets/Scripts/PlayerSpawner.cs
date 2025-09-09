@@ -20,7 +20,6 @@ public class PlayerSpawner : NetworkBehaviour
         }
 
         Instance = this;
-        DontDestroyOnLoad(gameObject);
     }
 
     public override void OnNetworkSpawn()

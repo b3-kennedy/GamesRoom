@@ -100,7 +100,7 @@ namespace Assets.CreditClicker
 
                 if (game.hasPlayerCountUpgrade)
                 {
-                    creditsToAdd *= 1 + (SteamManager.Instance.playerCount.Value/10);
+                    creditsToAdd *= 1 + (LobbyHolder.Instance.currentLobby.MemberCount/10);
                 }
 
                 if (game.hasTimeUpgrade)
