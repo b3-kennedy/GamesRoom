@@ -19,7 +19,10 @@ public class PlayerSaver : NetworkBehaviour
     {
         if (!IsOwner) return;
         SaveOnDisconnect();
-        SceneManager.LoadScene("LobbyAndMainMenu");
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        NetworkManager.Singleton.DisconnectClient(NetworkManager.Singleton.LocalClientId);
+        SceneManager.LoadScene("LobbyAndMainMenu", LoadSceneMode.Single);
     }
 
     public void Load()
