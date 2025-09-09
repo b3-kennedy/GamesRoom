@@ -25,7 +25,7 @@ namespace Assets.Football
         FootballGame footballGame;
         public float speed = 5f;
         public float jumpForce = 5f;
-
+        public float hitForce = 10f;
         public float fallMultiplier = 2.5f;
         public float riseMultiplier = 2.5f;
         Rigidbody rb;
@@ -51,9 +51,9 @@ namespace Assets.Football
             {
                 SendInputServerRpc(input);
             }
-            
-            
-            
+
+
+
         }
 
         PlayerInput GetInput()
@@ -75,7 +75,7 @@ namespace Assets.Football
             {
                 jumpRequest = true;
             }
-                
+
         }
 
         [ServerRpc(RequireOwnership = false)]
@@ -121,6 +121,19 @@ namespace Assets.Football
         bool isGrounded()
         {
             return Physics.Raycast(groundCheck.position, Vector3.down, rb.GetComponent<Collider>().bounds.extents.y + 0.1f);
+        }
+
+        void OnCollisionEnter(Collision other)
+        {
+            if (!IsServer) return;
+
+            if (other.collider.CompareTag("Ball"))
+            {
+                Rigidbody ballRb = other.collider.GetComponent<Rigidbody>();
+
+                Vector3 direction = (ballRb.position - transform.position).normalized;
+                ballRb.AddForce(direction * hitForce, ForceMode.Impulse);
+            }
         }
     }
 }

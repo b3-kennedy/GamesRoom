@@ -720,7 +720,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 96587636}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: dfea5dfd476fab54689321b6f29ef68c, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -1008,7 +1008,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 128770289}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: dfea5dfd476fab54689321b6f29ef68c, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -1444,7 +1444,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 217848430}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: dfea5dfd476fab54689321b6f29ef68c, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -9379,6 +9379,7 @@ Transform:
   - {fileID: 1524263067}
   - {fileID: 2097416492}
   - {fileID: 91736097}
+  - {fileID: 1964080781}
   m_Father: {fileID: 1327658735}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &927663257
@@ -9424,8 +9425,10 @@ MonoBehaviour:
   player1: {fileID: 0}
   player2: {fileID: 0}
   playerPrefab: {fileID: 1110502693453357769, guid: 610710fe2fb310b46a4944bde9034fcf, type: 3}
+  ballPrefab: {fileID: 1885121894366916245, guid: b62901dd5fbeff94495fd5d432f68477, type: 3}
   leftPlayerSpawn: {fileID: 2097416492}
   rightPlayerSpawn: {fileID: 91736097}
+  ballSpawn: {fileID: 1964080781}
 --- !u!1 &928922206
 GameObject:
   m_ObjectHideFlags: 0
@@ -16859,7 +16862,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1428739428}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: dfea5dfd476fab54689321b6f29ef68c, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -20463,7 +20466,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1761778376}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: dfea5dfd476fab54689321b6f29ef68c, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -22939,6 +22942,37 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1937415056}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1964080780
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1964080781}
+  m_Layer: 0
+  m_Name: ballSpawn
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1964080781
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1964080780}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 1.649994}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 927663256}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1983609641
 GameObject:

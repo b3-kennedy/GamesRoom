@@ -15,8 +15,12 @@ namespace Assets.Football
 
         public GameObject playerPrefab;
 
+        public GameObject ballPrefab;
+
         public Transform leftPlayerSpawn;
         public Transform rightPlayerSpawn;
+
+        public Transform ballSpawn;
 
         void Start()
         {
@@ -36,6 +40,7 @@ namespace Assets.Football
         [ServerRpc(RequireOwnership = false)]
         void SpawnAndAssignPlayersServerRpc(ulong clientID)
         {
+            SpawnBall();
             NetworkObject playerObject = NetworkManager.Singleton.ConnectedClients[clientID].PlayerObject;
             if (footballGame.connectedPlayers[0] == playerObject)
             {
@@ -48,6 +53,12 @@ namespace Assets.Football
                 GameObject p2 = Instantiate(playerPrefab, rightPlayerSpawn.position, Quaternion.identity);
                 p2.GetComponent<NetworkObject>().SpawnWithOwnership(clientID);
             }
+        }
+
+        void SpawnBall()
+        {
+            GameObject ball = Instantiate(ballPrefab, ballSpawn.position, Quaternion.identity);
+            ball.GetComponent<NetworkObject>().Spawn();
         }
 
 
