@@ -102,6 +102,19 @@ namespace Assets.Football
             {
                 rb.linearVelocity += (riseMultiplier - 1) * Physics.gravity.y * Time.fixedDeltaTime * Vector3.up;
             }
+
+            if (IsServer)
+            {
+                SyncStateClientRpc(rb.position, rb.linearVelocity);
+            }
+        }
+
+        private void SyncStateClientRpc(Vector3 pos, Vector3 vel)
+        {
+            if (IsOwner) return; // Don’t override the local owner’s prediction
+
+            rb.position = pos;
+            rb.linearVelocity = vel;
         }
 
         bool isGrounded()
