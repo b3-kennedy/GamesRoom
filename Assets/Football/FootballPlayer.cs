@@ -1,3 +1,4 @@
+using System;
 using Unity.Netcode;
 using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
@@ -5,6 +6,20 @@ using UnityEngine;
 
 namespace Assets.Football
 {
+
+
+    public struct PlayerInput : INetworkSerializable
+    {
+        public float horizontal;
+        public bool jump;
+
+        public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+        {
+            serializer.SerializeValue(ref horizontal);
+            serializer.SerializeValue(ref jump);
+        }
+    }
+
     public class FootballPlayer : NetworkBehaviour
     {
         FootballGame footballGame;
@@ -29,13 +44,42 @@ namespace Assets.Football
         {
             if (!IsOwner) return;
 
-            float x = Input.GetAxis("ArrowHorizontal") * speed;
-            moveVec = new Vector3(x, 0, 0);
+            var input = GetInput();
 
-            if (Input.GetKeyDown(KeyCode.UpArrow) && isGrounded())
+            ApplyMovement(input);
+            if (!IsServer)
+            {
+                SendInputServerRpc(input);
+            }
+            
+            
+        }
+
+        PlayerInput GetInput()
+        {
+            PlayerInput input = new PlayerInput
+            {
+                horizontal = Input.GetAxis("ArrowHorizontal"),
+                jump = Input.GetKeyDown(KeyCode.UpArrow) && isGrounded()
+
+            };
+            return input;
+        }
+
+        void ApplyMovement(PlayerInput input)
+        {
+            moveVec = new Vector3(input.horizontal * speed, 0, 0);
+
+            if (input.jump)
             {
                 jumpRequest = true;
             }
+                
+        }
+
+        void SendInputServerRpc(PlayerInput input)
+        {
+            Debug.Log(input.horizontal);
         }
 
         void FixedUpdate()
