@@ -42,7 +42,6 @@ public class SteamManager : NetworkBehaviour
         }
 
         Instance = this;
-        DontDestroyOnLoad(gameObject);
 
         lobbyUI.SetActive(false);
         mainMenuUI.SetActive(true);
