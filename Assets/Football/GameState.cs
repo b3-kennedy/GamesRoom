@@ -32,6 +32,10 @@ namespace Assets.Football
         public override void OnStateEnter()
         {
             SpawnAndAssignPlayersServerRpc(NetworkManager.Singleton.LocalClientId);
+            if (IsServer)
+            {
+                SpawnBall();
+            }
             gameObject.SetActive(true);
             cam.orthographicSize = 10f;
 
@@ -40,7 +44,6 @@ namespace Assets.Football
         [ServerRpc(RequireOwnership = false)]
         void SpawnAndAssignPlayersServerRpc(ulong clientID)
         {
-            SpawnBall();
             NetworkObject playerObject = NetworkManager.Singleton.ConnectedClients[clientID].PlayerObject;
             if (footballGame.connectedPlayers[0] == playerObject)
             {
