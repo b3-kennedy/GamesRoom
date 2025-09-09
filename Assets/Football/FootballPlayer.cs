@@ -86,6 +86,7 @@ namespace Assets.Football
 
         void FixedUpdate()
         {
+
             rb.linearVelocity = new Vector3(moveVec.x, rb.linearVelocity.y, 0);
             if (jumpRequest)
             {
