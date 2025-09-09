@@ -11,7 +11,7 @@ namespace Assets.Football
         [SerializeField] private float velocityCorrectionRate = 10f;
         [SerializeField] private float snapThreshold = 2f;
 
-        float syncRate = 0.1f;
+        float syncRate = 0.01f;
         float syncTimer;
 
         private Rigidbody rb;
