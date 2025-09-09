@@ -77,6 +77,7 @@ namespace Assets.Football
                 
         }
 
+        [ServerRpc(RequireOwnership = false)]
         void SendInputServerRpc(PlayerInput input)
         {
             Debug.Log(input.horizontal);
