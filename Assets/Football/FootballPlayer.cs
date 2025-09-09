@@ -53,6 +53,7 @@ namespace Assets.Football
             }
             
             
+            
         }
 
         PlayerInput GetInput()
@@ -80,7 +81,7 @@ namespace Assets.Football
         [ServerRpc(RequireOwnership = false)]
         void SendInputServerRpc(PlayerInput input)
         {
-            Debug.Log(input.horizontal);
+            ApplyMovement(input);
         }
 
         void FixedUpdate()
