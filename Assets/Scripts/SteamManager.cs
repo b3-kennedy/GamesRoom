@@ -54,21 +54,16 @@ public class SteamManager : NetworkBehaviour
         SteamMatchmaking.OnLobbyMemberJoined += OnLobbyMemberJoined;
         NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
         NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnected;
-        NetworkManager.Singleton.OnServerStopped += OnServerStopped;
 
     }
 
-    private void OnServerStopped(bool obj)
-    {
-        SceneManager.LoadScene("LobbyAndMainMenu");
-    }
 
     private void OnClientDisconnected(ulong obj)
     {
         if (IsServer)
         {
             playerCount.Value = NetworkManager.Singleton.ConnectedClients.Count;
-            
+
 
         }
     }
@@ -101,7 +96,6 @@ public class SteamManager : NetworkBehaviour
         SteamMatchmaking.OnLobbyMemberJoined -= OnLobbyMemberJoined;
         NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnected;
         NetworkManager.Singleton.OnClientDisconnectCallback -= OnClientDisconnected;
-        NetworkManager.Singleton.OnServerStopped -= OnServerStopped;
     }
 
     private void OnLobbyMemberJoined(Lobby lobby, Friend friend)

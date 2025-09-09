@@ -2,6 +2,7 @@ using UnityEngine;
 using Unity.Netcode;
 using System.IO;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class PlayerSaver : NetworkBehaviour
 {
@@ -18,6 +19,7 @@ public class PlayerSaver : NetworkBehaviour
     {
         if (!IsOwner) return;
         SaveOnDisconnect();
+        SceneManager.LoadScene("LobbyAndMainMenu");
     }
 
     public void Load()
