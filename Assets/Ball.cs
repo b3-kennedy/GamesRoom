@@ -11,6 +11,9 @@ namespace Assets.Football
         [SerializeField] private float velocityCorrectionRate = 10f;
         [SerializeField] private float snapThreshold = 2f;
 
+        float syncRate = 0.1f;
+        float syncTimer;
+
         private Rigidbody rb;
         private Vector3 targetPosition;
         private Vector3 targetVelocity;
@@ -25,7 +28,13 @@ namespace Assets.Football
         {
             if (IsServer)
             {
-                SyncBallStateClientRpc(rb.position, rb.linearVelocity);
+                syncTimer += Time.fixedDeltaTime;
+                if (syncTimer >= syncRate)
+                {
+                    SyncBallStateClientRpc(rb.position, rb.linearVelocity);
+                    syncTimer = 0f;
+                }
+                
             }
             else if (needsCorrection)
             {
@@ -66,7 +75,7 @@ namespace Assets.Football
                 // Move at constant speed towards target
                 Vector3 moveDirection = positionDiff.normalized;
                 float moveDistance = Mathf.Min(correctionSpeed * Time.fixedDeltaTime, positionDiff.magnitude);
-                rb.position += moveDirection * moveDistance;
+                rb.MovePosition(rb.position + moveDirection * moveDistance);
             }
 
             // Correct velocity
