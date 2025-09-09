@@ -13,23 +13,23 @@ namespace Assets.Football
             rb = GetComponent<Rigidbody>();
         }
 
-        void FixedUpdate()
-        {
-            if (!IsServer) return;
+        // void FixedUpdate()
+        // {
+        //     if (!IsServer) return;
 
-            // Ball physics is server-authoritative
-            // Periodically sync state to clients
-            SyncBallStateClientRpc(rb.position, rb.linearVelocity);
-        }
+        //     // Ball physics is server-authoritative
+        //     // Periodically sync state to clients
+        //     SyncBallStateClientRpc(rb.position, rb.linearVelocity);
+        // }
 
-        [ClientRpc]
-        void SyncBallStateClientRpc(Vector3 position, Vector3 velocity)
-        {
-            if (IsServer) return; // host already authoritative
+        // [ClientRpc]
+        // void SyncBallStateClientRpc(Vector3 position, Vector3 velocity)
+        // {
+        //     if (IsServer) return; // host already authoritative
 
-            rb.position = position;
-            rb.linearVelocity = velocity;
-        }
+        //     rb.position = position;
+        //     rb.linearVelocity = velocity;
+        // }
     }
 }
 
