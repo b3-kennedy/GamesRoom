@@ -109,6 +109,7 @@ namespace Assets.Football
             }
         }
 
+        [ClientRpc]
         private void SyncStateClientRpc(Vector3 pos, Vector3 vel)
         {
             if (IsOwner) return; // Don’t override the local owner’s prediction
