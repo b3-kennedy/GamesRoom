@@ -15,16 +15,18 @@ namespace Assets.Football
         void Awake()
         {
             rb = GetComponent<Rigidbody>();
-            rb.isKinematic = false; // now uses physics
             rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
         }
 
         public void BindToServerBall(Ball server)
         {
             serverBall = server;
+            rb = GetComponent<Rigidbody>();
+            rb.isKinematic = false;
+            rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
 
-            // Prevent colliding with the server ball
-            Physics.IgnoreCollision(server.GetComponent<Collider>(), GetComponent<Collider>());
+            // Ignore collisions with server ball
+            Physics.IgnoreCollision(server.GetComponent<Collider>(), rb.GetComponent<Collider>());
         }
 
         void FixedUpdate()
@@ -43,7 +45,6 @@ namespace Assets.Football
             {
                 // Smoothly adjust
                 rb.linearVelocity = Vector3.Lerp(rb.linearVelocity, serverBall.GetComponent<Rigidbody>().linearVelocity, velocityCorrectionRate * Time.fixedDeltaTime);
-                rb.position = Vector3.Lerp(rb.position, serverBall.transform.position, positionCorrectionSpeed * Time.fixedDeltaTime);
             }
         }
 
