@@ -1,4 +1,5 @@
 using TMPro;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace Assets.Football
@@ -19,7 +20,21 @@ namespace Assets.Football
         public override void OnStateEnter()
         {
             gameObject.SetActive(true);
-            winnerTMP.text = $"{footballGame.gameState.winner} WINS!";
+            if (IsServer)
+            {
+                SetWinnerTextClientRpc(footballGame.gameState.winner.GetComponent<NetworkObject>().OwnerClientId);
+            }
+            
+        }
+
+        [ClientRpc]
+        void SetWinnerTextClientRpc(ulong objectID)
+        {
+            if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(objectID, out var playerObject))
+            {
+                string steamName = playerObject.GetComponent<SteamPlayer>().playerName;
+                winnerTMP.text = $"{steamName} Wins!";
+            }
         }
 
         public override void OnStateUpdate()
