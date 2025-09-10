@@ -71,8 +71,7 @@ namespace Assets.Football
             ball.GetComponent<Ball>().gameState = this;
             ball.GetComponent<NetworkObject>().Spawn();
 
-            player1GO.transform.position = leftPlayerSpawn.position;
-            player2GO.transform.position = rightPlayerSpawn.position;
+
 
             
         }
@@ -96,6 +95,9 @@ namespace Assets.Football
         {
             ball.GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
             ball.transform.position = ballSpawn.position;
+
+            player1GO.transform.position = leftPlayerSpawn.position;
+            player2GO.transform.position = rightPlayerSpawn.position;
 
 
         }
