@@ -14,6 +14,8 @@ namespace Assets.Football
         float syncRate = 0.01f;
         float syncTimer;
 
+        public GameState gameState;
+
         private Rigidbody rb;
         private Vector3 targetPosition;
         private Vector3 targetVelocity;
@@ -34,7 +36,7 @@ namespace Assets.Football
                     SyncBallStateClientRpc(rb.position, rb.linearVelocity);
                     syncTimer = 0f;
                 }
-                
+
             }
             else if (needsCorrection)
             {
@@ -93,6 +95,19 @@ namespace Assets.Football
             }
         }
 
+        void OnTriggerEnter(Collider other)
+        {
+            if (!IsServer) return;
+
+            if (other.CompareTag("LeftGoal"))
+            {
+                gameState.OnGoalServerRpc(false);
+            }
+            else if(other.CompareTag("RightGoal"))
+            {
+                gameState.OnGoalServerRpc(true);
+            }
+        }
         // void FixedUpdate()
         // {
         //     if (!IsServer) return;

@@ -22,6 +22,13 @@ namespace Assets.Football
 
         public Transform ballSpawn;
 
+        public NetworkVariable<int> leftPlayerScore;
+        public NetworkVariable<int> rightPlayerScore;
+
+        GameObject ball;
+        GameObject player1GO;
+        GameObject player2GO;
+
         void Start()
         {
             if (game is FootballGame fg)
@@ -47,21 +54,50 @@ namespace Assets.Football
             NetworkObject playerObject = NetworkManager.Singleton.ConnectedClients[clientID].PlayerObject;
             if (footballGame.connectedPlayers[0] == playerObject)
             {
-                GameObject p1 = Instantiate(playerPrefab, leftPlayerSpawn.position, Quaternion.identity);
-                p1.GetComponent<NetworkObject>().SpawnWithOwnership(clientID);
+                player1GO = Instantiate(playerPrefab, leftPlayerSpawn.position, Quaternion.identity);
+                player1GO.GetComponent<NetworkObject>().SpawnWithOwnership(clientID);
 
             }
             else if (footballGame.connectedPlayers[1] == playerObject)
             {
-                GameObject p2 = Instantiate(playerPrefab, rightPlayerSpawn.position, Quaternion.identity);
-                p2.GetComponent<NetworkObject>().SpawnWithOwnership(clientID);
+                player2GO = Instantiate(playerPrefab, rightPlayerSpawn.position, Quaternion.identity);
+                player2GO.GetComponent<NetworkObject>().SpawnWithOwnership(clientID);
             }
         }
 
         void SpawnBall()
         {
-            GameObject ball = Instantiate(ballPrefab, ballSpawn.position, Quaternion.identity);
+            ball = Instantiate(ballPrefab, ballSpawn.position, Quaternion.identity);
+            ball.GetComponent<Ball>().gameState = this;
             ball.GetComponent<NetworkObject>().Spawn();
+
+            player1GO.transform.position = leftPlayerSpawn.position;
+            player2GO.transform.position = rightPlayerSpawn.position;
+
+            
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void OnGoalServerRpc(bool isRight)
+        {
+            if (isRight)
+            {
+                rightPlayerScore.Value++;
+            }
+            else
+            {
+                leftPlayerScore.Value++;
+            }
+            ResetPositions();
+
+        }
+
+        void ResetPositions()
+        {
+            ball.GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
+            ball.transform.position = ballSpawn.position;
+
+
         }
 
 
