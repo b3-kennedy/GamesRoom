@@ -9,6 +9,8 @@ namespace Assets.Football
         FootballGame footballGame;
         public TextMeshPro winnerTMP;
 
+        string winner;
+
         void Start()
         {
             if (game is FootballGame fg)
@@ -20,12 +22,17 @@ namespace Assets.Football
         public override void OnStateEnter()
         {
             gameObject.SetActive(true);
-            Debug.Log(footballGame.gameOverState);
             if (IsServer)
             {
                 SetWinnerTextClientRpc(footballGame.gameState.winner.GetComponent<NetworkObject>().OwnerClientId);
             }
             
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void SetWinnerServerRpc(string playerName)
+        {
+            winner = playerName;
         }
 
         [ClientRpc]
