@@ -96,6 +96,18 @@ namespace Assets.Football
             }
         }
 
+        [ServerRpc(RequireOwnership = false)]
+        public void SetWinnerServerRpc(string winner)
+        {
+            SetWinnerClientRpc(winner);
+        }
+
+        [ClientRpc]
+        void SetWinnerClientRpc(string winner)
+        {
+            gameOverState.winner = winner;
+        }
+
         private void ApplyState(GameState state)
         {
             switch (state)

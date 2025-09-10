@@ -9,7 +9,7 @@ namespace Assets.Football
         FootballGame footballGame;
         public TextMeshPro winnerTMP;
 
-        string winner;
+        public string winner;
 
         void Start()
         {
@@ -25,12 +25,6 @@ namespace Assets.Football
             
         }
 
-        [ServerRpc(RequireOwnership = false)]
-        public void SetWinnerServerRpc(string playerName)
-        {
-            winner = playerName;
-            Debug.Log("winner");
-        }
 
         public override void OnStateUpdate()
         {
