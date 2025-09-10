@@ -137,24 +137,28 @@ namespace Assets.Football
 
         void OnCollisionEnter(Collision other)
         {
-            Rigidbody ballRb = other.collider.GetComponent<Rigidbody>();
-            if (ballRb == null) return;
+            if (!other.collider.CompareTag("Ball")) return;
 
-            Vector3 direction = (ballRb.position - transform.position).normalized;
+            Vector3 direction = (other.collider.transform.position - transform.position).normalized;
+            Vector3 impulse = direction * hitForce;
 
+            // Server applies authoritative kick
             if (IsServer)
             {
-                // Apply server-authoritative kick
-                ballRb.AddForce(direction * hitForce, ForceMode.Impulse);
+                Ball ball = other.collider.GetComponent<Ball>();
+                if (ball != null)
+                {
+                    ball.GetComponent<Rigidbody>().AddForce(impulse, ForceMode.Impulse);
+                }
             }
 
+            // Owner applies local ghost kick for instant feedback
             if (IsOwner)
             {
-                // Apply local ghost kick for immediate feedback
                 GhostBall ghost = other.collider.GetComponent<GhostBall>();
                 if (ghost != null)
                 {
-                    ghost.ApplyLocalKick(direction * hitForce);
+                    ghost.ApplyLocalKick(impulse);
                 }
             }
         }
