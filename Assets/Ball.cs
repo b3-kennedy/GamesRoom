@@ -21,6 +21,8 @@ namespace Assets.Football
         private Vector3 targetVelocity;
         private bool needsCorrection = false;
 
+        public GameObject ghostBall;
+
         void Start()
         {
             rb = GetComponent<Rigidbody>();
@@ -39,9 +41,8 @@ namespace Assets.Football
                 GetComponent<Rigidbody>().isKinematic = true;
 
                 
-                GameObject ghostInstance = Instantiate(gameObject, transform.position, transform.rotation);
-                Destroy(ghostInstance.GetComponent<Ball>());
-                GhostBall ghostScript = ghostInstance.AddComponent<GhostBall>();
+                GameObject ghostInstance = Instantiate(ghostBall, transform.position, transform.rotation);
+                GhostBall ghostScript = ghostInstance.GetComponent<GhostBall>();
                 ghostScript.BindToServerBall(this);
             }
         }
@@ -50,7 +51,7 @@ namespace Assets.Football
         {
             if (IsServer)
             {
-                SyncBallStateClientRpc(rb.position, rb.linearVelocity);
+                //SyncBallStateClientRpc(rb.position, rb.linearVelocity);
             }
         }
 
@@ -77,14 +78,14 @@ namespace Assets.Football
         //     SyncBallStateClientRpc(rb.position, rb.linearVelocity);
         // }
 
-        [ClientRpc]
-        void SyncBallStateClientRpc(Vector3 position, Vector3 velocity)
-        {
-            if (IsServer) return; // host already authoritative
+        // [ClientRpc]
+        // void SyncBallStateClientRpc(Vector3 position, Vector3 velocity)
+        // {
+        //     if (IsServer) return; // host already authoritative
 
-            rb.position = position;
-            rb.linearVelocity = velocity;
-        }
+        //     rb.position = position;
+        //     rb.linearVelocity = velocity;
+        // }
     }
 }
 
