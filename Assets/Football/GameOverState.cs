@@ -22,10 +22,6 @@ namespace Assets.Football
         public override void OnStateEnter()
         {
             gameObject.SetActive(true);
-            if (IsServer)
-            {
-                SetWinnerTextClientRpc(footballGame.gameState.winner.GetComponent<NetworkObject>().OwnerClientId);
-            }
             
         }
 
@@ -34,16 +30,6 @@ namespace Assets.Football
         {
             winner = playerName;
             Debug.Log("winner");
-        }
-
-        [ClientRpc]
-        void SetWinnerTextClientRpc(ulong objectID)
-        {
-            if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(objectID, out var playerObject))
-            {
-                string steamName = playerObject.GetComponent<SteamPlayer>().playerName;
-                winnerTMP.text = $"{steamName} Wins!";
-            }
         }
 
         public override void OnStateUpdate()
