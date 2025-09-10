@@ -106,6 +106,7 @@ namespace Assets.Football
         void SetWinnerClientRpc(string winner)
         {
             gameOverState.winner = winner;
+            gameOverState.winnerTMP.text = $"{winner} has Won!";
         }
 
         private void ApplyState(GameState state)
