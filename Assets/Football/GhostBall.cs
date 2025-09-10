@@ -4,62 +4,52 @@ namespace Assets.Football
 {
     public class GhostBall : MonoBehaviour
     {
-        [Header("Smoothing Settings")]
-        public float positionCorrectionSpeed = 15f;
-        public float velocityCorrectionRate = 10f;
+        [Header("Reconciliation Settings")]
+        public float positionCorrectionSpeed = 10f;
+        public float velocityCorrectionRate = 5f;
+        public float snapThreshold = 2f;
 
-        // References
         private Rigidbody rb;
-        private Ball serverBall; // the authoritative networked ball
-
-        // Prediction variables
-        private Vector3 predictedVelocity;
-        private bool hasPrediction = false;
+        private Ball serverBall;
 
         void Awake()
         {
             rb = GetComponent<Rigidbody>();
-            rb.isKinematic = true; // we move manually
+            rb.isKinematic = false; // now uses physics
+            rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
         }
 
         public void BindToServerBall(Ball server)
         {
             serverBall = server;
+
+            // Prevent colliding with the server ball
+            Physics.IgnoreCollision(server.GetComponent<Collider>(), GetComponent<Collider>());
+        }
+
+        void FixedUpdate()
+        {
+            if (serverBall == null) return;
+
+            // Reconcile with server ball
+            Vector3 posDiff = serverBall.transform.position - transform.position;
+            if (posDiff.magnitude > snapThreshold)
+            {
+                // Snap if too far
+                rb.position = serverBall.transform.position;
+                rb.linearVelocity = serverBall.GetComponent<Rigidbody>().linearVelocity;
+            }
+            else
+            {
+                // Smoothly adjust
+                rb.linearVelocity = Vector3.Lerp(rb.linearVelocity, serverBall.GetComponent<Rigidbody>().linearVelocity, velocityCorrectionRate * Time.fixedDeltaTime);
+                rb.position = Vector3.Lerp(rb.position, serverBall.transform.position, positionCorrectionSpeed * Time.fixedDeltaTime);
+            }
         }
 
         public void ApplyLocalKick(Vector3 impulse)
         {
-            predictedVelocity += impulse / 1f; // assume mass = 1 for simplicity
-            hasPrediction = true;
-        }
-
-        void Update()
-        {
-            if (serverBall == null) return;
-
-            // Predict local movement
-            if (hasPrediction)
-            {
-                predictedVelocity += Physics.gravity * Time.deltaTime;
-                transform.position += predictedVelocity * Time.deltaTime;
-            }
-
-            // Smooth correction toward server-authoritative position
-            Vector3 targetPos = serverBall.transform.position;
-            Vector3 targetVel = serverBall.GetComponent<Rigidbody>().linearVelocity;
-
-            float distance = Vector3.Distance(transform.position, targetPos);
-
-            if (distance > 2f) // snap if too far
-            {
-                transform.position = targetPos;
-                predictedVelocity = targetVel;
-            }
-            else
-            {
-                transform.position = Vector3.Lerp(transform.position, targetPos, positionCorrectionSpeed * Time.deltaTime);
-                predictedVelocity = Vector3.Lerp(predictedVelocity, targetVel, velocityCorrectionRate * Time.deltaTime);
-            }
+            rb.AddForce(impulse, ForceMode.Impulse);
         }
     }
 }
