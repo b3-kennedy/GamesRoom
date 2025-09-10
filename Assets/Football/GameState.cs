@@ -180,8 +180,8 @@ namespace Assets.Football
             ball.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
             ball.transform.position = ballSpawn.position;
 
-            player1GO.transform.position = leftPlayerSpawn.position;
-            player2GO.transform.position = rightPlayerSpawn.position;
+            player1GO.GetComponent<FootballPlayer>().TeleportServerRpc(leftPlayerSpawn.position);
+            player2GO.GetComponent<FootballPlayer>().TeleportServerRpc(rightPlayerSpawn.position);
 
 
         }

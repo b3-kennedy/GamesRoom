@@ -1,6 +1,5 @@
 using System;
 using Unity.Netcode;
-using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
 
@@ -122,6 +121,18 @@ namespace Assets.Football
         bool isGrounded()
         {
             return Physics.Raycast(groundCheck.position, Vector3.down, rb.GetComponent<Collider>().bounds.extents.y + 0.1f);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void TeleportServerRpc(Vector3 pos)
+        {
+            TeleportClientRpc(pos);
+        }
+
+        [ClientRpc]
+        void TeleportClientRpc(Vector3 pos)
+        {
+            transform.position = pos;
         }
 
         void OnCollisionEnter(Collision other)
