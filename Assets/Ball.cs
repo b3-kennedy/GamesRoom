@@ -51,7 +51,7 @@ namespace Assets.Football
         {
             if (IsServer)
             {
-                //SyncBallStateClientRpc(rb.position, rb.linearVelocity);
+                SyncBallStateClientRpc(rb.position, rb.linearVelocity);
             }
         }
 
@@ -78,14 +78,14 @@ namespace Assets.Football
         //     SyncBallStateClientRpc(rb.position, rb.linearVelocity);
         // }
 
-        // [ClientRpc]
-        // void SyncBallStateClientRpc(Vector3 position, Vector3 velocity)
-        // {
-        //     if (IsServer) return; // host already authoritative
+        [ClientRpc]
+        void SyncBallStateClientRpc(Vector3 position, Vector3 velocity)
+        {
+            if (IsServer) return; // host already authoritative
 
-        //     rb.position = position;
-        //     rb.linearVelocity = velocity;
-        // }
+            rb.position = position;
+            //rb.linearVelocity = velocity;
+        }
     }
 }
 
