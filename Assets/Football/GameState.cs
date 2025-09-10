@@ -3,6 +3,7 @@ using Unity.Netcode;
 using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
+using System;
 
 namespace Assets.Football
 {
@@ -38,7 +39,11 @@ namespace Assets.Football
             {
                 footballGame = fg;
             }
+            leftPlayerScore.OnValueChanged += UpdateLeftScoreTextClientRpc;
+            rightPlayerScore.OnValueChanged += UpdateRightScoreTextClientRpc;
         }
+
+
         public override void OnStateEnter()
         {
             SpawnAndAssignPlayersServerRpc(NetworkManager.Singleton.LocalClientId);
@@ -75,7 +80,7 @@ namespace Assets.Football
             if (playersAssigned >= 2)
             {
                 SetPlayerNamesClientRpc(player1Name, player2Name);
-                UpdateScoreTextClientRpc();
+                SetScoreTextClientRpc();
             }
         }
 
@@ -109,16 +114,25 @@ namespace Assets.Football
                 rightPlayerScore.Value++;
             }
             ResetPositions();
-            UpdateScoreTextClientRpc();
 
 
         }
 
         [ClientRpc]
-        void UpdateScoreTextClientRpc()
+        void SetScoreTextClientRpc()
         {
-            player1ScoreTMP.text = $"{player1Name}: {leftPlayerScore.Value}";
-            player2ScoreTMP.text = $"{rightPlayerScore.Value}: {player2Name}";
+            player1ScoreTMP.text = $"{player1Name}: {0}";
+            player2ScoreTMP.text = $"{0}: {player2Name}";
+        }
+
+        private void UpdateLeftScoreTextClientRpc(int previousValue, int newValue)
+        {
+            player1ScoreTMP.text = $"{player1Name}: {newValue}";
+        }
+
+        private void UpdateRightScoreTextClientRpc(int previousValue, int newValue)
+        {
+            player2ScoreTMP.text = $"{newValue}: {player2Name}";
         }
 
         void ResetPositions()
