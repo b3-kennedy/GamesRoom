@@ -20,6 +20,7 @@ namespace Assets.Football
         public override void OnStateEnter()
         {
             gameObject.SetActive(true);
+            Debug.Log(footballGame.gameOverState);
             if (IsServer)
             {
                 SetWinnerTextClientRpc(footballGame.gameState.winner.GetComponent<NetworkObject>().OwnerClientId);
