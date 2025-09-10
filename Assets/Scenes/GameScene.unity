@@ -16711,7 +16711,7 @@ MonoBehaviour:
     m_InternalValue: 0
   mainMenuState: {fileID: 1662902947}
   gameState: {fileID: 927663258}
-  gameOverState: {fileID: 0}
+  gameOverState: {fileID: 696912972}
   connectedPlayersCount:
     m_InternalValue: 0
   connectedPlayers: []
