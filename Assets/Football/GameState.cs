@@ -2,6 +2,7 @@ using UnityEngine;
 using Unity.Netcode;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 
 namespace Assets.Football
 {
@@ -9,25 +10,27 @@ namespace Assets.Football
     {
         FootballGame footballGame;
         public Camera cam;
-
         public FootballPlayer player1;
         public FootballPlayer player2;
-
         public GameObject playerPrefab;
-
         public GameObject ballPrefab;
-
         public Transform leftPlayerSpawn;
         public Transform rightPlayerSpawn;
-
         public Transform ballSpawn;
-
         public NetworkVariable<int> leftPlayerScore;
         public NetworkVariable<int> rightPlayerScore;
+
+        public TextMeshPro player1ScoreTMP;
+        public TextMeshPro player2ScoreTMP;
 
         GameObject ball;
         GameObject player1GO;
         GameObject player2GO;
+
+        string player1Name;
+        string player2Name;
+
+        int playersAssigned = 0;
 
         void Start()
         {
@@ -56,13 +59,31 @@ namespace Assets.Football
             {
                 player1GO = Instantiate(playerPrefab, leftPlayerSpawn.position, Quaternion.identity);
                 player1GO.GetComponent<NetworkObject>().SpawnWithOwnership(clientID);
+                playersAssigned++;
+                player1Name = playerObject.GetComponent<SteamPlayer>().playerName;
+
 
             }
             else if (footballGame.connectedPlayers[1] == playerObject)
             {
                 player2GO = Instantiate(playerPrefab, rightPlayerSpawn.position, Quaternion.identity);
                 player2GO.GetComponent<NetworkObject>().SpawnWithOwnership(clientID);
+                playersAssigned++;
+                player2Name = playerObject.GetComponent<SteamPlayer>().playerName;
             }
+
+            if (playersAssigned >= 2)
+            {
+                SetPlayerNamesClientRpc(player1Name, player2Name);
+                UpdateScoreTextClientRpc();
+            }
+        }
+
+        [ClientRpc]
+        void SetPlayerNamesClientRpc(string p1Name, string p2Name)
+        {
+            player1Name = p1Name;
+            player2Name = p2Name;
         }
 
         void SpawnBall()
@@ -88,7 +109,16 @@ namespace Assets.Football
                 leftPlayerScore.Value++;
             }
             ResetPositions();
+            UpdateScoreTextClientRpc();
 
+
+        }
+
+        [ClientRpc]
+        void UpdateScoreTextClientRpc()
+        {
+            player1ScoreTMP.text = $"{player1Name}: {leftPlayerScore.Value}";
+            player2ScoreTMP.text = $"{rightPlayerScore}: {player2Name}";
         }
 
         void ResetPositions()
