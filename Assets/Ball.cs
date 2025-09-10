@@ -31,6 +31,12 @@ namespace Assets.Football
             if (!IsServer)
             {
                 GetComponent<MeshRenderer>().enabled = false;
+
+                // Turn off collider so ghost ball is not interfered with
+                GetComponent<Collider>().enabled = false;
+
+                // Rigidbody is already kinematic on clients
+                GetComponent<Rigidbody>().isKinematic = true;
             }
         }
 
