@@ -30,8 +30,10 @@ namespace Assets.Football
 
         string player1Name;
         string player2Name;
-
         int playersAssigned = 0;
+
+        public GameObject winner;
+        public GameObject loser;
 
         void Start()
         {
@@ -128,16 +130,34 @@ namespace Assets.Football
         private void UpdateLeftScoreText(int previousValue, int newValue)
         {
             player1ScoreTMP.text = $"{player1Name}: {newValue}";
+            if (IsServer)
+            {
+                if (newValue == 5)
+                {
+                    winner = NetworkManager.Singleton.ConnectedClients[player1GO.GetComponent<NetworkObject>().OwnerClientId].PlayerObject.gameObject;
+                    loser = NetworkManager.Singleton.ConnectedClients[player2GO.GetComponent<NetworkObject>().OwnerClientId].PlayerObject.gameObject;
+                }
+            }
+
         }
 
         private void UpdateRightScoreText(int previousValue, int newValue)
         {
             player2ScoreTMP.text = $"{newValue}: {player2Name}";
+            if (IsServer)
+            {
+                if (newValue == 5)
+                {
+                    winner = NetworkManager.Singleton.ConnectedClients[player2GO.GetComponent<NetworkObject>().OwnerClientId].PlayerObject.gameObject;
+                    loser = NetworkManager.Singleton.ConnectedClients[player1GO.GetComponent<NetworkObject>().OwnerClientId].PlayerObject.gameObject;
+                }
+            }
         }
 
         void ResetPositions()
         {
             ball.GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
+            ball.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
             ball.transform.position = ballSpawn.position;
 
             player1GO.transform.position = leftPlayerSpawn.position;
