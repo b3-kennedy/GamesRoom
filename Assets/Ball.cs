@@ -26,6 +26,14 @@ namespace Assets.Football
             rb = GetComponent<Rigidbody>();
         }
 
+        public override void OnNetworkSpawn()
+        {
+            if (!IsServer)
+            {
+                GetComponent<MeshRenderer>().enabled = false;
+            }
+        }
+
         void FixedUpdate()
         {
             if (IsServer)

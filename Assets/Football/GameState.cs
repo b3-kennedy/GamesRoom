@@ -53,10 +53,16 @@ namespace Assets.Football
             {
                 SpawnBall();
             }
+            else
+            {
+                SpawnLocalBall();
+            }
             gameObject.SetActive(true);
             cam.orthographicSize = 10f;
 
         }
+
+
 
         public override void OnReset()
         {
@@ -114,10 +120,12 @@ namespace Assets.Football
             ball = Instantiate(ballPrefab, ballSpawn.position, Quaternion.identity);
             ball.GetComponent<Ball>().gameState = this;
             ball.GetComponent<NetworkObject>().Spawn();
+        }
 
-
-
-            
+        private void SpawnLocalBall()
+        {
+            ball = Instantiate(ballPrefab, ballSpawn.position, Quaternion.identity);
+            ball.GetComponent<Ball>().gameState = this;
         }
 
         [ServerRpc(RequireOwnership = false)]
