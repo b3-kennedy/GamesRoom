@@ -58,6 +58,20 @@ namespace Assets.Football
 
         }
 
+        public override void OnReset()
+        {
+            if (IsServer)
+            {
+                ball.GetComponent<NetworkObject>().Despawn();
+                player1GO.GetComponent<NetworkObject>().Despawn();
+                player2GO.GetComponent<NetworkObject>().Despawn();
+                leftPlayerScore.Value = 0;
+                rightPlayerScore.Value = 0;
+            }
+
+
+        }
+
         [ServerRpc(RequireOwnership = false)]
         void SpawnAndAssignPlayersServerRpc(ulong clientID)
         {
@@ -65,6 +79,7 @@ namespace Assets.Football
             if (footballGame.connectedPlayers[0] == playerObject)
             {
                 player1GO = Instantiate(playerPrefab, leftPlayerSpawn.position, Quaternion.identity);
+                player1GO.GetComponent<FootballPlayer>().footballGame = footballGame;
                 player1GO.GetComponent<NetworkObject>().SpawnWithOwnership(clientID);
                 playersAssigned++;
                 player1Name = playerObject.GetComponent<SteamPlayer>().playerName;
@@ -74,6 +89,7 @@ namespace Assets.Football
             else if (footballGame.connectedPlayers[1] == playerObject)
             {
                 player2GO = Instantiate(playerPrefab, rightPlayerSpawn.position, Quaternion.identity);
+                player2GO.GetComponent<FootballPlayer>().footballGame = footballGame;
                 player2GO.GetComponent<NetworkObject>().SpawnWithOwnership(clientID);
                 playersAssigned++;
                 player2Name = playerObject.GetComponent<SteamPlayer>().playerName;
@@ -136,6 +152,7 @@ namespace Assets.Football
                 {
                     winner = NetworkManager.Singleton.ConnectedClients[player1GO.GetComponent<NetworkObject>().OwnerClientId].PlayerObject.gameObject;
                     loser = NetworkManager.Singleton.ConnectedClients[player2GO.GetComponent<NetworkObject>().OwnerClientId].PlayerObject.gameObject;
+                    footballGame.ChangeStateServerRpc(FootballGame.GameState.GAME_OVER);
                 }
             }
 
@@ -150,6 +167,7 @@ namespace Assets.Football
                 {
                     winner = NetworkManager.Singleton.ConnectedClients[player2GO.GetComponent<NetworkObject>().OwnerClientId].PlayerObject.gameObject;
                     loser = NetworkManager.Singleton.ConnectedClients[player1GO.GetComponent<NetworkObject>().OwnerClientId].PlayerObject.gameObject;
+                    footballGame.ChangeStateServerRpc(FootballGame.GameState.GAME_OVER);
                 }
             }
         }

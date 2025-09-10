@@ -16,6 +16,7 @@ namespace Assets.Football
 
         public MainMenu mainMenuState;
         public Football.GameState gameState;
+        public GameOverState gameOverState;
 
         public NetworkVariable<int> connectedPlayersCount = new NetworkVariable<int>();
         public List<NetworkObject> connectedPlayers = new List<NetworkObject>();
@@ -33,7 +34,7 @@ namespace Assets.Football
         {
             mainMenuState.game = this;
             gameState.game = this;
-            // gameOverState.game = this;
+            gameOverState.game = this;
             // wagerState.game = this;
         }
 
@@ -61,6 +62,7 @@ namespace Assets.Football
         {
             connectedPlayers.Clear();
             connectedPlayersCount.Value = 0;
+            gameState.OnReset();
             ChangeStateServerRpc(GameState.MAIN_MENU);
 
         }
@@ -89,6 +91,7 @@ namespace Assets.Football
                     gameState.OnStateExit();                
                     break;
                 case GameState.GAME_OVER:
+                    gameOverState.OnStateExit();
                     break;
             }
         }
@@ -106,6 +109,7 @@ namespace Assets.Football
                     break;
 
                 case GameState.GAME_OVER:
+                    gameOverState.OnStateEnter();
                     break;
             }
         }

@@ -22,7 +22,7 @@ namespace Assets.Football
 
     public class FootballPlayer : NetworkBehaviour
     {
-        FootballGame footballGame;
+        [HideInInspector] public FootballGame footballGame;
         public float speed = 5f;
         public float jumpForce = 5f;
         public float hitForce = 10f;
