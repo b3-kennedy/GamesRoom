@@ -39,8 +39,8 @@ namespace Assets.Football
             {
                 footballGame = fg;
             }
-            leftPlayerScore.OnValueChanged += UpdateLeftScoreTextClientRpc;
-            rightPlayerScore.OnValueChanged += UpdateRightScoreTextClientRpc;
+            leftPlayerScore.OnValueChanged += UpdateLeftScoreText;
+            rightPlayerScore.OnValueChanged += UpdateRightScoreText;
         }
 
 
@@ -125,12 +125,12 @@ namespace Assets.Football
             player2ScoreTMP.text = $"{0}: {player2Name}";
         }
 
-        private void UpdateLeftScoreTextClientRpc(int previousValue, int newValue)
+        private void UpdateLeftScoreText(int previousValue, int newValue)
         {
             player1ScoreTMP.text = $"{player1Name}: {newValue}";
         }
 
-        private void UpdateRightScoreTextClientRpc(int previousValue, int newValue)
+        private void UpdateRightScoreText(int previousValue, int newValue)
         {
             player2ScoreTMP.text = $"{newValue}: {player2Name}";
         }
