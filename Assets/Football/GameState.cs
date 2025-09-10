@@ -152,7 +152,7 @@ namespace Assets.Football
                 {
                     winner = NetworkManager.Singleton.ConnectedClients[player1GO.GetComponent<NetworkObject>().OwnerClientId].PlayerObject.gameObject;
                     loser = NetworkManager.Singleton.ConnectedClients[player2GO.GetComponent<NetworkObject>().OwnerClientId].PlayerObject.gameObject;
-                    Debug.Log(footballGame.gameOverState);
+                    Debug.Log(winner.GetComponent<SteamPlayer>().playerName);
                     footballGame.gameOverState.SetWinnerServerRpc(winner.GetComponent<SteamPlayer>().playerName);
                     footballGame.ChangeStateServerRpc(FootballGame.GameState.GAME_OVER);
                 }
@@ -169,7 +169,7 @@ namespace Assets.Football
                 {
                     winner = NetworkManager.Singleton.ConnectedClients[player2GO.GetComponent<NetworkObject>().OwnerClientId].PlayerObject.gameObject;
                     loser = NetworkManager.Singleton.ConnectedClients[player1GO.GetComponent<NetworkObject>().OwnerClientId].PlayerObject.gameObject;
-                    Debug.Log(footballGame.gameOverState);
+                    Debug.Log(winner.GetComponent<SteamPlayer>().playerName);
                     footballGame.gameOverState.SetWinnerServerRpc(winner.GetComponent<SteamPlayer>().playerName);
                     footballGame.ChangeStateServerRpc(FootballGame.GameState.GAME_OVER);
                 }
