@@ -102,11 +102,11 @@ namespace Assets.Football
         {
             if (isRight)
             {
-                rightPlayerScore.Value++;
+                leftPlayerScore.Value++;
             }
             else
             {
-                leftPlayerScore.Value++;
+                rightPlayerScore.Value++;
             }
             ResetPositions();
             UpdateScoreTextClientRpc();
@@ -118,7 +118,7 @@ namespace Assets.Football
         void UpdateScoreTextClientRpc()
         {
             player1ScoreTMP.text = $"{player1Name}: {leftPlayerScore.Value}";
-            player2ScoreTMP.text = $"{rightPlayerScore}: {player2Name}";
+            player2ScoreTMP.text = $"{rightPlayerScore.Value}: {player2Name}";
         }
 
         void ResetPositions()
