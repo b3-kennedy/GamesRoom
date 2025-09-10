@@ -30,13 +30,7 @@ namespace Assets.Football
         {
             if (IsServer)
             {
-                syncTimer += Time.fixedDeltaTime;
-                if (syncTimer >= syncRate)
-                {
-                    SyncBallStateClientRpc(rb.position, rb.linearVelocity);
-                    syncTimer = 0f;
-                }
-
+                SyncBallStateClientRpc(rb.position, rb.linearVelocity);
             }
             else if (needsCorrection)
             {
