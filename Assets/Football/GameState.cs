@@ -180,16 +180,16 @@ namespace Assets.Football
             ball.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
             ball.transform.position = ballSpawn.position;
 
+            player1GO.transform.position = leftPlayerSpawn.position;
+            player2GO.transform.position = rightPlayerSpawn.position;
 
-            ResetPositionsClientRpc();
 
         }
 
         [ClientRpc]
         void ResetPositionsClientRpc()
         {
-            player1GO.transform.position = leftPlayerSpawn.position;
-            player2GO.transform.position = rightPlayerSpawn.position;
+            
         }
 
 

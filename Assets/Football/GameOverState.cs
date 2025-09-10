@@ -33,6 +33,7 @@ namespace Assets.Football
         public void SetWinnerServerRpc(string playerName)
         {
             winner = playerName;
+            Debug.Log(winner);
         }
 
         [ClientRpc]
