@@ -23,6 +23,8 @@ namespace Assets.Football
 
         public GameObject ghostBall;
 
+        public bool useServerBall;
+
         void Start()
         {
             rb = GetComponent<Rigidbody>();
@@ -32,18 +34,22 @@ namespace Assets.Football
         {
             if (!IsServer)
             {
-                GetComponent<MeshRenderer>().enabled = false;
+                if (!useServerBall)
+                {
+                    GetComponent<MeshRenderer>().enabled = false;
 
-                // Turn off collider so ghost ball is not interfered with
-                GetComponent<Collider>().enabled = false;
+                    // Turn off collider so ghost ball is not interfered with
+                    GetComponent<Collider>().enabled = false;
 
-                // Rigidbody is already kinematic on clients
-                GetComponent<Rigidbody>().isKinematic = true;
+                    // Rigidbody is already kinematic on clients
+                    GetComponent<Rigidbody>().isKinematic = true;
 
-                
-                GameObject ghostInstance = Instantiate(ghostBall, transform.position, transform.rotation);
-                GhostBall ghostScript = ghostInstance.GetComponent<GhostBall>();
-                ghostScript.BindToServerBall(this);
+
+                    GameObject ghostInstance = Instantiate(ghostBall, transform.position, transform.rotation);
+                    GhostBall ghostScript = ghostInstance.GetComponent<GhostBall>();
+                    ghostScript.BindToServerBall(this);
+                }
+
             }
         }
 
@@ -84,7 +90,11 @@ namespace Assets.Football
             if (IsServer) return; // host already authoritative
 
             rb.position = position;
-            //rb.linearVelocity = velocity;
+            if (useServerBall)
+            {
+                rb.linearVelocity = velocity;
+            }
+
         }
     }
 }
