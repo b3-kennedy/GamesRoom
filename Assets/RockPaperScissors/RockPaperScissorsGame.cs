@@ -1,6 +1,7 @@
 using UnityEngine;
 using Unity.Netcode;
 using System.Collections.Generic;
+using UnityEditor.SettingsManagement;
 
 namespace Assets.RockPaperScissors
 {
@@ -57,13 +58,10 @@ namespace Assets.RockPaperScissors
                 {
                     leftPlayer.GetComponent<NetworkObject>().ChangeOwnership(connectedPlayers[0].OwnerClientId);
                     rightPlayer.GetComponent<NetworkObject>().ChangeOwnership(connectedPlayers[1].OwnerClientId);
-
-                    leftPlayer.GetComponent<RPSPlayer>().isPicking.Value = true;
-                    rightPlayer.GetComponent<RPSPlayer>().isPicking.Value = false;
-
                     ulong left = connectedPlayers[0].NetworkObjectId;
                     ulong right = connectedPlayers[1].NetworkObjectId;
                     BeginClientRpc(left, right);
+                    SetTurns();
                 }
             }
         }
@@ -90,6 +88,12 @@ namespace Assets.RockPaperScissors
 
             leftPlayerName = player1.GetComponent<SteamPlayer>().playerName;
             rightPlayerName = player2.GetComponent<SteamPlayer>().playerName;
+        }
+
+        void SetTurns()
+        {
+            leftPlayer.GetComponent<RPSPlayer>().isPicking.Value = true;
+            rightPlayer.GetComponent<RPSPlayer>().isPicking.Value = false;
         }
 
         [ServerRpc(RequireOwnership = false)]
