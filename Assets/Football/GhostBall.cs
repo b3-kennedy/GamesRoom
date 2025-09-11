@@ -5,12 +5,14 @@ namespace Assets.Football
     public class GhostBall : MonoBehaviour
     {
         [Header("Reconciliation Settings")]
-        public float positionCorrectionSpeed = 10f;
-        public float velocityCorrectionRate = 5f;
+        public float positionCorrectionFactor = 0.1f;
+        public float velocityCorrectionFactor = 0.1f;
         public float snapThreshold = 2f;
 
         private Rigidbody rb;
         private Ball serverBall;
+
+        Rigidbody serverRb;
 
         void Awake()
         {
@@ -21,7 +23,7 @@ namespace Assets.Football
         public void BindToServerBall(Ball server)
         {
             serverBall = server;
-            rb = GetComponent<Rigidbody>();
+            serverRb = serverRb.GetComponent<Rigidbody>();
             rb.isKinematic = false;
             rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
 
@@ -33,20 +35,24 @@ namespace Assets.Football
         {
             if (serverBall == null) return;
 
-            // Reconcile with server ball
-            float posDiff = Vector3.Distance(serverBall.transform.position, transform.position);
+            Vector3 serverPos = serverBall.transform.position;
+            Vector3 serverVel = serverRb.linearVelocity;
+
+            float posDiff = Vector3.Distance(serverPos, rb.position);
+
             if (posDiff > snapThreshold)
             {
-                // Snap if too far
-                Debug.Log("snap");
-                rb.position = serverBall.transform.position;
-                rb.linearVelocity = serverBall.GetComponent<Rigidbody>().linearVelocity;
+                // Way too far off → snap
+                rb.position = serverPos;
+                rb.linearVelocity = serverVel;
             }
             else
             {
-                // Smoothly adjust
-                //rb.linearVelocity = Vector3.Lerp(rb.linearVelocity, serverBall.GetComponent<Rigidbody>().linearVelocity, velocityCorrectionRate * Time.fixedDeltaTime);
-                rb.linearVelocity = serverBall.GetComponent<Rigidbody>().linearVelocity;
+                // Smooth reconciliation
+                Vector3 correction = (serverPos - rb.position) * positionCorrectionFactor;
+                rb.MovePosition(rb.position + correction);
+
+                rb.linearVelocity = Vector3.Lerp(rb.linearVelocity, serverVel, velocityCorrectionFactor);
             }
         }
 
