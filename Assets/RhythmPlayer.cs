@@ -115,11 +115,11 @@ public class RhythmPlayer : NetworkBehaviour
                     duel.ChangeStateServerRpc(RythmDuel.GameState.GAME);
                 }
 
-                if (Input.GetKeyDown(KeyCode.LeftArrow) && duel.wagerAmount.Value > 0)
+                if (Input.GetKeyDown(KeyCode.LeftArrow))
                 {
                     ChangeWagerAmountServerRpc(-10);
                 }
-                else if (Input.GetKeyDown(KeyCode.RightArrow) && duel.wagerAmount.Value < 500)
+                else if (Input.GetKeyDown(KeyCode.RightArrow))
                 {
                     ChangeWagerAmountServerRpc(10);
                 }
@@ -165,7 +165,14 @@ public class RhythmPlayer : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     void ChangeWagerAmountServerRpc(int amount)
     {
+        int player1Credits = duel.connectedPlayers[0].GetComponent<SteamPlayer>().credits.Value;
+        int player2Credits = duel.connectedPlayers[1].GetComponent<SteamPlayer>().credits.Value;
+
+        int maxWager = Mathf.Min(player1Credits, player2Credits);
+
         duel.wagerAmount.Value += amount;
+
+        duel.wagerAmount.Value = Mathf.Clamp(duel.wagerAmount.Value, 0, maxWager);
     }
 
     public void LostLife()

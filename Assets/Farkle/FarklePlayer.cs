@@ -70,11 +70,11 @@ namespace Assets.Farkle
         {
             if (farkleGame.netGameState.Value == FarkleGame.GameState.WAGER && isPlayer1)
             {
-                if (Input.GetKeyDown(KeyCode.LeftArrow) && wagerState.wagerAmount.Value > 0)
+                if (Input.GetKeyDown(KeyCode.LeftArrow))
                 {
                     wagerState.SetWagerAmountServerRpc(-10);
                 }
-                else if (Input.GetKeyDown(KeyCode.RightArrow) && wagerState.wagerAmount.Value < 500)
+                else if (Input.GetKeyDown(KeyCode.RightArrow))
                 {
                     wagerState.SetWagerAmountServerRpc(10);
                 }

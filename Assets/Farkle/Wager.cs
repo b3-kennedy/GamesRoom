@@ -99,7 +99,14 @@ namespace Assets.Farkle
         [ServerRpc(RequireOwnership = false)]
         public void SetWagerAmountServerRpc(int value)
         {
+            int player1Credits = farkleGame.connectedPlayers[0].GetComponent<SteamPlayer>().credits.Value;
+            int player2Credits = farkleGame.connectedPlayers[1].GetComponent<SteamPlayer>().credits.Value;
+
+            int maxWager = Mathf.Min(player1Credits, player2Credits);
+
             wagerAmount.Value += value;
+
+            wagerAmount.Value = Mathf.Clamp(wagerAmount.Value, 0, maxWager);
         }
         
 

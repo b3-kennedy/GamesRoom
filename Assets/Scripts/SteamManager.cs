@@ -6,11 +6,15 @@ using UnityEngine.UI;
 using Netcode.Transports.Facepunch;
 using Unity.Netcode;
 using System;
+using UnityEngine.SceneManagement;
 
 public class SteamManager : NetworkBehaviour
 {
 
     public static SteamManager Instance;
+
+    public Button hostButton;
+    public Button joinButton;
 
     public TMP_InputField input;
 
@@ -38,10 +42,11 @@ public class SteamManager : NetworkBehaviour
         }
 
         Instance = this;
-        DontDestroyOnLoad(gameObject);
 
         lobbyUI.SetActive(false);
         mainMenuUI.SetActive(true);
+        hostButton.onClick.AddListener(HostLobby);
+        joinButton.onClick.AddListener(JoinLobbyWithID);
     }
 
     void OnEnable()
@@ -56,11 +61,14 @@ public class SteamManager : NetworkBehaviour
 
     }
 
+
     private void OnClientDisconnected(ulong obj)
     {
         if (IsServer)
         {
             playerCount.Value = NetworkManager.Singleton.ConnectedClients.Count;
+
+
         }
     }
 
