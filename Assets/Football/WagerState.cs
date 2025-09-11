@@ -47,11 +47,12 @@ namespace Assets.Football
         public override void OnStateEnter()
         {
             gameObject.SetActive(true);
-            player1 = footballGame.connectedPlayers[0].gameObject;
-            player2 = footballGame.connectedPlayers[1].gameObject;
-            player1Name = player1.GetComponent<SteamPlayer>().playerName;
+
             if (IsServer)
             {
+                player1 = footballGame.connectedPlayers[0].gameObject;
+                player2 = footballGame.connectedPlayers[1].gameObject;
+                player1Name = player1.GetComponent<SteamPlayer>().playerName;
                 SetChooseTextClientRpc(player1Name);
             }
         }
