@@ -34,8 +34,8 @@ namespace Assets.Football
             if (serverBall == null) return;
 
             // Reconcile with server ball
-            Vector3 posDiff = serverBall.transform.position - transform.position;
-            if (posDiff.magnitude > snapThreshold)
+            float posDiff = Vector3.Distance(serverBall.transform.position, transform.position);
+            if (posDiff > snapThreshold)
             {
                 // Snap if too far
                 rb.position = serverBall.transform.position;

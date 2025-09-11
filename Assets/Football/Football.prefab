@@ -181,4 +181,4 @@ MonoBehaviour:
   snapThreshold: 2
   gameState: {fileID: 0}
   ghostBall: {fileID: 1885121894366916245, guid: e539fce01e1f64843849557b7637ef3c, type: 3}
-  useServerBall: 1
+  useServerBall: 0
