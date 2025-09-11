@@ -1,5 +1,6 @@
+using Unity.Netcode;
 using UnityEngine;
-
+using System.Collections.Generic;
 namespace Assets.Football
 {
     public class GhostBall : MonoBehaviour
@@ -13,6 +14,8 @@ namespace Assets.Football
         private Ball serverBall;
 
         Rigidbody serverRb;
+
+        public Dictionary<int, BallState> history = new Dictionary<int, BallState>();
 
         void Awake()
         {
@@ -29,31 +32,55 @@ namespace Assets.Football
 
             // Ignore collisions with server ball
             Physics.IgnoreCollision(server.GetComponent<Collider>(), rb.GetComponent<Collider>());
+
         }
 
         void FixedUpdate()
         {
             if (serverBall == null) return;
 
-            Vector3 serverPos = serverBall.transform.position;
-            Vector3 serverVel = serverRb.linearVelocity;
-
-            float posDiff = Vector3.Distance(serverPos, rb.position);
-
-            if (posDiff > snapThreshold)
+            // 1️⃣ Predict physics for current tick (already handled by Rigidbody)
+            // Save predicted state in history
+            int currentTick = NetworkManager.Singleton.LocalTime.Tick;
+            history[currentTick] = new BallState
             {
-                // Way too far off → snap
-                rb.position = serverPos;
-                rb.linearVelocity = serverVel;
-            }
-            else
-            {
-                // Smooth reconciliation
-                Vector3 correction = (serverPos - rb.position) * positionCorrectionFactor;
-                rb.MovePosition(rb.position + correction);
+                position = rb.position,
+                velocity = rb.linearVelocity
+            };
 
-                rb.linearVelocity = Vector3.Lerp(rb.linearVelocity, serverVel, velocityCorrectionFactor);
+            // 2️⃣ Reconcile if authoritative state exists for this tick
+            if (history.TryGetValue(currentTick, out BallState predictedState))
+            {
+                // Check if server has sent a state for this tick
+                if (serverBall.history.TryGetValue(currentTick, out BallState serverState))
+                {
+                    Vector3 posDiff = serverState.position - predictedState.position;
+                    float distance = posDiff.magnitude;
+
+                    if (distance > snapThreshold)
+                    {
+                        // Snap if very far off
+                        rb.position = serverState.position;
+                        rb.linearVelocity = serverState.velocity;
+                    }
+                    else
+                    {
+                        // Smoothly correct toward server state
+                        rb.MovePosition(rb.position + posDiff * positionCorrectionFactor);
+                        rb.linearVelocity = Vector3.Lerp(rb.linearVelocity, serverState.velocity, velocityCorrectionFactor);
+                    }
+                }
             }
+
+            // Optional: remove old history to save memory
+            List<int> oldTicks = new List<int>();
+            foreach (int t in history.Keys)
+            {
+                if (t < currentTick - 200) // keep last 200 ticks
+                    oldTicks.Add(t);
+            }
+            foreach (int t in oldTicks)
+                history.Remove(t);
         }
 
         public void ApplyLocalKick(Vector3 impulse)

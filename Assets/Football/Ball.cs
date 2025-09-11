@@ -1,9 +1,18 @@
+using Steamworks;
 using Unity.Netcode;
 using UnityEngine;
+using System.Collections.Generic;
 
 
 namespace Assets.Football
 {
+
+    public struct BallState
+    {
+        public Vector3 position;
+        public Vector3 velocity;
+    }
+
     public class Ball : NetworkBehaviour
     {
         [Header("Smoothing Settings")]
@@ -22,8 +31,11 @@ namespace Assets.Football
         private bool needsCorrection = false;
 
         public GameObject ghostBall;
+        GameObject ghostInstance;
 
         public bool useServerBall;
+
+        public Dictionary<int, BallState> history = new Dictionary<int, BallState>();
 
         void Start()
         {
@@ -46,7 +58,7 @@ namespace Assets.Football
                     GetComponent<Rigidbody>().isKinematic = true;
 
 
-                    GameObject ghostInstance = Instantiate(ghostBall, transform.position, transform.rotation);
+                    ghostInstance = Instantiate(ghostBall, transform.position, transform.rotation);
                     GhostBall ghostScript = ghostInstance.GetComponent<GhostBall>();
                     ghostScript.BindToServerBall(this);
                 }
@@ -58,8 +70,37 @@ namespace Assets.Football
         {
             if (IsServer)
             {
-                SyncBallStateClientRpc(rb.position, rb.linearVelocity);
+                if (useServerBall)
+                {
+                    SyncBallStateClientRpc(rb.position, rb.linearVelocity);
+                }
+                else
+                {
+                    WithGhostBall();
+                }
+                
             }
+        }
+
+        void WithGhostBall()
+        {
+            // Save current state in history
+            int tick = NetworkManager.Singleton.ServerTime.Tick;
+            BallState state = new BallState
+            {
+                position = rb.position,
+                velocity = rb.linearVelocity
+            };
+            history[tick] = state;
+
+            // Remove old ticks
+            List<int> oldTicks = new List<int>();
+            foreach (int t in history.Keys)
+            {
+                if (t < tick - 200) oldTicks.Add(t);
+            }
+            foreach (int t in oldTicks) history.Remove(t);
+            SyncBallClientRpc(tick, rb.position, rb.linearVelocity);
         }
 
 
@@ -71,7 +112,7 @@ namespace Assets.Football
             {
                 gameState.OnGoalServerRpc(false);
             }
-            else if(other.CompareTag("RightGoal"))
+            else if (other.CompareTag("RightGoal"))
             {
                 gameState.OnGoalServerRpc(true);
             }
@@ -90,12 +131,24 @@ namespace Assets.Football
         {
             if (IsServer) return; // host already authoritative
 
-            rb.position = position;
+            
+
             if (useServerBall)
             {
                 rb.linearVelocity = velocity;
             }
 
+        }
+
+        [ClientRpc]
+        void SyncBallClientRpc(int t, Vector3 pos, Vector3 vel)
+        {
+            BallState state = new BallState
+            {
+                position = pos,
+                velocity = vel
+            };
+            ghostInstance.GetComponent<GhostBall>().history[t] = state;
         }
     }
 }
