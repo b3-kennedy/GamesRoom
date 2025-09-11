@@ -145,7 +145,6 @@ namespace Assets.Football
         {
             if (!ghostInstance) return;
 
-            rb.linearVelocity = vel;
             rb.position = pos;
 
             BallState state = new BallState
