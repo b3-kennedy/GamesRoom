@@ -1,6 +1,7 @@
 using UnityEngine;
 using Unity.Netcode;
 using System.Collections.Generic;
+using Assets.Farkle;
 
 namespace Assets.Football
 {
@@ -16,7 +17,13 @@ namespace Assets.Football
 
         public MainMenu mainMenuState;
         public Football.GameState gameState;
+
+        public WagerState wagerState;
+
         public GameOverState gameOverState;
+
+        public FootballMenuControl footballMenuController1;
+        public FootballMenuControl footballMenuController2;
 
         public NetworkVariable<int> connectedPlayersCount = new NetworkVariable<int>();
         public List<NetworkObject> connectedPlayers = new List<NetworkObject>();
@@ -28,6 +35,11 @@ namespace Assets.Football
 
             // Apply initial state locally
             ApplyState(netGameState.Value);
+
+            wagerState.gameObject.SetActive(false);
+            gameOverState.gameObject.SetActive(false);
+            gameState.gameObject.SetActive(false);
+            mainMenuState.gameObject.SetActive(true);
         }
 
         void Awake()
@@ -35,7 +47,7 @@ namespace Assets.Football
             mainMenuState.game = this;
             gameState.game = this;
             gameOverState.game = this;
-            // wagerState.game = this;
+            wagerState.game = this;
         }
 
 
@@ -53,8 +65,38 @@ namespace Assets.Football
                     connectedPlayers.Add(NetworkManager.Singleton.ConnectedClients[clientID].PlayerObject);
                     connectedPlayersCount.Value = connectedPlayers.Count;
                 }
+
+                if (connectedPlayers.Count == 2)
+                {
+                    footballMenuController1.GetComponent<NetworkObject>().ChangeOwnership(connectedPlayers[0].OwnerClientId);
+                    footballMenuController2.GetComponent<NetworkObject>().ChangeOwnership(connectedPlayers[1].OwnerClientId);
+                    BeginClientRpc(footballMenuController1.GetComponent<NetworkObject>().NetworkObjectId,
+                    footballMenuController2.GetComponent<NetworkObject>().NetworkObjectId); 
+                }
             }
 
+        }
+
+        [ClientRpc]
+        void BeginClientRpc(ulong p1ObjectID, ulong p2ObjectID)
+        {
+            FootballMenuControl player1 = null;
+            FootballMenuControl player2 = null;
+
+            if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(p1ObjectID, out var p1))
+            {
+                player1 = p1.GetComponent<FootballMenuControl>();
+            }
+
+            if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(p1ObjectID, out var p2))
+            {
+                player2 = p2.GetComponent<FootballMenuControl>();
+            }
+
+            player1.footballGame = this;
+            player1.isPlayer1 = true;
+            player2.isPlayer1 = false;
+            player2.footballGame = this;
         }
 
         [ServerRpc(RequireOwnership = false)]
@@ -85,13 +127,16 @@ namespace Assets.Football
             switch (state)
             {
                 case GameState.MAIN_MENU:
-                    mainMenuState.OnStateExit();                
+                    mainMenuState.OnStateExit();
                     break;
                 case GameState.GAME:
-                    gameState.OnStateExit();                
+                    gameState.OnStateExit();
                     break;
                 case GameState.GAME_OVER:
                     gameOverState.OnStateExit();
+                    break;
+                case GameState.WAGER:
+                    wagerState.OnStateExit();
                     break;
             }
         }
@@ -123,6 +168,9 @@ namespace Assets.Football
 
                 case GameState.GAME_OVER:
                     gameOverState.OnStateEnter();
+                    break;
+                case GameState.WAGER:
+                    wagerState.OnStateEnter();
                     break;
             }
         }

@@ -27,7 +27,7 @@ namespace Assets.Football
             connectedPlayersText.text = $"{footballGame.connectedPlayersCount.Value}/2";
             if (footballGame.connectedPlayers.Count == 2)
             {
-                footballGame.ChangeStateServerRpc(FootballGame.GameState.GAME);
+                footballGame.ChangeStateServerRpc(FootballGame.GameState.WAGER);
             }
         }
 

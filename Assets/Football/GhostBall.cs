@@ -35,6 +35,8 @@ namespace Assets.Football
 
         }
 
+
+        //this works ok for now, might need to improve at a later date
         void FixedUpdate()
         {
             if (serverBall == null) return;
@@ -63,18 +65,17 @@ namespace Assets.Football
                     rb.linearVelocity = Vector3.Lerp(rb.linearVelocity, serverState.velocity, velocityCorrectionFactor);
                 }
 
-                Debug.Log("reconcile");
             }
 
-            //     // Optional: remove old history to save memory
-            //     List<int> oldTicks = new List<int>();
-            // foreach (int t in history.Keys)
-            // {
-            //     if (t < currentTick - 200) // keep last 200 ticks
-            //         oldTicks.Add(t);
-            // }
-            // foreach (int t in oldTicks)
-            //     history.Remove(t);
+            // Optional: remove old history to save memory
+            List<int> oldTicks = new List<int>();
+            foreach (int t in history.Keys)
+            {
+                if (t < latestTick - 200) // keep last 200 ticks
+                    oldTicks.Add(t);
+            }
+            foreach (int t in oldTicks)
+                history.Remove(t);
         }
 
         public void ApplyLocalKick(Vector3 impulse)
