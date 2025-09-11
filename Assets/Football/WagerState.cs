@@ -23,6 +23,7 @@ namespace Assets.Football
         GameObject player2;
 
         string player1Name;
+        string player2Name;
 
         void Start()
         {
@@ -33,11 +34,11 @@ namespace Assets.Football
 
             if (IsServer)
             {
-                Debug.Log(footballGame);
                 player1 = footballGame.connectedPlayers[0].gameObject;
                 player2 = footballGame.connectedPlayers[1].gameObject;
                 player1Name = player1.GetComponent<SteamPlayer>().playerName;
-                SetChooseTextClientRpc(player1Name);
+                player2Name = player2.GetComponent<SteamPlayer>().playerName;
+                SetChooseTextClientRpc(player1Name, player2Name);
             }
 
             wagerAmount.OnValueChanged += OnWagerChanged;
@@ -62,9 +63,10 @@ namespace Assets.Football
         }
 
         [ClientRpc]
-        void SetChooseTextClientRpc(string p1Name)
+        void SetChooseTextClientRpc(string p1Name, string p2Name)
         {
             chooseTMP.text = $"{p1Name} choose an amount";
+            rightPlayerConfirmTMP.text = $"{p2Name} do you agree to this amount?";
         }
 
         [ServerRpc(RequireOwnership = false)]

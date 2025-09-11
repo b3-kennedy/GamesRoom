@@ -105,6 +105,7 @@ namespace Assets.Football
             connectedPlayers.Clear();
             connectedPlayersCount.Value = 0;
             gameState.OnReset();
+            wagerState.wagerAmount.Value = 0;
             ChangeStateServerRpc(GameState.MAIN_MENU);
 
         }
