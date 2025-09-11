@@ -88,7 +88,7 @@ namespace Assets.Football
                 player1 = p1.GetComponent<FootballMenuControl>();
             }
 
-            if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(p1ObjectID, out var p2))
+            if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(p2ObjectID, out var p2))
             {
                 player2 = p2.GetComponent<FootballMenuControl>();
             }
