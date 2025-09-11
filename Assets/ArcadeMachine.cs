@@ -11,9 +11,12 @@ public class ArcadeMachine : NetworkBehaviour
 
     public GameObject activePlayer;
 
+    public GameObject cam;
+
 
     void Start()
     {
+        cam.SetActive(false);
     }
 
     public void StartGame()
@@ -37,6 +40,7 @@ public class ArcadeMachine : NetworkBehaviour
     [ClientRpc]
     void TurnOnClientRpc()
     {
+        cam.SetActive(true);
         screen.SetActive(true);
     }
 
@@ -66,6 +70,7 @@ public class ArcadeMachine : NetworkBehaviour
     void TurnOffScreenClientRpc()
     {
         screen.SetActive(false);
+        cam.SetActive(false);
         //arcadeGame.ResetServerRpc();
     }
 }
