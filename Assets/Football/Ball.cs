@@ -143,12 +143,12 @@ namespace Assets.Football
         [ClientRpc]
         void SyncBallClientRpc(int t, Vector3 pos, Vector3 vel)
         {
+            if (!ghostInstance) return;
             BallState state = new BallState
             {
                 position = pos,
                 velocity = vel
             };
-            Debug.Log(ghostInstance);
             ghostInstance.GetComponent<GhostBall>().history[t] = state;
         }
     }
