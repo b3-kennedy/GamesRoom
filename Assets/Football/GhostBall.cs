@@ -23,7 +23,7 @@ namespace Assets.Football
         public void BindToServerBall(Ball server)
         {
             serverBall = server;
-            serverRb = serverRb.GetComponent<Rigidbody>();
+            serverRb = server.GetComponent<Rigidbody>();
             rb.isKinematic = false;
             rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
 
