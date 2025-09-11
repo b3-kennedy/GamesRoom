@@ -117,9 +117,11 @@ namespace Assets.RockPaperScissors
         {
             switch (state)
             {
-                case GameState.MAIN_MENU:                    
+                case GameState.MAIN_MENU:
+                    mainMenuState.OnStateExit();                  
                     break;
-                case GameState.GAME:                    
+                case GameState.GAME:
+                    gameState.OnStateExit();               
                     break;
                 case GameState.GAME_OVER:
                     break;
@@ -131,9 +133,11 @@ namespace Assets.RockPaperScissors
             switch (state)
             {
                 case GameState.MAIN_MENU:
+                    mainMenuState.OnStateEnter();
                     break;
 
                 case GameState.GAME:
+                    gameState.OnStateEnter();
                     break;
 
                 case GameState.GAME_OVER:
