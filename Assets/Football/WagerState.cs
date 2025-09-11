@@ -50,6 +50,7 @@ namespace Assets.Football
 
             if (IsServer)
             {
+                Debug.Log(footballGame);
                 player1 = footballGame.connectedPlayers[0].gameObject;
                 player2 = footballGame.connectedPlayers[1].gameObject;
                 player1Name = player1.GetComponent<SteamPlayer>().playerName;
