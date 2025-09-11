@@ -143,9 +143,14 @@ namespace Assets.Football
         }
 
         [ServerRpc(RequireOwnership = false)]
-        public void SetWinnerServerRpc(string winner)
+        public void SetWinnerServerRpc(string winner, ulong winnerID, ulong loserID)
         {
             SetWinnerClientRpc(winner);
+            SteamPlayer winnerPlayer = NetworkManager.Singleton.ConnectedClients[winnerID].PlayerObject.GetComponent<SteamPlayer>();
+            SteamPlayer loserPlayer = NetworkManager.Singleton.ConnectedClients[loserID].PlayerObject.GetComponent<SteamPlayer>();
+            winnerPlayer.credits.Value += wagerState.wagerAmount.Value;
+            loserPlayer.credits.Value -= wagerState.wagerAmount.Value;
+
         }
 
         [ClientRpc]
