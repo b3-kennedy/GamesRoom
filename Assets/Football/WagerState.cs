@@ -31,6 +31,7 @@ namespace Assets.Football
             }
 
             Debug.Log(footballGame);
+            Debug.Log("HELLO????");
 
             wagerAmount.OnValueChanged += OnWagerChanged;
         }
