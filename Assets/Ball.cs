@@ -34,6 +34,7 @@ namespace Assets.Football
         {
             if (!IsServer)
             {
+                //
                 if (!useServerBall)
                 {
                     GetComponent<MeshRenderer>().enabled = false;
