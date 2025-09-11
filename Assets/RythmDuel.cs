@@ -50,7 +50,7 @@ public class RythmDuel : Game
 
     [Header("Main Menu Scene")]
 
-    List<NetworkObject> connectedPlayers = new List<NetworkObject>();
+    [HideInInspector] public List<NetworkObject> connectedPlayers = new List<NetworkObject>();
     NetworkVariable<int> connectedPlayersCount = new NetworkVariable<int>();
     public TextMeshPro connectedPlayersText;
     public TextMeshPro joinText;
@@ -94,14 +94,6 @@ public class RythmDuel : Game
     SteamPlayer winner;
     SteamPlayer loser;
     bool hasPayedOut = false;
-
-
-
-
-
-
-
-    
     float spawnInterval;
 
     float timer;

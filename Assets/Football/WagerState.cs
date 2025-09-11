@@ -50,9 +50,16 @@ namespace Assets.Football
         }
 
         [ServerRpc(RequireOwnership = false)]
-        public void ChangeWagerAmountServerRpc(int change)
+        public void ChangeWagerAmountServerRpc(int amount)
         {
-            wagerAmount.Value += change;
+            int player1Credits = player1.GetComponent<SteamPlayer>().credits.Value;
+            int player2Credits = player2.GetComponent<SteamPlayer>().credits.Value;
+
+            int maxWager = Mathf.Min(player1Credits, player2Credits);
+
+            wagerAmount.Value += amount;
+
+            wagerAmount.Value = Mathf.Clamp(wagerAmount.Value, 0, maxWager);
         }
 
         public override void OnStateEnter()
