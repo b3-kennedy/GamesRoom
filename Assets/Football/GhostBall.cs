@@ -51,6 +51,7 @@ namespace Assets.Football
             // 2️⃣ Reconcile if authoritative state exists for this tick
             if (history.TryGetValue(currentTick, out BallState predictedState))
             {
+                Debug.Log("reconcile");
                 // Check if server has sent a state for this tick
                 if (serverBall.history.TryGetValue(currentTick, out BallState serverState))
                 {
