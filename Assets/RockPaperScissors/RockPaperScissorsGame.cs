@@ -90,7 +90,7 @@ namespace Assets.RockPaperScissors
             rightPlayerName = player2.GetComponent<SteamPlayer>().playerName;
         }
 
-        void SetTurns()
+        public void SetTurns()
         {
             leftPlayer.GetComponent<RPSPlayer>().isPicking.Value = true;
             rightPlayer.GetComponent<RPSPlayer>().isPicking.Value = false;
