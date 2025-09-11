@@ -38,6 +38,7 @@ namespace Assets.Football
             if (posDiff > snapThreshold)
             {
                 // Snap if too far
+                Debug.Log("snap");
                 rb.position = serverBall.transform.position;
                 rb.linearVelocity = serverBall.GetComponent<Rigidbody>().linearVelocity;
             }
