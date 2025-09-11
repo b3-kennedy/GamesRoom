@@ -46,7 +46,7 @@ namespace Assets.Football
 
         public override void OnStateEnter()
         {
-            gameObject.SetActive(true);
+
 
             if (IsServer)
             {
@@ -56,6 +56,7 @@ namespace Assets.Football
                 player1Name = player1.GetComponent<SteamPlayer>().playerName;
                 SetChooseTextClientRpc(player1Name);
             }
+            gameObject.SetActive(true);
         }
 
         [ClientRpc]

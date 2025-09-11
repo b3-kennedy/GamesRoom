@@ -18,7 +18,7 @@ namespace Assets.Football
         public MainMenu mainMenuState;
         public Football.GameState gameState;
 
-        public Football.WagerState wagerState;
+        public WagerState wagerState;
 
         public GameOverState gameOverState;
 
