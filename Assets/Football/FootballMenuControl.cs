@@ -6,8 +6,8 @@ namespace Assets.Football
     public class FootballMenuControl : NetworkBehaviour
     {
 
-        [HideInInspector] public FootballGame footballGame;
-        [HideInInspector] public bool isPlayer1;
+        public FootballGame footballGame;
+        public bool isPlayer1;
 
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
@@ -19,6 +19,8 @@ namespace Assets.Football
         void Update()
         {
             if (!IsOwner) return;
+
+            if (!footballGame) return;
 
             if (footballGame.netGameState.Value == FootballGame.GameState.WAGER && isPlayer1)
             {
