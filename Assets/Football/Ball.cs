@@ -144,6 +144,10 @@ namespace Assets.Football
         void SyncBallClientRpc(int t, Vector3 pos, Vector3 vel)
         {
             if (!ghostInstance) return;
+
+            rb.linearVelocity = vel;
+            rb.position = pos;
+
             BallState state = new BallState
             {
                 position = pos,
