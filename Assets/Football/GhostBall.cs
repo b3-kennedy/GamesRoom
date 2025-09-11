@@ -39,50 +39,42 @@ namespace Assets.Football
         {
             if (serverBall == null) return;
 
-            // 1️⃣ Predict physics for current tick (already handled by Rigidbody)
-            // Save predicted state in history
-            int currentTick = NetworkManager.Singleton.LocalTime.Tick;
-            history[currentTick] = new BallState
+            // Get the most recent server tick available
+            int latestServerTick = -1;
+            foreach (var tick in serverBall.history.Keys)
             {
-                position = rb.position,
-                velocity = rb.linearVelocity
-            };
+                if (tick > latestServerTick) latestServerTick = tick;
+            }
 
-            // 2️⃣ Reconcile if authoritative state exists for this tick
-            if (history.TryGetValue(currentTick, out BallState predictedState))
+            if (latestServerTick != -1)
             {
-                
-                // Check if server has sent a state for this tick
-                if (serverBall.history.TryGetValue(currentTick, out BallState serverState))
+                BallState serverState = serverBall.history[latestServerTick];
+                Vector3 posDiff = serverState.position - rb.position;
+                float distance = posDiff.magnitude;
+
+                if (distance > snapThreshold)
                 {
-                    Debug.Log("reconcile");
-                    Vector3 posDiff = serverState.position - predictedState.position;
-                    float distance = posDiff.magnitude;
-
-                    if (distance > snapThreshold)
-                    {
-                        // Snap if very far off
-                        rb.position = serverState.position;
-                        rb.linearVelocity = serverState.velocity;
-                    }
-                    else
-                    {
-                        // Smoothly correct toward server state
-                        rb.MovePosition(rb.position + posDiff * positionCorrectionFactor);
-                        rb.linearVelocity = Vector3.Lerp(rb.linearVelocity, serverState.velocity, velocityCorrectionFactor);
-                    }
+                    rb.position = serverState.position;
+                    rb.linearVelocity = serverState.velocity;
                 }
+                else
+                {
+                    rb.position = Vector3.Lerp(rb.position, serverState.position, positionCorrectionFactor);
+                    rb.linearVelocity = Vector3.Lerp(rb.linearVelocity, serverState.velocity, velocityCorrectionFactor);
+                }
+
+                Debug.Log("reconcile");
             }
 
-            // Optional: remove old history to save memory
-            List<int> oldTicks = new List<int>();
-            foreach (int t in history.Keys)
-            {
-                if (t < currentTick - 200) // keep last 200 ticks
-                    oldTicks.Add(t);
-            }
-            foreach (int t in oldTicks)
-                history.Remove(t);
+            //     // Optional: remove old history to save memory
+            //     List<int> oldTicks = new List<int>();
+            // foreach (int t in history.Keys)
+            // {
+            //     if (t < currentTick - 200) // keep last 200 ticks
+            //         oldTicks.Add(t);
+            // }
+            // foreach (int t in oldTicks)
+            //     history.Remove(t);
         }
 
         public void ApplyLocalKick(Vector3 impulse)
