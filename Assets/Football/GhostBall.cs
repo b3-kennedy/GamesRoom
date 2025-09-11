@@ -44,7 +44,8 @@ namespace Assets.Football
             else
             {
                 // Smoothly adjust
-                rb.linearVelocity = Vector3.Lerp(rb.linearVelocity, serverBall.GetComponent<Rigidbody>().linearVelocity, velocityCorrectionRate * Time.fixedDeltaTime);
+                //rb.linearVelocity = Vector3.Lerp(rb.linearVelocity, serverBall.GetComponent<Rigidbody>().linearVelocity, velocityCorrectionRate * Time.fixedDeltaTime);
+                rb.linearVelocity = serverBall.GetComponent<Rigidbody>().linearVelocity;
             }
         }
 
