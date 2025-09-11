@@ -18,6 +18,8 @@ namespace Assets.Football
         // Update is called once per frame
         void Update()
         {
+            if (!IsOwner) return;
+
             if (footballGame.netGameState.Value == FootballGame.GameState.WAGER && isPlayer1)
             {
                 if (Input.GetKeyDown(KeyCode.RightArrow))
