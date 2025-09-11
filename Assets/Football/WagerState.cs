@@ -23,6 +23,7 @@ namespace Assets.Football
         GameObject player2;
 
         string player1Name;
+
         void Start()
         {
             if (game is FootballGame fg)
@@ -50,7 +51,7 @@ namespace Assets.Football
         public override void OnStateEnter()
         {
 
-
+            gameObject.SetActive(true);
             if (IsServer)
             {
                 Debug.Log(footballGame);
@@ -59,7 +60,7 @@ namespace Assets.Football
                 player1Name = player1.GetComponent<SteamPlayer>().playerName;
                 SetChooseTextClientRpc(player1Name);
             }
-            gameObject.SetActive(true);
+
         }
 
         [ClientRpc]
