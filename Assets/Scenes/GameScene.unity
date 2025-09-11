@@ -2086,6 +2086,7 @@ MonoBehaviour:
   screen: {fileID: 851475807}
   nearPlayers: []
   activePlayer: {fileID: 0}
+  cam: {fileID: 348709046}
 --- !u!114 &277015717
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9760,6 +9761,7 @@ MonoBehaviour:
   maxTargets: 200
   maxSpeed: 10
   minSpawnInterval: 0.2
+  connectedPlayers: []
   connectedPlayersText: {fileID: 394227997}
   joinText: {fileID: 0}
   playerName: {fileID: 1075465711}
@@ -9968,6 +9970,7 @@ MonoBehaviour:
   screen: {fileID: 1284958442}
   nearPlayers: []
   activePlayer: {fileID: 0}
+  cam: {fileID: 1957297958}
 --- !u!114 &885683000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15782,6 +15785,7 @@ MonoBehaviour:
   screen: {fileID: 556790630}
   nearPlayers: []
   activePlayer: {fileID: 0}
+  cam: {fileID: 1789044601}
 --- !u!114 &1260563788
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26698,6 +26702,7 @@ MonoBehaviour:
   screen: {fileID: 500923797}
   nearPlayers: []
   activePlayer: {fileID: 0}
+  cam: {fileID: 1901820973}
 --- !u!114 &2051322137
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -28661,6 +28666,7 @@ MonoBehaviour:
   screen: {fileID: 8086946124177674474}
   nearPlayers: []
   activePlayer: {fileID: 0}
+  cam: {fileID: 1137578182952910871}
 --- !u!82 &5134661499807283001
 AudioSource:
   m_ObjectHideFlags: 0
