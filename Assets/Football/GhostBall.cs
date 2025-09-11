@@ -39,16 +39,16 @@ namespace Assets.Football
         {
             if (serverBall == null) return;
 
-            // Get the most recent server tick available
-            int latestServerTick = -1;
-            foreach (var tick in serverBall.history.Keys)
+            // Get the latest server tick received
+            int latestTick = -1;
+            foreach (var tick in history.Keys)
             {
-                if (tick > latestServerTick) latestServerTick = tick;
+                if (tick > latestTick) latestTick = tick;
             }
 
-            if (latestServerTick != -1)
+            if (latestTick != -1)
             {
-                BallState serverState = serverBall.history[latestServerTick];
+                BallState serverState = history[latestTick]; // <-- use ghost's history
                 Vector3 posDiff = serverState.position - rb.position;
                 float distance = posDiff.magnitude;
 
