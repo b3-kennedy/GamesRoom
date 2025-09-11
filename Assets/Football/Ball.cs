@@ -148,6 +148,7 @@ namespace Assets.Football
                 position = pos,
                 velocity = vel
             };
+            Debug.Log(ghostInstance);
             ghostInstance.GetComponent<GhostBall>().history[t] = state;
         }
     }
