@@ -31,8 +31,14 @@ namespace Assets.Football
                 footballGame = fg;
             }
 
-            Debug.Log(footballGame);
-            Debug.Log("HELLO????");
+            if (IsServer)
+            {
+                Debug.Log(footballGame);
+                player1 = footballGame.connectedPlayers[0].gameObject;
+                player2 = footballGame.connectedPlayers[1].gameObject;
+                player1Name = player1.GetComponent<SteamPlayer>().playerName;
+                SetChooseTextClientRpc(player1Name);
+            }
 
             wagerAmount.OnValueChanged += OnWagerChanged;
         }
@@ -52,14 +58,6 @@ namespace Assets.Football
         {
 
             gameObject.SetActive(true);
-            if (IsServer)
-            {
-                Debug.Log(footballGame);
-                player1 = footballGame.connectedPlayers[0].gameObject;
-                player2 = footballGame.connectedPlayers[1].gameObject;
-                player1Name = player1.GetComponent<SteamPlayer>().playerName;
-                SetChooseTextClientRpc(player1Name);
-            }
 
         }
 

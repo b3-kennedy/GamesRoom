@@ -45,6 +45,22 @@ namespace Assets.Football
                     footballGame.ChangeStateServerRpc(FootballGame.GameState.GAME);
                 }
             }
+
+            if (footballGame.netGameState.Value == FootballGame.GameState.WAGER && !isPlayer1)
+            {
+                if (footballGame.wagerState.isPlayer1Locked.Value)
+                {
+                    if (Input.GetKeyDown(KeyCode.Y))
+                    {
+                        footballGame.ChangeStateServerRpc(FootballGame.GameState.GAME);
+                    }
+
+                    if (Input.GetKeyDown(KeyCode.N))
+                    {
+                        footballGame.wagerState.ChangePlayer1LockedInStateServerRpc();
+                    }
+                }
+            }
         }
     }
 }
