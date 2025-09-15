@@ -62,7 +62,7 @@ namespace Assets.RockPaperScissors
 
             if (isPicking.Value && rpsGame.gameState.pickScreen.activeSelf)
             {
-                if(Input.GetKeyDown(KeyCode.UpArrow))
+                if(Input.GetKeyDown(KeyCode.DownArrow))
                 {
                     index++;
                     if(index > 2)
@@ -71,7 +71,7 @@ namespace Assets.RockPaperScissors
                     }
                 }
                 
-                if(Input.GetKeyDown(KeyCode.DownArrow))
+                if(Input.GetKeyDown(KeyCode.UpArrow))
                 {
                     index--;
                     if(index < 0)
