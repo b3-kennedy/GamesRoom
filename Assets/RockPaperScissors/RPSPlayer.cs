@@ -15,10 +15,15 @@ namespace Assets.RockPaperScissors
 
         [HideInInspector] public GameObject playerObject;
 
+        int index;
+
+        GameObject[] itemsArray;
+
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
             isPicking.OnValueChanged += OnTurnChange;
+            itemsArray = rpsGame.gameState.items;
         }
 
         private void OnTurnChange(bool previousValue, bool newValue)
@@ -56,7 +61,45 @@ namespace Assets.RockPaperScissors
         // Update is called once per frame
         void Update()
         {
+            if (!IsOwner) return;
 
+            if (isPicking.Value && rpsGame.gameState.pickScreen.activeSelf)
+            {
+                if(Input.GetKeyDown(KeyCode.UpArrow))
+                {
+                    index++;
+                    if(index > 2)
+                    {
+                        index = 0;
+                    }
+                }
+                
+                if(Input.GetKeyDown(KeyCode.DownArrow))
+                {
+                    index--;
+                    if(index < 0)
+                    {
+                        index = 2;
+                    }
+                }
+
+                Select();
+            }
+        }
+        
+        void Select()
+        {
+            for (int i = 0; i < itemsArray.Length; i++)
+            {
+                if(i == index)
+                {
+                    itemsArray[i].GetComponent<RPSItem>().ChangeSelectedValue(true);
+                }
+                else
+                {
+                    itemsArray[i].GetComponent<RPSItem>().ChangeSelectedValue(false);
+                }
+            }
         }
     }
 }

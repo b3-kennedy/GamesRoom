@@ -12,6 +12,8 @@ namespace Assets.RockPaperScissors
 
         public GameObject pickScreen;
 
+        public GameObject[] items;
+
         void Start()
         {
             if (game is RockPaperScissorsGame rps)
