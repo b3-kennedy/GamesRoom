@@ -79,7 +79,22 @@ namespace Assets.RockPaperScissors
                         index = 2;
                     }
                 }
-
+                
+                if(Input.GetKeyDown(KeyCode.Return))
+                {
+                    if(index == 0)
+                    {
+                        rpsGame.gameState.SelectItemServerRpc(isLeftPlayer, GameState.SelectedItem.ROCK);
+                    }
+                    else if (index == 1)
+                    {
+                        rpsGame.gameState.SelectItemServerRpc(isLeftPlayer, GameState.SelectedItem.PAPER);
+                    }
+                    else if (index == 2)
+                    {
+                        rpsGame.gameState.SelectItemServerRpc(isLeftPlayer, GameState.SelectedItem.SCISSORS);
+                    }
+                }
                 Select();
             }
         }
