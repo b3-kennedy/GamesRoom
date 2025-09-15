@@ -32,7 +32,8 @@ namespace Assets.RockPaperScissors
         [ClientRpc]
         void OnTurnChangeClientRpc(bool value)
         {
-            Debug.Log(value);   
+            Debug.Log(value);
+            Debug.Log(isPicking.Value);  
             if (value)
             {
 
