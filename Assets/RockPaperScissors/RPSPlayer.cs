@@ -26,13 +26,12 @@ namespace Assets.RockPaperScissors
         private void OnTurnChange(bool previousValue, bool newValue)
         {
 
-            OnTurnChangeClientRpc();
+            OnTurnChange();
 
         }
 
 
-        [ClientRpc]
-        void OnTurnChangeClientRpc()
+        void OnTurnChange()
         {
             if (isPicking.Value)
             {
