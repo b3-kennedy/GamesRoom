@@ -10,6 +10,8 @@ namespace Assets.RockPaperScissors
 
         public TextMeshPro pickingTMP;
 
+        public GameObject pickScreen;
+
         void Start()
         {
             if (game is RockPaperScissorsGame rps)

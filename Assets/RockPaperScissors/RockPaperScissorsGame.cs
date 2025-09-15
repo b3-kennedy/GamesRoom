@@ -34,8 +34,15 @@ namespace Assets.RockPaperScissors
             // Apply initial state locally
             ApplyState(netGameState.Value);
 
+            mainMenuState.gameObject.SetActive(false);
+            gameState.gameObject.SetActive(false);
+        }
+
+        void Awake()
+        {
             mainMenuState.game = this;
             gameState.game = this;
+
         }
 
         [ServerRpc(RequireOwnership = false)]

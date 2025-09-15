@@ -34,11 +34,13 @@ namespace Assets.RockPaperScissors
         {
             if (isPicking.Value)
             {
-
+                rpsGame.gameState.pickScreen.SetActive(true);
+                rpsGame.gameState.pickingTMP.gameObject.SetActive(false);
             }
             else
             {
-                Debug.Log("Turn change");
+                rpsGame.gameState.pickScreen.SetActive(false);
+                rpsGame.gameState.pickingTMP.gameObject.SetActive(true);
                 if (isLeftPlayer)
                 {
                     rpsGame.gameState.pickingTMP.text = $"{rpsGame.leftPlayerName} is picking...";
