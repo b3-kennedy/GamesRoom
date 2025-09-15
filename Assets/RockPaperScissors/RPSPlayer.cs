@@ -31,8 +31,9 @@ namespace Assets.RockPaperScissors
         }
 
 
-        void OnTurnChange()
+        public void OnTurnChange()
         {
+            
             Debug.Log(isPicking.Value);
             if (isPicking.Value)
             {
