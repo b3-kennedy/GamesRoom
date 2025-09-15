@@ -9,7 +9,14 @@ namespace Assets.RockPaperScissors
     {
 
         RockPaperScissorsGame rpsGame;
-        public NetworkVariable<bool> isLeftWinner;
+
+        public enum ResultState { LEFT_WIN, RIGHT_WIN, DRAW}
+
+        public NetworkVariable<ResultState> resutState = new NetworkVariable<ResultState>(
+            ResultState.DRAW,
+            NetworkVariableReadPermission.Everyone,
+            NetworkVariableWritePermission.Server
+        );
 
         public GameObject leftRock;
         public GameObject leftPaper;
@@ -42,27 +49,31 @@ namespace Assets.RockPaperScissors
             Debug.Log("winner");
             if(rpsGame.gameState.LeftSelectedItem.Value == GameState.SelectedItem.ROCK && rpsGame.gameState.RightSelectedItem.Value == GameState.SelectedItem.SCISSORS)
             {
-                isLeftWinner.Value = true;
+                resutState.Value = ResultState.LEFT_WIN;
             }
             else if(rpsGame.gameState.LeftSelectedItem.Value == GameState.SelectedItem.PAPER && rpsGame.gameState.RightSelectedItem.Value == GameState.SelectedItem.ROCK)
             {
-                isLeftWinner.Value = true;
+                resutState.Value = ResultState.LEFT_WIN;
             }
             else if (rpsGame.gameState.LeftSelectedItem.Value == GameState.SelectedItem.SCISSORS && rpsGame.gameState.RightSelectedItem.Value == GameState.SelectedItem.PAPER)
             {
-                isLeftWinner.Value = true;
+                resutState.Value = ResultState.LEFT_WIN;
             }
             else if (rpsGame.gameState.LeftSelectedItem.Value == GameState.SelectedItem.ROCK && rpsGame.gameState.RightSelectedItem.Value == GameState.SelectedItem.PAPER)
             {
-                isLeftWinner.Value = false;
+                resutState.Value = ResultState.RIGHT_WIN;
             }
             else if (rpsGame.gameState.LeftSelectedItem.Value == GameState.SelectedItem.PAPER && rpsGame.gameState.RightSelectedItem.Value == GameState.SelectedItem.SCISSORS)
             {
-                isLeftWinner.Value = false;
+                resutState.Value = ResultState.RIGHT_WIN;
             }
             else if (rpsGame.gameState.LeftSelectedItem.Value == GameState.SelectedItem.SCISSORS && rpsGame.gameState.RightSelectedItem.Value == GameState.SelectedItem.ROCK)
             {
-                isLeftWinner.Value = false;
+                resutState.Value = ResultState.RIGHT_WIN;
+            }
+            else if(rpsGame.gameState.LeftSelectedItem.Value == rpsGame.gameState.RightSelectedItem.Value)
+            {
+                resutState.Value = ResultState.DRAW;
             }
             ShowWinnerClientRpc(rpsGame.gameState.LeftSelectedItem.Value, rpsGame.gameState.RightSelectedItem.Value);
         }
@@ -108,13 +119,17 @@ namespace Assets.RockPaperScissors
                 rightScissors.SetActive(true);
             }
             
-            if(isLeftWinner.Value)
+            if(resutState.Value == ResultState.LEFT_WIN)
             {
                 winnerTMP.text = $"{rpsGame.leftPlayerName} Wins!";
             }
-            else
+            else if(resutState.Value == ResultState.RIGHT_WIN)
             {
                 winnerTMP.text = $"{rpsGame.rightPlayerName} Wins!";
+            }
+            else if(resutState.Value == ResultState.DRAW)
+            {
+                winnerTMP.text = $"Draw!";
             }
             
             if(IsServer)
