@@ -49,9 +49,6 @@ namespace Assets.RockPaperScissors
             if (!IsServer) return;
 
             RightSelectedItem.Value = newValue;
-            rpsGame.rightPlayer.GetComponent<RPSPlayer>().isLockedIn.Value = true;
-            rpsGame.leftPlayer.GetComponent<RPSPlayer>().isPicking.Value = true;
-            rpsGame.rightPlayer.GetComponent<RPSPlayer>().isPicking.Value = false;
 
 
         }
@@ -61,9 +58,6 @@ namespace Assets.RockPaperScissors
             if (!IsServer) return;
 
             LeftSelectedItem.Value = newValue;
-            rpsGame.leftPlayer.GetComponent<RPSPlayer>().isLockedIn.Value = true;
-            rpsGame.leftPlayer.GetComponent<RPSPlayer>().isPicking.Value = false;
-            rpsGame.rightPlayer.GetComponent<RPSPlayer>().isPicking.Value = true;
         }
 
         public override void OnStateEnter()
@@ -79,10 +73,16 @@ namespace Assets.RockPaperScissors
             if(isLeft)
             {
                 LeftSelectedItem.Value = item;
+                rpsGame.leftPlayer.GetComponent<RPSPlayer>().isLockedIn.Value = true;
+                rpsGame.leftPlayer.GetComponent<RPSPlayer>().isPicking.Value = false;
+                rpsGame.rightPlayer.GetComponent<RPSPlayer>().isPicking.Value = true;
             }
             else
             {
                 RightSelectedItem.Value = item;
+                rpsGame.rightPlayer.GetComponent<RPSPlayer>().isLockedIn.Value = true;
+                rpsGame.leftPlayer.GetComponent<RPSPlayer>().isPicking.Value = true;
+                rpsGame.rightPlayer.GetComponent<RPSPlayer>().isPicking.Value = false;
             }
 
             if (rpsGame.leftPlayer.GetComponent<RPSPlayer>().isLockedIn.Value && rpsGame.rightPlayer.GetComponent<RPSPlayer>().isLockedIn.Value)
