@@ -2052,6 +2052,7 @@ GameObject:
   - component: {fileID: 267402823}
   - component: {fileID: 267402822}
   - component: {fileID: 267402821}
+  - component: {fileID: 267402824}
   m_Layer: 0
   m_Name: Rock
   m_TagString: Untagged
@@ -2152,6 +2153,19 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 267402819}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &267402824
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 267402819}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d91834b4bed81b4398b9e5b3c868744, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isSelected: 0
 --- !u!1 &273611683
 GameObject:
   m_ObjectHideFlags: 0
@@ -20032,6 +20046,10 @@ MonoBehaviour:
   game: {fileID: 0}
   pickingTMP: {fileID: 1243326449}
   pickScreen: {fileID: 2090602672}
+  items:
+  - {fileID: 267402819}
+  - {fileID: 1805230218}
+  - {fileID: 1757334651}
 --- !u!1 &1354843529
 GameObject:
   m_ObjectHideFlags: 0
@@ -26046,6 +26064,7 @@ GameObject:
   - component: {fileID: 1757334655}
   - component: {fileID: 1757334654}
   - component: {fileID: 1757334653}
+  - component: {fileID: 1757334656}
   m_Layer: 0
   m_Name: Scissors
   m_TagString: Untagged
@@ -26146,6 +26165,19 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1757334651}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1757334656
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1757334651}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d91834b4bed81b4398b9e5b3c868744, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isSelected: 0
 --- !u!1 &1761778376
 GameObject:
   m_ObjectHideFlags: 0
@@ -26871,6 +26903,7 @@ GameObject:
   - component: {fileID: 1805230222}
   - component: {fileID: 1805230221}
   - component: {fileID: 1805230220}
+  - component: {fileID: 1805230223}
   m_Layer: 0
   m_Name: Paper
   m_TagString: Untagged
@@ -26971,6 +27004,19 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1805230218}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1805230223
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1805230218}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d91834b4bed81b4398b9e5b3c868744, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isSelected: 0
 --- !u!1 &1810650394
 GameObject:
   m_ObjectHideFlags: 0
