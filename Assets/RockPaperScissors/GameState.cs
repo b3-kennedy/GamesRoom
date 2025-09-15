@@ -36,12 +36,10 @@ namespace Assets.RockPaperScissors
             {
                 rpsGame = rps;
             }
-            rpsGame.SetTurns();
         }
         public override void OnStateEnter()
         {
             gameObject.SetActive(true);
-            rpsGame.SetTurns();
 
 
         }
