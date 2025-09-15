@@ -64,44 +64,44 @@ namespace Assets.RockPaperScissors
             {
                 isLeftWinner.Value = false;
             }
-            ShowWinnerClientRpc();
+            ShowWinnerClientRpc(rpsGame.gameState.LeftSelectedItem.Value, rpsGame.gameState.RightSelectedItem.Value);
         }
         
         [ClientRpc]
-        void ShowWinnerClientRpc()
+        void ShowWinnerClientRpc(GameState.SelectedItem left, GameState.SelectedItem right)
         {
-            if(rpsGame.gameState.LeftSelectedItem.Value == GameState.SelectedItem.ROCK)
+            if(left == GameState.SelectedItem.ROCK)
             {
                 leftRock.SetActive(true);
                 leftPaper.SetActive(false);
                 leftScissors.SetActive(false);
             }
-            else if (rpsGame.gameState.LeftSelectedItem.Value == GameState.SelectedItem.PAPER)
+            else if (left == GameState.SelectedItem.PAPER)
             {
                 leftRock.SetActive(false);
                 leftPaper.SetActive(true);
                 leftScissors.SetActive(false);
             }
-            else if (rpsGame.gameState.LeftSelectedItem.Value == GameState.SelectedItem.SCISSORS)
+            else if (left == GameState.SelectedItem.SCISSORS)
             {
                 leftRock.SetActive(false);
                 leftPaper.SetActive(false);
                 leftScissors.SetActive(true);
             }
             
-            if(rpsGame.gameState.RightSelectedItem.Value == GameState.SelectedItem.ROCK)
+            if(right == GameState.SelectedItem.ROCK)
             {
                 rightRock.SetActive(true);
                 rightPaper.SetActive(false);
                 rightScissors.SetActive(false);
             }
-            else if (rpsGame.gameState.RightSelectedItem.Value == GameState.SelectedItem.PAPER)
+            else if (right == GameState.SelectedItem.PAPER)
             {
                 rightRock.SetActive(false);
                 rightPaper.SetActive(true);
                 rightScissors.SetActive(false);
             }
-            else if (rpsGame.gameState.RightSelectedItem.Value == GameState.SelectedItem.SCISSORS)
+            else if (right == GameState.SelectedItem.SCISSORS)
             {
                 rightRock.SetActive(false);
                 rightPaper.SetActive(false);
