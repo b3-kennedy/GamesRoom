@@ -33,8 +33,8 @@ namespace Assets.RockPaperScissors
 
         public void OnTurnChange()
         {
-            
-            Debug.Log(isPicking.Value);
+
+            if (!IsOwner) return;
             if (isPicking.Value)
             {
                 rpsGame.gameState.pickScreen.SetActive(true);
