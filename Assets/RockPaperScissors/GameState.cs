@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using Unity.Netcode;
+using System;
 
 
 namespace Assets.RockPaperScissors
@@ -38,7 +39,37 @@ namespace Assets.RockPaperScissors
             {
                 rpsGame = rps;
             }
+
+            LeftSelectedItem.OnValueChanged += SelectItemLeft;
+            RightSelectedItem.OnValueChanged += SelectItemRight;
         }
+
+        private void SelectItemRight(SelectedItem previousValue, SelectedItem newValue)
+        {
+            RightSelectedItem.Value = newValue;
+            rpsGame.rightPlayer.GetComponent<RPSPlayer>().isLockedIn.Value = true;
+            rpsGame.leftPlayer.GetComponent<RPSPlayer>().isPicking.Value = true;
+            rpsGame.rightPlayer.GetComponent<RPSPlayer>().isPicking.Value = false;
+
+            if (rpsGame.leftPlayer.GetComponent<RPSPlayer>().isLockedIn.Value && rpsGame.rightPlayer.GetComponent<RPSPlayer>().isLockedIn.Value)
+            {
+                rpsGame.ChangeStateServerRpc(RockPaperScissorsGame.GameState.ROUND_RESULTS);
+            }
+        }
+
+        private void SelectItemLeft(SelectedItem previousValue, SelectedItem newValue)
+        {
+            LeftSelectedItem.Value = newValue;
+            rpsGame.leftPlayer.GetComponent<RPSPlayer>().isLockedIn.Value = true;
+            rpsGame.leftPlayer.GetComponent<RPSPlayer>().isPicking.Value = false;
+            rpsGame.rightPlayer.GetComponent<RPSPlayer>().isPicking.Value = true;
+
+            if (rpsGame.leftPlayer.GetComponent<RPSPlayer>().isLockedIn.Value && rpsGame.rightPlayer.GetComponent<RPSPlayer>().isLockedIn.Value)
+            {
+                rpsGame.ChangeStateServerRpc(RockPaperScissorsGame.GameState.ROUND_RESULTS);
+            }
+        }
+
         public override void OnStateEnter()
         {
             gameObject.SetActive(true);
@@ -49,27 +80,14 @@ namespace Assets.RockPaperScissors
         [ServerRpc(RequireOwnership = false)]
         public void SelectItemServerRpc(bool isLeft, SelectedItem item)
         {
-            if (isLeft)
+            if(isLeft)
             {
                 LeftSelectedItem.Value = item;
-                rpsGame.leftPlayer.GetComponent<RPSPlayer>().isLockedIn.Value = true;
-                rpsGame.leftPlayer.GetComponent<RPSPlayer>().isPicking.Value = false;
-                rpsGame.rightPlayer.GetComponent<RPSPlayer>().isPicking.Value = true;
             }
             else
             {
                 RightSelectedItem.Value = item;
-                rpsGame.rightPlayer.GetComponent<RPSPlayer>().isLockedIn.Value = true;
-                rpsGame.leftPlayer.GetComponent<RPSPlayer>().isPicking.Value = true;
-                rpsGame.rightPlayer.GetComponent<RPSPlayer>().isPicking.Value = false;
-
             }
-
-            if (rpsGame.leftPlayer.GetComponent<RPSPlayer>().isLockedIn.Value && rpsGame.rightPlayer.GetComponent<RPSPlayer>().isLockedIn.Value)
-            {
-                rpsGame.ChangeStateServerRpc(RockPaperScissorsGame.GameState.ROUND_RESULTS);
-            }
-
         }        
 
         public override void OnStateUpdate()
