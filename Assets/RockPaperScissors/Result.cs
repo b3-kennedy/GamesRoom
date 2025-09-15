@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
@@ -115,6 +116,18 @@ namespace Assets.RockPaperScissors
             {
                 winnerTMP.text = $"{rpsGame.rightPlayerName} Wins!";
             }
+            
+            if(IsServer)
+            {
+                StartCoroutine(BackToGame());
+            }
+        }
+        
+        IEnumerator BackToGame()
+        {
+            yield return new WaitForSeconds(3);
+            rpsGame.ResetPlayersServerRpc();
+            rpsGame.ChangeStateServerRpc(RockPaperScissorsGame.GameState.GAME);
         }
 
         public override void OnStateUpdate()

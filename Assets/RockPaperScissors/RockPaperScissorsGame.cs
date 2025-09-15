@@ -48,6 +48,7 @@ namespace Assets.RockPaperScissors
             resultState.game = this;
 
         }
+    
 
         [ServerRpc(RequireOwnership = false)]
         public override void BeginServerRpc(ulong clientID)
@@ -115,6 +116,16 @@ namespace Assets.RockPaperScissors
             connectedPlayers.Clear();
             connectedPlayersCount.Value = 0;
             ChangeStateServerRpc(GameState.MAIN_MENU);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void ResetPlayersServerRpc()
+        {
+            leftPlayer.GetComponent<RPSPlayer>().isPicking.Value = true;
+            rightPlayer.GetComponent<RPSPlayer>().isPicking.Value = false;
+            leftPlayer.GetComponent<RPSPlayer>().isLockedIn.Value = false;
+            rightPlayer.GetComponent<RPSPlayer>().isLockedIn.Value = false;
+
         }
 
         private void OnNetworkGameStateChanged(GameState oldState, GameState newState)
