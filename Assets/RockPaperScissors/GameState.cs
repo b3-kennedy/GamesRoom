@@ -20,7 +20,11 @@ namespace Assets.RockPaperScissors
         public override void OnStateEnter()
         {
             gameObject.SetActive(true);
-            rpsGame.SetTurns();
+            if(IsServer)
+            {
+                rpsGame.SetTurns();
+            }
+            
         }
 
         public override void OnStateUpdate()
