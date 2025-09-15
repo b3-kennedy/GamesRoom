@@ -38,6 +38,7 @@ namespace Assets.RockPaperScissors
         
         void DecideWinner()
         {
+            Debug.Log("winner");
             if(rpsGame.gameState.LeftSelectedItem.Value == GameState.SelectedItem.ROCK && rpsGame.gameState.RightSelectedItem.Value == GameState.SelectedItem.SCISSORS)
             {
                 isLeftWinner.Value = true;
