@@ -1,6 +1,7 @@
 using System.Collections;
 using TMPro;
 using Unity.Netcode;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 namespace Assets.RockPaperScissors
@@ -12,7 +13,7 @@ namespace Assets.RockPaperScissors
 
         public enum ResultState { LEFT_WIN, RIGHT_WIN, DRAW}
 
-        public NetworkVariable<ResultState> resutState = new NetworkVariable<ResultState>(
+        public NetworkVariable<ResultState> resultState = new NetworkVariable<ResultState>(
             ResultState.DRAW,
             NetworkVariableReadPermission.Everyone,
             NetworkVariableWritePermission.Server
@@ -49,37 +50,37 @@ namespace Assets.RockPaperScissors
             Debug.Log("winner");
             if(rpsGame.gameState.LeftSelectedItem.Value == GameState.SelectedItem.ROCK && rpsGame.gameState.RightSelectedItem.Value == GameState.SelectedItem.SCISSORS)
             {
-                resutState.Value = ResultState.LEFT_WIN;
+                resultState.Value = ResultState.LEFT_WIN;
             }
             else if(rpsGame.gameState.LeftSelectedItem.Value == GameState.SelectedItem.PAPER && rpsGame.gameState.RightSelectedItem.Value == GameState.SelectedItem.ROCK)
             {
-                resutState.Value = ResultState.LEFT_WIN;
+                resultState.Value = ResultState.LEFT_WIN;
             }
             else if (rpsGame.gameState.LeftSelectedItem.Value == GameState.SelectedItem.SCISSORS && rpsGame.gameState.RightSelectedItem.Value == GameState.SelectedItem.PAPER)
             {
-                resutState.Value = ResultState.LEFT_WIN;
+                resultState.Value = ResultState.LEFT_WIN;
             }
             else if (rpsGame.gameState.LeftSelectedItem.Value == GameState.SelectedItem.ROCK && rpsGame.gameState.RightSelectedItem.Value == GameState.SelectedItem.PAPER)
             {
-                resutState.Value = ResultState.RIGHT_WIN;
+                resultState.Value = ResultState.RIGHT_WIN;
             }
             else if (rpsGame.gameState.LeftSelectedItem.Value == GameState.SelectedItem.PAPER && rpsGame.gameState.RightSelectedItem.Value == GameState.SelectedItem.SCISSORS)
             {
-                resutState.Value = ResultState.RIGHT_WIN;
+                resultState.Value = ResultState.RIGHT_WIN;
             }
             else if (rpsGame.gameState.LeftSelectedItem.Value == GameState.SelectedItem.SCISSORS && rpsGame.gameState.RightSelectedItem.Value == GameState.SelectedItem.ROCK)
             {
-                resutState.Value = ResultState.RIGHT_WIN;
+                resultState.Value = ResultState.RIGHT_WIN;
             }
             else if(rpsGame.gameState.LeftSelectedItem.Value == rpsGame.gameState.RightSelectedItem.Value)
             {
-                resutState.Value = ResultState.DRAW;
+                resultState.Value = ResultState.DRAW;
             }
-            ShowWinnerClientRpc(rpsGame.gameState.LeftSelectedItem.Value, rpsGame.gameState.RightSelectedItem.Value);
+            ShowWinnerClientRpc(rpsGame.gameState.LeftSelectedItem.Value, rpsGame.gameState.RightSelectedItem.Value, resultState.Value);
         }
         
         [ClientRpc]
-        void ShowWinnerClientRpc(GameState.SelectedItem left, GameState.SelectedItem right)
+        void ShowWinnerClientRpc(GameState.SelectedItem left, GameState.SelectedItem right, ResultState result)
         {
             if(left == GameState.SelectedItem.ROCK)
             {
@@ -119,15 +120,15 @@ namespace Assets.RockPaperScissors
                 rightScissors.SetActive(true);
             }
             
-            if(resutState.Value == ResultState.LEFT_WIN)
+            if(result == ResultState.LEFT_WIN)
             {
                 winnerTMP.text = $"{rpsGame.leftPlayerName} Wins!";
             }
-            else if(resutState.Value == ResultState.RIGHT_WIN)
+            else if(result == ResultState.RIGHT_WIN)
             {
                 winnerTMP.text = $"{rpsGame.rightPlayerName} Wins!";
             }
-            else if(resutState.Value == ResultState.DRAW)
+            else if(result == ResultState.DRAW)
             {
                 winnerTMP.text = $"Draw!";
             }
