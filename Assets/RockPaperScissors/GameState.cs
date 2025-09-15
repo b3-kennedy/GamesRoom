@@ -36,11 +36,7 @@ namespace Assets.RockPaperScissors
             {
                 rpsGame = rps;
             }
-
-            if (IsServer)
-            {
-                rpsGame.SetTurns();
-            }
+            rpsGame.SetTurns();
         }
         public override void OnStateEnter()
         {
