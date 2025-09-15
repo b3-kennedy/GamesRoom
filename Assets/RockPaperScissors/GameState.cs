@@ -41,8 +41,9 @@ namespace Assets.RockPaperScissors
         public override void OnStateEnter()
         {
             gameObject.SetActive(true);
+            rpsGame.SetTurns();
 
-            
+
         }
         
         [ServerRpc(RequireOwnership = false)]
