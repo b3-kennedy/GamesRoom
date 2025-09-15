@@ -20050,6 +20050,10 @@ MonoBehaviour:
   - {fileID: 267402819}
   - {fileID: 1805230218}
   - {fileID: 1757334651}
+  LeftSelectedItem:
+    m_InternalValue: 0
+  RightSelectedItem:
+    m_InternalValue: 0
 --- !u!1 &1354843529
 GameObject:
   m_ObjectHideFlags: 0
