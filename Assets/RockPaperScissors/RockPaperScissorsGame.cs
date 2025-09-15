@@ -6,7 +6,7 @@ namespace Assets.RockPaperScissors
 {
     public class RockPaperScissorsGame : Game
     {
-        public enum GameState { MAIN_MENU, GAME, GAME_OVER }
+        public enum GameState { MAIN_MENU, GAME, GAME_OVER, ROUND_RESULTS}
 
         public NetworkVariable<GameState> netGameState = new NetworkVariable<GameState>(
             GameState.MAIN_MENU,
@@ -19,6 +19,8 @@ namespace Assets.RockPaperScissors
 
         public MainMenu mainMenuState;
         public RockPaperScissors.GameState gameState;
+
+        public Result resultState;
 
         public GameObject leftPlayer;
         public GameObject rightPlayer;
@@ -36,12 +38,14 @@ namespace Assets.RockPaperScissors
 
             mainMenuState.gameObject.SetActive(true);
             gameState.gameObject.SetActive(false);
+            resultState.gameObject.SetActive(false);
         }
 
         void Awake()
         {
             mainMenuState.game = this;
             gameState.game = this;
+            resultState.game = this;
 
         }
 

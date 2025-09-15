@@ -13,6 +13,8 @@ namespace Assets.RockPaperScissors
 
         public GameObject pickScreen;
 
+        public GameObject roundWinnerScreen;
+
         public GameObject[] items;
         
 
@@ -65,11 +67,10 @@ namespace Assets.RockPaperScissors
 
             if (rpsGame.leftPlayer.GetComponent<RPSPlayer>().isLockedIn.Value && rpsGame.rightPlayer.GetComponent<RPSPlayer>().isLockedIn.Value)
             {
-                Debug.Log("both players locked in, pick winner");
+                rpsGame.ChangeStateServerRpc(RockPaperScissorsGame.GameState.ROUND_RESULTS);
             }
 
-        }
-        
+        }        
 
         public override void OnStateUpdate()
         {

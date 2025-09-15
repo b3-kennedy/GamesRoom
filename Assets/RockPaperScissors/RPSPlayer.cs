@@ -46,11 +46,11 @@ namespace Assets.RockPaperScissors
                 rpsGame.gameState.pickingTMP.gameObject.SetActive(true);
                 if (isLeftPlayer)
                 {
-                    rpsGame.gameState.pickingTMP.text = $"{rpsGame.leftPlayerName} is picking...";
+                    rpsGame.gameState.pickingTMP.text = $"{rpsGame.rightPlayerName} is picking...";
                 }
                 else
                 {
-                    rpsGame.gameState.pickingTMP.text = $"{rpsGame.rightPlayerName} is picking...";
+                    rpsGame.gameState.pickingTMP.text = $"{rpsGame.leftPlayerName} is picking...";
                 }
                 
             }
