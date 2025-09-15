@@ -17,13 +17,10 @@ namespace Assets.RockPaperScissors
 
         int index;
 
-        GameObject[] itemsArray;
-
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
             isPicking.OnValueChanged += OnTurnChange;
-            itemsArray = rpsGame.gameState.items;
         }
 
         private void OnTurnChange(bool previousValue, bool newValue)
@@ -89,15 +86,15 @@ namespace Assets.RockPaperScissors
         
         void Select()
         {
-            for (int i = 0; i < itemsArray.Length; i++)
+            for (int i = 0; i < rpsGame.gameState.items.Length; i++)
             {
                 if(i == index)
                 {
-                    itemsArray[i].GetComponent<RPSItem>().ChangeSelectedValue(true);
+                    rpsGame.gameState.items[i].GetComponent<RPSItem>().ChangeSelectedValue(true);
                 }
                 else
                 {
-                    itemsArray[i].GetComponent<RPSItem>().ChangeSelectedValue(false);
+                    rpsGame.gameState.items[i].GetComponent<RPSItem>().ChangeSelectedValue(false);
                 }
             }
         }
