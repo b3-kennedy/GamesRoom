@@ -34,7 +34,7 @@ namespace Assets.RockPaperScissors
             // Apply initial state locally
             ApplyState(netGameState.Value);
 
-            mainMenuState.gameObject.SetActive(false);
+            mainMenuState.gameObject.SetActive(true);
             gameState.gameObject.SetActive(false);
         }
 
