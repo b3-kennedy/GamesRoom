@@ -2166,6 +2166,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isSelected: 0
+  outline: {fileID: 260943912}
 --- !u!1 &273611683
 GameObject:
   m_ObjectHideFlags: 0
@@ -26182,6 +26183,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isSelected: 0
+  outline: {fileID: 1022299635}
 --- !u!1 &1761778376
 GameObject:
   m_ObjectHideFlags: 0
@@ -27021,6 +27023,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isSelected: 0
+  outline: {fileID: 1536275147}
 --- !u!1 &1810650394
 GameObject:
   m_ObjectHideFlags: 0
