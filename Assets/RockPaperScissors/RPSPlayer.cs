@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Assets.RockPaperScissors
 {
-    public class RPSPlayer : MonoBehaviour
+    public class RPSPlayer : NetworkBehaviour
     {
         [HideInInspector]public RockPaperScissorsGame rpsGame;
 
