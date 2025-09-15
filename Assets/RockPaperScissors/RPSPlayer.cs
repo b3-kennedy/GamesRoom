@@ -15,7 +15,7 @@ namespace Assets.RockPaperScissors
 
         [HideInInspector] public GameObject playerObject;
 
-        int index;
+        [HideInInspector] public int index;
 
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()

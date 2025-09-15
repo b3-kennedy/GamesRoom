@@ -127,6 +127,12 @@ namespace Assets.RockPaperScissors
             rightPlayer.GetComponent<RPSPlayer>().isLockedIn.Value = false;
 
         }
+        
+        [ClientRpc]
+        void ResetPlayersClientRpc()
+        {
+            leftPlayer.GetComponent<RPSPlayer>().index = 0;
+        }
 
         private void OnNetworkGameStateChanged(GameState oldState, GameState newState)
         {
