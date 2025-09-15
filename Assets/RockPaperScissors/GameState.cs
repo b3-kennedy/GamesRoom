@@ -46,6 +46,8 @@ namespace Assets.RockPaperScissors
 
         private void SelectItemRight(SelectedItem previousValue, SelectedItem newValue)
         {
+            if (!IsServer) return;
+
             RightSelectedItem.Value = newValue;
             rpsGame.rightPlayer.GetComponent<RPSPlayer>().isLockedIn.Value = true;
             rpsGame.leftPlayer.GetComponent<RPSPlayer>().isPicking.Value = true;
@@ -59,6 +61,8 @@ namespace Assets.RockPaperScissors
 
         private void SelectItemLeft(SelectedItem previousValue, SelectedItem newValue)
         {
+            if (!IsServer) return;
+
             LeftSelectedItem.Value = newValue;
             rpsGame.leftPlayer.GetComponent<RPSPlayer>().isLockedIn.Value = true;
             rpsGame.leftPlayer.GetComponent<RPSPlayer>().isPicking.Value = false;
@@ -88,6 +92,8 @@ namespace Assets.RockPaperScissors
             {
                 RightSelectedItem.Value = item;
             }
+
+
         }        
 
         public override void OnStateUpdate()
