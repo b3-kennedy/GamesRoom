@@ -142,6 +142,9 @@ namespace Assets.RockPaperScissors
                     break;
                 case GameState.GAME_OVER:
                     break;
+                case GameState.ROUND_RESULTS:
+                    resultState.OnStateExit();
+                    break;
             }
         }
 
@@ -158,6 +161,10 @@ namespace Assets.RockPaperScissors
                     break;
 
                 case GameState.GAME_OVER:
+                    break;
+
+                case GameState.ROUND_RESULTS:
+                    resultState.OnStateEnter();
                     break;
             }
         }
