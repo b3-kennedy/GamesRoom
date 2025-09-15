@@ -32,13 +32,14 @@ namespace Assets.RockPaperScissors
         [ClientRpc]
         void OnTurnChangeClientRpc(bool value)
         {
-            Debug.Log("Turn change");
+            
             if (value)
             {
 
             }
             else
             {
+                Debug.Log("Turn change");
                 if (isLeftPlayer)
                 {
                     rpsGame.gameState.pickingTMP.text = $"{rpsGame.rightPlayerName} is picking...";
