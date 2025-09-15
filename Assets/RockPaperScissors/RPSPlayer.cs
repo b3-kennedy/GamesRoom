@@ -23,9 +23,11 @@ namespace Assets.RockPaperScissors
 
         private void OnTurnChange(bool previousValue, bool newValue)
         {
-            
+
             OnTurnChangeClientRpc(newValue);
+
         }
+
 
         [ClientRpc]
         void OnTurnChangeClientRpc(bool value)
