@@ -80,8 +80,8 @@ namespace Assets.RockPaperScissors
                         index = 2;
                     }
                 }
-                
-                if(Input.GetKeyDown(KeyCode.Return))
+
+                if (Input.GetKeyDown(KeyCode.Return) && rpsGame.netGameState.Value == RockPaperScissorsGame.GameState.GAME)
                 {
                     
                     if(index == 0)
