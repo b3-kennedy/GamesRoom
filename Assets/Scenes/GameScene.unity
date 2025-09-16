@@ -12795,13 +12795,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 933998746}
+  - component: {fileID: 933998747}
   m_Layer: 0
   m_Name: GameOver
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &933998746
 Transform:
   m_ObjectHideFlags: 0
@@ -12820,6 +12821,21 @@ Transform:
   - {fileID: 1600311213}
   m_Father: {fileID: 1300625638}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &933998747
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 933998744}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f88eea533ffe80544aacecfde4bca833, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  game: {fileID: 0}
+  winnerTMP: {fileID: 0}
 --- !u!1 &936294567
 GameObject:
   m_ObjectHideFlags: 0
@@ -20681,6 +20697,7 @@ MonoBehaviour:
     m_InternalValue: 0
   mainMenuState: {fileID: 1728953492}
   gameState: {fileID: 1327849085}
+  gameOverState: {fileID: 933998747}
   resultState: {fileID: 488247722}
   leftPlayer: {fileID: 1473928113}
   rightPlayer: {fileID: 1189443711}
