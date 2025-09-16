@@ -26,7 +26,7 @@ namespace Assets.RockPaperScissors
             connectedPlayersText.text = $"{rpsGame.connectedPlayersCount.Value}/2";
             if (rpsGame.connectedPlayers.Count == 2)
             {
-                rpsGame.ChangeStateServerRpc(RockPaperScissorsGame.GameState.GAME);
+                rpsGame.ChangeStateServerRpc(RockPaperScissorsGame.GameState.WAGER);
             }
         }
 
