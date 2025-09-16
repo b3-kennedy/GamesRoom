@@ -12835,7 +12835,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   game: {fileID: 0}
-  winnerTMP: {fileID: 0}
+  winnerTMP: {fileID: 1036151320}
 --- !u!1 &936294567
 GameObject:
   m_ObjectHideFlags: 0

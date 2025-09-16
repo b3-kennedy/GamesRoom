@@ -172,21 +172,24 @@ namespace Assets.RockPaperScissors
             {
                 winnerTMP.text = $"Draw!";
             }
-            
-            if(IsServer)
-            {
-                StartCoroutine(BackToGame());
-            }
         }
 
         private void RightScoreChanged(int previousValue, int newValue)
         {
             rightScoreTMP.text = newValue.ToString();
+            if (IsServer && leftScore.Value < 3 && rightScore.Value < 3)
+            {
+                StartCoroutine(BackToGame());
+            }
         }
 
         private void LeftScoreChanged(int previousValue, int newValue)
         {
             leftScoreTMP.text = newValue.ToString();
+            if (IsServer && leftScore.Value < 3 && rightScore.Value < 3)
+            {
+                StartCoroutine(BackToGame());
+            }
         }
 
         IEnumerator BackToGame()
