@@ -70,6 +70,7 @@ namespace Assets.RockPaperScissors
         [ServerRpc(RequireOwnership = false)]
         public void SelectItemServerRpc(bool isLeft, SelectedItem item)
         {
+            Debug.Log("hello?");
             if(isLeft)
             {
                 LeftSelectedItem.Value = item;
