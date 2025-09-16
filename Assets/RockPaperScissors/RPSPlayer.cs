@@ -83,6 +83,7 @@ namespace Assets.RockPaperScissors
                 
                 if(Input.GetKeyDown(KeyCode.Return))
                 {
+                    
                     if(index == 0)
                     {
                         rpsGame.gameState.SelectItemServerRpc(isLeftPlayer, GameState.SelectedItem.ROCK);
