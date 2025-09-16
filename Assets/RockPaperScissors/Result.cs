@@ -101,15 +101,15 @@ namespace Assets.RockPaperScissors
             {
                 SetGameWinnerClientRpc(false);
                 
-                rpsGame.rightPlayer.GetComponent<RPSPlayer>().playerObject.GetComponent<SteamPlayer>().credits.Value += 0;
-                rpsGame.leftPlayer.GetComponent<RPSPlayer>().playerObject.GetComponent<SteamPlayer>().credits.Value -= 0;
+                rpsGame.rightPlayer.GetComponent<RPSPlayer>().playerObject.GetComponent<SteamPlayer>().credits.Value += rpsGame.wagerState.wagerAmount.Value;
+                rpsGame.leftPlayer.GetComponent<RPSPlayer>().playerObject.GetComponent<SteamPlayer>().credits.Value -= rpsGame.wagerState.wagerAmount.Value;
             }
             else if(leftScore.Value >= 3)
             {
                 SetGameWinnerClientRpc(true);
                 
-                rpsGame.rightPlayer.GetComponent<RPSPlayer>().playerObject.GetComponent<SteamPlayer>().credits.Value -= 0;
-                rpsGame.leftPlayer.GetComponent<RPSPlayer>().playerObject.GetComponent<SteamPlayer>().credits.Value += 0;
+                rpsGame.rightPlayer.GetComponent<RPSPlayer>().playerObject.GetComponent<SteamPlayer>().credits.Value -= rpsGame.wagerState.wagerAmount.Value;
+                rpsGame.leftPlayer.GetComponent<RPSPlayer>().playerObject.GetComponent<SteamPlayer>().credits.Value += rpsGame.wagerState.wagerAmount.Value;
             }
             
             
