@@ -99,13 +99,15 @@ namespace Assets.RockPaperScissors
             
             if(rightScore.Value >= 3)
             {
-                rpsGame.gameOverState.winnerTMP.text = $"{rpsGame.rightPlayerName} Wins!";
+                SetGameWinnerClientRpc(false);
+                
                 rpsGame.rightPlayer.GetComponent<RPSPlayer>().playerObject.GetComponent<SteamPlayer>().credits.Value += 0;
                 rpsGame.leftPlayer.GetComponent<RPSPlayer>().playerObject.GetComponent<SteamPlayer>().credits.Value -= 0;
             }
             else if(leftScore.Value >= 3)
             {
-                rpsGame.gameOverState.winnerTMP.text = $"{rpsGame.leftPlayerName} Wins!";
+                SetGameWinnerClientRpc(true);
+                
                 rpsGame.rightPlayer.GetComponent<RPSPlayer>().playerObject.GetComponent<SteamPlayer>().credits.Value -= 0;
                 rpsGame.leftPlayer.GetComponent<RPSPlayer>().playerObject.GetComponent<SteamPlayer>().credits.Value += 0;
             }
@@ -173,6 +175,19 @@ namespace Assets.RockPaperScissors
                 {
                     StartCoroutine(BackToGame());
                 }
+            }
+        }
+        
+        [ClientRpc]
+        void SetGameWinnerClientRpc(bool isLeft)
+        {
+            if(isLeft)
+            {
+                rpsGame.gameOverState.winnerTMP.text = $"{rpsGame.leftPlayerName} Wins!";
+            }
+            else
+            {
+                rpsGame.gameOverState.winnerTMP.text = $"{rpsGame.rightPlayerName} Wins!";
             }
         }
 
