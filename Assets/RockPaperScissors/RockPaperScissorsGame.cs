@@ -20,6 +20,8 @@ namespace Assets.RockPaperScissors
         public MainMenu mainMenuState;
         public RockPaperScissors.GameState gameState;
 
+        public GameOver gameOverState;
+
         public Result resultState;
 
         public GameObject leftPlayer;
@@ -39,6 +41,7 @@ namespace Assets.RockPaperScissors
             mainMenuState.gameObject.SetActive(true);
             gameState.gameObject.SetActive(false);
             resultState.gameObject.SetActive(false);
+            gameOverState.gameObject.SetActive(false);
         }
 
         void Awake()
@@ -46,6 +49,7 @@ namespace Assets.RockPaperScissors
             mainMenuState.game = this;
             gameState.game = this;
             resultState.game = this;
+            gameOverState.game = this;
 
         }
     
@@ -158,6 +162,7 @@ namespace Assets.RockPaperScissors
                     gameState.OnStateExit();               
                     break;
                 case GameState.GAME_OVER:
+                    gameOverState.OnStateExit();
                     break;
                 case GameState.ROUND_RESULTS:
                     resultState.OnStateExit();
@@ -178,6 +183,7 @@ namespace Assets.RockPaperScissors
                     break;
 
                 case GameState.GAME_OVER:
+                    gameOverState.OnStateEnter();
                     break;
 
                 case GameState.ROUND_RESULTS:

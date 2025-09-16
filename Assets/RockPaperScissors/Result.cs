@@ -96,6 +96,23 @@ namespace Assets.RockPaperScissors
                 resultState.Value = ResultState.DRAW;
             }
             ShowWinnerClientRpc(rpsGame.gameState.LeftSelectedItem.Value, rpsGame.gameState.RightSelectedItem.Value, resultState.Value);
+            
+            if(rightScore.Value >= 3)
+            {
+                rpsGame.gameOverState.winnerTMP.text = $"{rpsGame.rightPlayerName} Wins!";
+                rpsGame.rightPlayer.GetComponent<SteamPlayer>().credits.Value += 0;
+                rpsGame.leftPlayer.GetComponent<SteamPlayer>().credits.Value -= 0;
+                rpsGame.ChangeStateServerRpc(RockPaperScissorsGame.GameState.GAME_OVER);
+            }
+            else if(leftScore.Value >= 3)
+            {
+                rpsGame.gameOverState.winnerTMP.text = $"{rpsGame.leftPlayerName} Wins!";
+                rpsGame.leftPlayer.GetComponent<SteamPlayer>().credits.Value += 0;
+                rpsGame.rightPlayer.GetComponent<SteamPlayer>().credits.Value -= 0;
+                rpsGame.ChangeStateServerRpc(RockPaperScissorsGame.GameState.GAME_OVER);
+            }
+            
+            
         }
         
         [ClientRpc]
