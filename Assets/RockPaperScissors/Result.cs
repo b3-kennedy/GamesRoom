@@ -197,7 +197,7 @@ namespace Assets.RockPaperScissors
             {
                 rpsGame.ChangeStateServerRpc(RockPaperScissorsGame.GameState.GAME);
             }
-            else if(IsServer && leftScore.Value >= 3 && rightScore.Value >= 3)
+            else if(IsServer && leftScore.Value >= 3 || rightScore.Value >= 3)
             {
                 rpsGame.ChangeStateServerRpc(RockPaperScissorsGame.GameState.GAME_OVER);
             }
