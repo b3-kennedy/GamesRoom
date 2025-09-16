@@ -194,13 +194,20 @@ namespace Assets.RockPaperScissors
         private void RightScoreChanged(int previousValue, int newValue)
         {
             rightScoreTMP.text = newValue.ToString();
-            StartCoroutine(BackToGame());
+            if(gameObject.activeSelf)
+            {
+                StartCoroutine(BackToGame());
+            }
+            
         }
 
         private void LeftScoreChanged(int previousValue, int newValue)
         {
             leftScoreTMP.text = newValue.ToString();
-            StartCoroutine(BackToGame());
+            if (gameObject.activeSelf)
+            {
+                StartCoroutine(BackToGame());
+            }
 
         }
 

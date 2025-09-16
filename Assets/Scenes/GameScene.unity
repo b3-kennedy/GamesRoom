@@ -11098,13 +11098,14 @@ GameObject:
   m_Component:
   - component: {fileID: 860919359}
   - component: {fileID: 860919360}
+  - component: {fileID: 860919361}
   m_Layer: 0
   m_Name: Wager (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &860919359
 Transform:
   m_ObjectHideFlags: 0
@@ -11151,6 +11152,29 @@ MonoBehaviour:
   AutoObjectParentSync: 1
   SyncOwnerTransformWhenParented: 1
   AllowOwnerToParent: 0
+--- !u!114 &860919361
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 860919357}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06f2ba480c45d294994a3a73508b31fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  game: {fileID: 0}
+  chooseTMP: {fileID: 1072878377}
+  amountTMP: {fileID: 1136735103}
+  rightPlayerConfirmTMP: {fileID: 1707421469}
+  player1ButtonOptions: {fileID: 2132925244}
+  player2ButtonOptions: {fileID: 421000872}
+  wagerAmount:
+    m_InternalValue: 0
+  isPlayer1Locked:
+    m_InternalValue: 0
 --- !u!1 &865524453
 GameObject:
   m_ObjectHideFlags: 0
@@ -20699,6 +20723,7 @@ MonoBehaviour:
   gameState: {fileID: 1327849085}
   gameOverState: {fileID: 933998747}
   resultState: {fileID: 488247722}
+  wagerState: {fileID: 860919361}
   leftPlayer: {fileID: 1473928113}
   rightPlayer: {fileID: 1189443711}
   leftPlayerName: 

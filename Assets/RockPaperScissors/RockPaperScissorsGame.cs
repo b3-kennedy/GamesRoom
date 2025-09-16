@@ -6,7 +6,7 @@ namespace Assets.RockPaperScissors
 {
     public class RockPaperScissorsGame : Game
     {
-        public enum GameState { MAIN_MENU, GAME, GAME_OVER, ROUND_RESULTS}
+        public enum GameState { MAIN_MENU, GAME, GAME_OVER, ROUND_RESULTS, WAGER}
 
         public NetworkVariable<GameState> netGameState = new NetworkVariable<GameState>(
             GameState.MAIN_MENU,
@@ -19,10 +19,9 @@ namespace Assets.RockPaperScissors
 
         public MainMenu mainMenuState;
         public RockPaperScissors.GameState gameState;
-
         public GameOver gameOverState;
-
         public Result resultState;
+        public Wager wagerState;
 
         public GameObject leftPlayer;
         public GameObject rightPlayer;
@@ -42,6 +41,7 @@ namespace Assets.RockPaperScissors
             gameState.gameObject.SetActive(false);
             resultState.gameObject.SetActive(false);
             gameOverState.gameObject.SetActive(false);
+            wagerState.gameObject.SetActive(false);
         }
 
         void Awake()
@@ -50,6 +50,7 @@ namespace Assets.RockPaperScissors
             gameState.game = this;
             resultState.game = this;
             gameOverState.game = this;
+            wagerState.game = this;
 
         }
     
@@ -169,6 +170,9 @@ namespace Assets.RockPaperScissors
                 case GameState.ROUND_RESULTS:
                     resultState.OnStateExit();
                     break;
+                case GameState.WAGER:
+                    wagerState.OnStateExit();
+                    break;
             }
         }
 
@@ -190,6 +194,10 @@ namespace Assets.RockPaperScissors
 
                 case GameState.ROUND_RESULTS:
                     resultState.OnStateEnter();
+                    break;
+
+                case GameState.WAGER:
+                    wagerState.OnStateEnter();
                     break;
             }
         }
