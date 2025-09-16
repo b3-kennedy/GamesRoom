@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using TMPro;
 using Unity.Netcode;
@@ -27,6 +28,13 @@ namespace Assets.RockPaperScissors
         public GameObject rightScissors;
 
         public TextMeshPro winnerTMP;
+        public TextMeshPro leftPlayerNameTMP;
+        public TextMeshPro rightPlayerNameTMP;
+        public TextMeshPro leftScoreTMP;
+        public TextMeshPro rightScoreTMP;
+
+        public NetworkVariable<int> leftScore;
+        public NetworkVariable<int> rightScore;
 
         void Start()
         {
@@ -34,7 +42,12 @@ namespace Assets.RockPaperScissors
             {
                 rpsGame = rps;
             }
+
+            leftScore.OnValueChanged += LeftScoreChanged;
+            rightScore.OnValueChanged += RightScoreChanged;
         }
+
+
 
         public override void OnStateEnter()
         {
@@ -51,26 +64,32 @@ namespace Assets.RockPaperScissors
             if(rpsGame.gameState.LeftSelectedItem.Value == GameState.SelectedItem.ROCK && rpsGame.gameState.RightSelectedItem.Value == GameState.SelectedItem.SCISSORS)
             {
                 resultState.Value = ResultState.LEFT_WIN;
+                leftScore.Value++;
             }
             else if(rpsGame.gameState.LeftSelectedItem.Value == GameState.SelectedItem.PAPER && rpsGame.gameState.RightSelectedItem.Value == GameState.SelectedItem.ROCK)
             {
                 resultState.Value = ResultState.LEFT_WIN;
+                leftScore.Value++;
             }
             else if (rpsGame.gameState.LeftSelectedItem.Value == GameState.SelectedItem.SCISSORS && rpsGame.gameState.RightSelectedItem.Value == GameState.SelectedItem.PAPER)
             {
                 resultState.Value = ResultState.LEFT_WIN;
+                leftScore.Value++;
             }
             else if (rpsGame.gameState.LeftSelectedItem.Value == GameState.SelectedItem.ROCK && rpsGame.gameState.RightSelectedItem.Value == GameState.SelectedItem.PAPER)
             {
                 resultState.Value = ResultState.RIGHT_WIN;
+                rightScore.Value++;
             }
             else if (rpsGame.gameState.LeftSelectedItem.Value == GameState.SelectedItem.PAPER && rpsGame.gameState.RightSelectedItem.Value == GameState.SelectedItem.SCISSORS)
             {
                 resultState.Value = ResultState.RIGHT_WIN;
+                rightScore.Value++;
             }
             else if (rpsGame.gameState.LeftSelectedItem.Value == GameState.SelectedItem.SCISSORS && rpsGame.gameState.RightSelectedItem.Value == GameState.SelectedItem.ROCK)
             {
                 resultState.Value = ResultState.RIGHT_WIN;
+                rightScore.Value++;
             }
             else if(rpsGame.gameState.LeftSelectedItem.Value == rpsGame.gameState.RightSelectedItem.Value)
             {
@@ -119,6 +138,10 @@ namespace Assets.RockPaperScissors
                 rightPaper.SetActive(false);
                 rightScissors.SetActive(true);
             }
+
+            leftPlayerNameTMP.text = rpsGame.leftPlayerName;
+            rightPlayerNameTMP.text = rpsGame.rightPlayerName;
+            
             
             if(result == ResultState.LEFT_WIN)
             {
@@ -138,7 +161,17 @@ namespace Assets.RockPaperScissors
                 StartCoroutine(BackToGame());
             }
         }
-        
+
+        private void RightScoreChanged(int previousValue, int newValue)
+        {
+            rightScoreTMP.text = newValue.ToString();
+        }
+
+        private void LeftScoreChanged(int previousValue, int newValue)
+        {
+            leftScoreTMP.text = newValue.ToString();
+        }
+
         IEnumerator BackToGame()
         {
             yield return new WaitForSeconds(3);
