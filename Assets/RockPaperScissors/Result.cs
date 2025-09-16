@@ -102,14 +102,12 @@ namespace Assets.RockPaperScissors
                 rpsGame.gameOverState.winnerTMP.text = $"{rpsGame.rightPlayerName} Wins!";
                 rpsGame.rightPlayer.GetComponent<RPSPlayer>().playerObject.GetComponent<SteamPlayer>().credits.Value += 0;
                 rpsGame.leftPlayer.GetComponent<RPSPlayer>().playerObject.GetComponent<SteamPlayer>().credits.Value -= 0;
-                rpsGame.ChangeStateServerRpc(RockPaperScissorsGame.GameState.GAME_OVER);
             }
             else if(leftScore.Value >= 3)
             {
                 rpsGame.gameOverState.winnerTMP.text = $"{rpsGame.leftPlayerName} Wins!";
                 rpsGame.rightPlayer.GetComponent<RPSPlayer>().playerObject.GetComponent<SteamPlayer>().credits.Value -= 0;
                 rpsGame.leftPlayer.GetComponent<RPSPlayer>().playerObject.GetComponent<SteamPlayer>().credits.Value += 0;
-                rpsGame.ChangeStateServerRpc(RockPaperScissorsGame.GameState.GAME_OVER);
             }
             
             
@@ -181,26 +179,29 @@ namespace Assets.RockPaperScissors
         private void RightScoreChanged(int previousValue, int newValue)
         {
             rightScoreTMP.text = newValue.ToString();
-            if (IsServer && leftScore.Value < 3 && rightScore.Value < 3)
-            {
-                StartCoroutine(BackToGame());
-            }
+            StartCoroutine(BackToGame());
         }
 
         private void LeftScoreChanged(int previousValue, int newValue)
         {
             leftScoreTMP.text = newValue.ToString();
-            if (IsServer && leftScore.Value < 3 && rightScore.Value < 3)
-            {
-                StartCoroutine(BackToGame());
-            }
+            StartCoroutine(BackToGame());
+
         }
 
         IEnumerator BackToGame()
         {
             yield return new WaitForSeconds(3);
             rpsGame.ResetPlayersServerRpc();
-            rpsGame.ChangeStateServerRpc(RockPaperScissorsGame.GameState.GAME);
+            if (IsServer && leftScore.Value < 3 && rightScore.Value < 3)
+            {
+                rpsGame.ChangeStateServerRpc(RockPaperScissorsGame.GameState.GAME);
+            }
+            else if(IsServer && leftScore.Value >= 3 && rightScore.Value >= 3)
+            {
+                rpsGame.ChangeStateServerRpc(RockPaperScissorsGame.GameState.GAME_OVER);
+            }
+            
         }
 
         public override void OnStateUpdate()
