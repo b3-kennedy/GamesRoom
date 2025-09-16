@@ -23,6 +23,10 @@ namespace Assets.RockPaperScissors
 
         public override void OnStateUpdate()
         {
+            if(Input.GetKeyDown(KeyCode.R))
+            {
+                rpsGame.ResetServerRpc();
+            }
         }
 
         public override void OnStateExit()

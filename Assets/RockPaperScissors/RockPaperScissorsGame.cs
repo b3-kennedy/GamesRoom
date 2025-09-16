@@ -119,6 +119,8 @@ namespace Assets.RockPaperScissors
         {
             connectedPlayers.Clear();
             connectedPlayersCount.Value = 0;
+            resultState.leftScore.Value = 0;
+            resultState.rightScore.Value = 0;
             ChangeStateServerRpc(GameState.MAIN_MENU);
         }
 
