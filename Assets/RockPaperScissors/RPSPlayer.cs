@@ -99,6 +99,24 @@ namespace Assets.RockPaperScissors
                 }
                 Select();
             }
+            
+            if(rpsGame.netGameState.Value == RockPaperScissorsGame.GameState.WAGER)
+            {
+                if(Input.GetKeyDown(KeyCode.RightArrow))
+                {
+                    rpsGame.wagerState.ChangeWagerAmountServerRpc(10);
+                }
+                
+                if(Input.GetKeyDown(KeyCode.LeftArrow))
+                {
+                    rpsGame.wagerState.ChangeWagerAmountServerRpc(-10);
+                }
+                
+                if(Input.GetKeyDown(KeyCode.Return))
+                {
+                    rpsGame.wagerState.ChangePlayer1LockedInStateServerRpc();
+                }
+            }
         }
         
         void Select()
