@@ -102,7 +102,7 @@ namespace Assets.RockPaperScissors
                 Select();
             }
             
-            if(rpsGame.netGameState.Value == RockPaperScissorsGame.GameState.WAGER)
+            if(rpsGame.netGameState.Value == RockPaperScissorsGame.GameState.WAGER && isLeftPlayer)
             {
                 if(Input.GetKeyDown(KeyCode.RightArrow))
                 {
@@ -117,6 +117,22 @@ namespace Assets.RockPaperScissors
                 if(Input.GetKeyDown(KeyCode.Return))
                 {
                     rpsGame.wagerState.ChangePlayer1LockedInStateServerRpc();
+                }
+            }
+
+            if (rpsGame.netGameState.Value == RockPaperScissorsGame.GameState.WAGER && !isLeftPlayer)
+            {
+                if (rpsGame.wagerState.isPlayer1Locked.Value)
+                {
+                    if (Input.GetKeyDown(KeyCode.Y))
+                    {
+                        rpsGame.ChangeStateServerRpc(RockPaperScissorsGame.GameState.GAME);
+                    }
+
+                    if (Input.GetKeyDown(KeyCode.N))
+                    {
+                        rpsGame.wagerState.ChangePlayer1LockedInStateServerRpc();
+                    }
                 }
             }
         }
