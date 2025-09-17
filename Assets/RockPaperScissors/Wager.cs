@@ -52,6 +52,7 @@ namespace Assets.RockPaperScissors
         [ServerRpc(RequireOwnership = false)]
         public void ChangeWagerAmountServerRpc(int amount)
         {
+            Debug.Log(player1);
             int player1Credits = player1.GetComponent<SteamPlayer>().credits.Value;
             int player2Credits = player2.GetComponent<SteamPlayer>().credits.Value;
 
