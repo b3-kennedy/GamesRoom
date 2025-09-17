@@ -61,6 +61,8 @@ namespace Assets.RockPaperScissors
         {
             if (!IsOwner) return;
 
+            if (!rpsGame) return;
+
             if (isPicking.Value && rpsGame.gameState.pickScreen.activeSelf)
             {
                 if(Input.GetKeyDown(KeyCode.DownArrow))
