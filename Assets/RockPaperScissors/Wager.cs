@@ -34,6 +34,8 @@ namespace Assets.RockPaperScissors
             {
                 player1 = rpsGame.connectedPlayers[0].gameObject;
                 player2 = rpsGame.connectedPlayers[1].gameObject;
+                Debug.Log(player1);
+                
                 player1Name = player1.GetComponent<SteamPlayer>().playerName;
                 player2Name = player2.GetComponent<SteamPlayer>().playerName;
                 SetChooseTextClientRpc(player1Name, player2Name);
