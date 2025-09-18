@@ -10,6 +10,7 @@ namespace Assets.Dodger
 
         public MainMenu mainMenuState;
         public Dodger.GameState gameState;
+        public GameOver gameOverState;
         public GameObject playerPrefab;
         DodgerPlayer player;
 
@@ -127,6 +128,7 @@ namespace Assets.Dodger
                     gameState.OnStateExit();             
                     break;
                 case GameState.GAME_OVER:
+                    gameOverState.OnStateExit();
                     break;
             }
         }
@@ -144,6 +146,7 @@ namespace Assets.Dodger
                     break;
 
                 case GameState.GAME_OVER:
+                    gameOverState.OnStateEnter();
                     break;
             }
         }
