@@ -54,19 +54,27 @@ namespace Assets.Dodger
 
             if(netGameState.Value == GameState.MAIN_MENU)
             {
-                player = Instantiate(playerPrefab, transform).GetComponent<DodgerPlayer>();
+                player = Instantiate(playerPrefab).GetComponent<DodgerPlayer>();
                 player.transform.position = new Vector3(-212.630005f, -120f, 143.293686f); 
                 player.GetComponent<NetworkObject>().SpawnWithOwnership(clientID);
                 ChangeStateServerRpc(GameState.GAME);
+                ulong playerObjID = player.GetComponent<NetworkObject>().NetworkObjectId;
                 ulong netObjID = NetworkManager.Singleton.ConnectedClients[clientID].PlayerObject.GetComponent<NetworkObject>().NetworkObjectId;
-                OnBeginClientRpc(netObjID);
+                OnBeginClientRpc(netObjID, playerObjID);
             }
 
         }
 
         [ClientRpc]
-        void OnBeginClientRpc(ulong netID)
+        void OnBeginClientRpc(ulong netID, ulong playerObjID)
         {
+            if (NetworkManager.SpawnManager.SpawnedObjects.TryGetValue(playerObjID, out var p))
+            {
+                player = p.GetComponent<DodgerPlayer>();
+
+
+            }
+
             if (NetworkManager.SpawnManager.SpawnedObjects.TryGetValue(netID, out var playerObj))
             {
                 player.playerObject = playerObj.gameObject;
