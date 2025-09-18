@@ -1,9 +1,10 @@
+using Unity.Netcode;
 using UnityEngine;
 
 
 namespace Assets.Dodger
 {
-    public class DodgerPlayer : MonoBehaviour
+    public class DodgerPlayer : NetworkBehaviour
     {
         public float speed = 10f;
         Vector3 moveVec;
@@ -31,6 +32,8 @@ namespace Assets.Dodger
         // Update is called once per frame
         void Update()
         {
+            if (!IsOwner) return;
+        
             float x = Input.GetAxisRaw("ArrowHorizontal");
             float y = Input.GetAxisRaw("ArrowVertical");
 

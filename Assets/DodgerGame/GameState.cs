@@ -44,7 +44,11 @@ namespace Assets.Dodger
         public override void OnStateEnter()
         {
             gameObject.SetActive(true);
-            SpawnServerRpc();
+            if(IsServer)
+            {
+                SpawnServerRpc();
+            }
+            
         }
         
 
