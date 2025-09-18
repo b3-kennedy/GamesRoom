@@ -72,6 +72,16 @@ namespace Assets.Dodger
             lastDashTime = Time.time;
         }
 
+        void OnTriggerEnter(Collider other)
+        {
+            if (!IsOwner) return;
+            
+            if(other.CompareTag("DodgeGoal"))
+            {
+                game.gameState.IncreaseScoreServerRpc(1);
+            }
+        }
+
 
     }
 }

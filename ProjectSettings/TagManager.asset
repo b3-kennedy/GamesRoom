@@ -17,6 +17,7 @@ TagManager:
   - Ball
   - LeftGoal
   - RightGoal
+  - DodgeGoal
   layers:
   - Default
   - TransparentFX
