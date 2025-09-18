@@ -14,9 +14,9 @@ namespace Assets.Dodger
         public Transform obstacleParent;
         public GameObject obstaclePrefab;
         public float baseSpeed = 1f;
-        float speed;
+        [HideInInspector] public float speed;
         public float distanceBetweenPipes = 3f;
-        float speedTimer;
+        [HideInInspector] public float speedTimer;
         public float speedIncreaseInterval = 30f;
         public float speedIncrease = 0.1f;
         public List<GameObject> pipeList;

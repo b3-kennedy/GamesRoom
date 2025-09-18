@@ -7472,7 +7472,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: PLAYER 1 WINS
+  m_text: 'SCORE: 0'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -9877,7 +9877,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &696912971
 Transform:
   m_ObjectHideFlags: 0
@@ -31084,8 +31084,9 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   mainMenuState: {fileID: 1648555290}
   gameState: {fileID: 1650984656}
-  gameOverState: {fileID: 0}
+  gameOverState: {fileID: 1858687507}
   playerPrefab: {fileID: 149083696765562152, guid: 00eb2061244be1a4882f28f644ec234b, type: 3}
+  player: {fileID: 0}
   playerSpawn: {fileID: 944715335}
   netGameState:
     m_InternalValue: 0
@@ -31577,6 +31578,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   game: {fileID: 0}
+  scoreTMP: {fileID: 526186740}
 --- !u!1 &1891467920
 GameObject:
   m_ObjectHideFlags: 0

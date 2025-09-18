@@ -1,3 +1,5 @@
+using TMPro;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace Assets.Dodger
@@ -6,6 +8,7 @@ namespace Assets.Dodger
     {
 
         DodgerGame dodgerGame;
+        public TextMeshPro scoreTMP;
 
         void Start()
         {
@@ -13,16 +16,26 @@ namespace Assets.Dodger
             {
                 dodgerGame = dg;
             }
+            scoreTMP.text = $"Score: {dodgerGame.gameState.score.Value}";
         }
 
         public override void OnStateEnter()
         {
-            gameObject.SetActive(true);
+            gameObject.SetActive(true);            
+
+        }
+        
+        public void UpdateScore()
+        {
+
         }
 
         public override void OnStateUpdate()
         {
-            base.OnStateUpdate();
+            if(Input.GetKeyDown(KeyCode.R))
+            {
+                dodgerGame.ResetServerRpc();
+            }
         }
 
         public override void OnStateExit()

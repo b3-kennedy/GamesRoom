@@ -12,7 +12,7 @@ namespace Assets.Dodger
         public Dodger.GameState gameState;
         public GameOver gameOverState;
         public GameObject playerPrefab;
-        DodgerPlayer player;
+        [HideInInspector] public DodgerPlayer player;
 
         public Transform playerSpawn;
 
@@ -35,7 +35,7 @@ namespace Assets.Dodger
             mainMenuState.gameObject.SetActive(true);
             gameState.gameObject.SetActive(false);
             //resultState.gameObject.SetActive(false);
-            //gameOverState.gameObject.SetActive(false);
+            gameOverState.gameObject.SetActive(false);
             //wagerState.gameObject.SetActive(false);
         }
 
@@ -44,7 +44,7 @@ namespace Assets.Dodger
             mainMenuState.game = this;
             gameState.game = this;
             //resultState.game = this;
-            //gameOverState.game = this;
+            gameOverState.game = this;
             //wagerState.game = this;
 
         }
@@ -92,6 +92,8 @@ namespace Assets.Dodger
         public override void ResetServerRpc()
         {
             ChangeStateServerRpc(GameState.MAIN_MENU);
+            gameState.score.Value = 0;
+            player.GetComponent<NetworkObject>().Despawn(true);
             ResetClientRpc();
         }
         
@@ -101,6 +103,15 @@ namespace Assets.Dodger
             if (player.playerObject)
             {
                 player.playerObject.GetComponent<PlayerMovement>().canJump = true;
+                gameState.speed = gameState.baseSpeed;
+                
+                for (int i = gameState.pipeList.Count - 1; i >= 0 ; i--)
+                {
+                    Destroy(gameState.pipeList[i]);
+                }
+                gameState.pipeList.Clear();
+                gameState.speedTimer = 0;
+                
             }
         }
 

@@ -79,11 +79,13 @@ namespace Assets.Dodger
             if(other.CompareTag("DodgeGoal"))
             {
                 game.gameState.IncreaseScoreServerRpc(1);
+                Destroy(other.gameObject);
             }
             
             if(other.CompareTag("DodgeKillBox"))
             {
                 game.ChangeStateServerRpc(DodgerGame.GameState.GAME_OVER);
+                game.gameOverState.UpdateScore();
             }
         }
 
