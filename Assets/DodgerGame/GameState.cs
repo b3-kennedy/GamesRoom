@@ -66,20 +66,22 @@ namespace Assets.Dodger
                     pipeList.RemoveAt(i);
                 }
             }
-            
-            
+
+            speedTimer += Time.deltaTime;
+            if (speedTimer >= speedIncreaseInterval)
+            {
+                speed += speedIncrease;
+                speedTimer = 0;
+            }
+
+
             if (!IsServer) return;
             
 
 
             Spawn();
 
-            speedTimer += Time.deltaTime;
-            if(speedTimer >= speedIncreaseInterval)
-            {
-                speed += speedIncrease;
-                speedTimer = 0;
-            }            
+         
 
         }
         
