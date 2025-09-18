@@ -9,6 +9,8 @@ namespace Assets.Dodger
 
         DodgerGame dodgerGame;
 
+        public GameObject playerPrefab;
+
         public Transform minSpawn;
         public Transform maxSpawn;
 
@@ -44,6 +46,7 @@ namespace Assets.Dodger
             gameObject.SetActive(true);
             SpawnServerRpc();
         }
+        
 
         public override void OnStateUpdate()
         {
