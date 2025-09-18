@@ -80,6 +80,11 @@ namespace Assets.Dodger
             {
                 game.gameState.IncreaseScoreServerRpc(1);
             }
+            
+            if(other.CompareTag("DodgeKillBox"))
+            {
+                game.ChangeStateServerRpc(DodgerGame.GameState.GAME_OVER);
+            }
         }
 
 

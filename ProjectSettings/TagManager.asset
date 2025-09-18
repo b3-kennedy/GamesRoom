@@ -18,6 +18,7 @@ TagManager:
   - LeftGoal
   - RightGoal
   - DodgeGoal
+  - DodgeKillBox
   layers:
   - Default
   - TransparentFX
