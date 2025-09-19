@@ -6,15 +6,18 @@ namespace Assets.Dodger
 {
     public class DodgerGame : Game
     {
-        public enum GameState { MAIN_MENU, GAME, GAME_OVER }
+        public enum GameState { MAIN_MENU, GAME, GAME_OVER, LEADERBOARDS }
 
         public MainMenu mainMenuState;
         public Dodger.GameState gameState;
         public GameOver gameOverState;
+        public Leaderboards leaderboardState;
         public GameObject playerPrefab;
         [HideInInspector] public DodgerPlayer player;
 
         public Transform playerSpawn;
+
+        ulong playerID;
 
         
 
@@ -34,9 +37,9 @@ namespace Assets.Dodger
 
             mainMenuState.gameObject.SetActive(true);
             gameState.gameObject.SetActive(false);
-            //resultState.gameObject.SetActive(false);
             gameOverState.gameObject.SetActive(false);
-            //wagerState.gameObject.SetActive(false);
+            leaderboardState.gameObject.SetActive(false);
+
         }
 
         void Awake()
@@ -58,16 +61,16 @@ namespace Assets.Dodger
                 player = Instantiate(playerPrefab).GetComponent<DodgerPlayer>();
                 player.transform.position = new Vector3(-212.630005f, -120f, 143.293686f); 
                 player.GetComponent<NetworkObject>().SpawnWithOwnership(clientID);
-                ChangeStateServerRpc(GameState.GAME);
+                ChangeStateServerRpc(GameState.LEADERBOARDS);
                 ulong playerObjID = player.GetComponent<NetworkObject>().NetworkObjectId;
                 ulong netObjID = NetworkManager.Singleton.ConnectedClients[clientID].PlayerObject.GetComponent<NetworkObject>().NetworkObjectId;
-                OnBeginClientRpc(netObjID, playerObjID);
+                OnBeginClientRpc(netObjID, playerObjID, clientID);
             }
 
         }
 
         [ClientRpc]
-        void OnBeginClientRpc(ulong netID, ulong playerObjID)
+        void OnBeginClientRpc(ulong netID, ulong playerObjID, ulong clientID)
         {
             if (NetworkManager.SpawnManager.SpawnedObjects.TryGetValue(playerObjID, out var p))
             {
@@ -85,8 +88,43 @@ namespace Assets.Dodger
 
             }
 
+            playerID = clientID;
+
 
         }
+
+        [ServerRpc(RequireOwnership = false)]
+        void CheckScoreServerRpc(ulong playerID)
+        {
+            var playerObj = NetworkManager.Singleton.ConnectedClients[playerID].PlayerObject;
+            CheckScoreClientRpc(playerObj.GetComponent<NetworkObject>().NetworkObjectId);
+        }
+
+        [ClientRpc]
+        void CheckScoreClientRpc(ulong objectID)
+        {
+            if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(objectID, out var player))
+            {
+                if (gameState.score.Value > LeaderboardHolder.Instance.GetHighScore(LeaderboardHolder.GameType.DODGER))
+                {
+                    if (IsServer)
+                    {
+                        player.GetComponent<PlayerSaver>().dodgerHighScore.Value = gameState.score.Value;
+                    }
+                }
+                else if (gameState.score.Value > player.GetComponent<PlayerSaver>().dodgerHighScore.Value)
+                {
+                    if (IsServer)
+                    {
+                        player.GetComponent<PlayerSaver>().dodgerHighScore.Value = gameState.score.Value;
+                    }
+                }
+
+
+            }
+            LeaderboardHolder.Instance.UpdateDodgeLeaderboardServerRpc();
+        }
+
 
         [ServerRpc(RequireOwnership = false)]
         public override void ResetServerRpc()
@@ -112,6 +150,16 @@ namespace Assets.Dodger
                 gameState.pipeList.Clear();
                 gameState.speedTimer = 0;
                 
+            }
+        }
+
+        void Update()
+        {
+            if (NetworkManager.Singleton.LocalClientId != playerID) return;
+            
+            if(Input.GetKeyDown(KeyCode.E) && netGameState.Value == GameState.LEADERBOARDS)
+            {
+                ChangeStateServerRpc(GameState.GAME);
             }
         }
 
@@ -141,6 +189,9 @@ namespace Assets.Dodger
                 case GameState.GAME_OVER:
                     gameOverState.OnStateExit();
                     break;
+                case GameState.LEADERBOARDS:
+                    leaderboardState.OnStateExit();
+                    break;
             }
         }
 
@@ -158,6 +209,10 @@ namespace Assets.Dodger
 
                 case GameState.GAME_OVER:
                     gameOverState.OnStateEnter();
+                    CheckScoreServerRpc(playerID);
+                    break;
+                case GameState.LEADERBOARDS:
+                    leaderboardState.OnStateEnter();
                     break;
             }
         }

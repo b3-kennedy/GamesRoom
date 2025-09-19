@@ -7,6 +7,7 @@ public class PlayerData
 {
     public int creditCount;
     public int flappyBirdHighScore;
+    public int dodgerHighScore;
 }
 
 

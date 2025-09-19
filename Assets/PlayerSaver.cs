@@ -9,6 +9,7 @@ public class PlayerSaver : NetworkBehaviour
 {
 
     public NetworkVariable<int> fbHighScore;
+    public NetworkVariable<int> dodgerHighScore;
 
     public override void OnNetworkSpawn()
     {
@@ -69,21 +70,23 @@ public class PlayerSaver : NetworkBehaviour
             SetPlayerCreditsServerRpc(NetworkManager.Singleton.LocalClientId, creditCount);
         }
 
-        LoadScoreServerRpc(saveDataWrapper.playerData.flappyBirdHighScore);
+        LoadScoreServerRpc(saveDataWrapper.playerData.flappyBirdHighScore, saveDataWrapper.playerData.dodgerHighScore);
         StartCoroutine(Wait());
     }
 
     [ServerRpc(RequireOwnership = false)]
-    void LoadScoreServerRpc(int score)
+    void LoadScoreServerRpc(int flappyScore, int dodgerScore)
     {
-        fbHighScore.Value = score;
+        fbHighScore.Value = flappyScore;
+        dodgerHighScore.Value = dodgerScore;
     }
 
     //hacky way to ensure object is spawned, for some reason it didnt work without waiting even though this script is on the player object :)
     IEnumerator Wait()
     {
         yield return new WaitForSeconds(3f); 
-        LeaderboardHolder.Instance.UpdateLeaderboardServerRpc();
+        LeaderboardHolder.Instance.UpdateFlappyBirdLeaderboardServerRpc();
+        LeaderboardHolder.Instance.UpdateDodgeLeaderboardServerRpc();
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -118,8 +121,8 @@ public class PlayerSaver : NetworkBehaviour
         saveDataWrapper.playerData = new PlayerData
         {
             creditCount = GetComponent<SteamPlayer>().credits.Value,
-            flappyBirdHighScore = fbHighScore.Value
-            
+            flappyBirdHighScore = fbHighScore.Value,
+            dodgerHighScore = dodgerHighScore.Value
         };
 
         // Write back to file
