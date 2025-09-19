@@ -16,18 +16,20 @@ namespace Assets.Dodger
             {
                 dodgerGame = dg;
             }
-            scoreTMP.text = $"Score: {dodgerGame.gameState.score.Value}";
+            UpdateScore();
         }
 
         public override void OnStateEnter()
         {
-            gameObject.SetActive(true);            
+            gameObject.SetActive(true);
+            UpdateScore();
 
         }
         
         public void UpdateScore()
         {
-
+            if (!dodgerGame) return;
+            scoreTMP.text = $"Score: {dodgerGame.gameState.score.Value}";
         }
 
         public override void OnStateUpdate()

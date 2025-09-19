@@ -19,6 +19,7 @@ TagManager:
   - RightGoal
   - DodgeGoal
   - DodgeKillBox
+  - SpeedPowerUp
   layers:
   - Default
   - TransparentFX

@@ -150,12 +150,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  speed: 10
+  baseSpeed: 10
   game: {fileID: 0}
   playerObject: {fileID: 0}
   dashSpeed: 25
   dashDuration: 0.1
-  dashCooldown: 1
+  dashCooldown: 0.5
 --- !u!54 &5419141913673142350
 Rigidbody:
   m_ObjectHideFlags: 0

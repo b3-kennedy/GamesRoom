@@ -6,7 +6,8 @@ namespace Assets.Dodger
 {
     public class DodgerPlayer : NetworkBehaviour
     {
-        public float speed = 10f;
+        public float baseSpeed = 10f;
+        float speed;
         Vector3 moveVec;
 
         [HideInInspector] public DodgerGame game;
@@ -27,6 +28,7 @@ namespace Assets.Dodger
         void Start()
         {
             rb = GetComponent<Rigidbody>();
+            speed = baseSpeed;
         }
 
         // Update is called once per frame
@@ -54,7 +56,7 @@ namespace Assets.Dodger
         {
             if (isDashing)
             {
-                rb.linearVelocity = moveVec * dashSpeed;
+                rb.linearVelocity = moveVec * (speed + 15);
             }
             else
             {
@@ -86,6 +88,12 @@ namespace Assets.Dodger
             {
                 game.ChangeStateServerRpc(DodgerGame.GameState.GAME_OVER);
                 game.gameOverState.UpdateScore();
+            }
+            
+            if(other.CompareTag("SpeedPowerUp"))
+            {
+                speed += 0.5f;
+                Destroy(other.gameObject);
             }
         }
 

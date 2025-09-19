@@ -11,6 +11,10 @@ namespace Assets.Dodger
         public GameObject playerPrefab;
         public Transform minSpawn;
         public Transform maxSpawn;
+        public Transform topLeft;
+        public Transform topRight;
+        public Transform bottomLeft;
+        public Transform bottomRight;
         public Transform obstacleParent;
         public GameObject obstaclePrefab;
         public float baseSpeed = 1f;
@@ -22,6 +26,15 @@ namespace Assets.Dodger
         public List<GameObject> pipeList;
         public NetworkVariable<int> score;
         public TextMeshPro scoreTMP;
+        
+        public GameObject powerUpPrefab;
+
+        float powerUpTimer;
+
+        float powerUpSpawnTime;
+        
+        public float minPowerUpSpawnTime = 5f;
+        public float maxPowerUpSpawnTime = 120f;
         
         void Start()
         {
@@ -46,7 +59,9 @@ namespace Assets.Dodger
             if(IsServer)
             {
                 SpawnServerRpc();
+                powerUpSpawnTime = Random.Range(minPowerUpSpawnTime, maxPowerUpSpawnTime);
             }
+            
             
         }
         
@@ -80,8 +95,22 @@ namespace Assets.Dodger
 
             Spawn();
 
+            powerUpTimer += Time.deltaTime;
+            if(powerUpTimer >= powerUpSpawnTime)
+            {
+                powerUpSpawnTime = Random.Range(minPowerUpSpawnTime, maxPowerUpSpawnTime);
+                Vector3 spawn = GetRandomPoint();
+                SpawnPowerUpClientRpc(spawn);
+                powerUpTimer = 0;
+            }
          
 
+        }
+        
+        [ClientRpc]
+        void SpawnPowerUpClientRpc(Vector3 spawn)
+        {
+            GameObject powerUp = Instantiate(powerUpPrefab, spawn, Quaternion.identity);
         }
         
         void Spawn()
@@ -122,6 +151,13 @@ namespace Assets.Dodger
             GameObject obstacle = Instantiate(obstaclePrefab, obstacleParent);
             pipeList.Add(obstacle);
             obstacle.transform.position = pos;
+        }
+        
+        Vector3 GetRandomPoint()
+        {
+            float randomX = Random.Range(topLeft.position.x, topRight.position.x);
+            float randomY = Random.Range(topLeft.position.y, bottomLeft.position.y);
+            return new Vector3(randomX, randomY, topLeft.position.z);
         }
         
         public float GetSpawnPos()
