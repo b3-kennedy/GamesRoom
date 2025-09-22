@@ -26,7 +26,6 @@ public class CombineBall : NetworkBehaviour
 
     void OnCollisionEnter(Collision other)
     {
-        if (!IsServer) return;
         CombineBall otherBall = other.gameObject.GetComponent<CombineBall>();
         if (otherBall != null && otherBall.ballType == ballType)
         {
@@ -34,9 +33,9 @@ public class CombineBall : NetworkBehaviour
             {
                 if(otherBall.ballType != BallType.OMEGA)
                 {
-                    gameObject.GetComponent<NetworkObject>().Despawn(true);
-                    other.gameObject.GetComponent<NetworkObject>().Despawn(true);
-                    SpawnNextBallServerRpc(other.transform.position);
+                    ulong ball1ID = gameObject.GetComponent<NetworkObject>().NetworkObjectId;
+                    ulong ball2ID = gameObject.GetComponent<NetworkObject>().NetworkObjectId;
+                    SpawnNextBallServerRpc(ball1ID, ball2ID, other.transform.position);
                 }
 
                 
@@ -45,8 +44,18 @@ public class CombineBall : NetworkBehaviour
     }
     
     [ServerRpc(RequireOwnership = false)]
-    void SpawnNextBallServerRpc(Vector3 pos)
+    void SpawnNextBallServerRpc(ulong ball1ID, ulong ball2ID, Vector3 pos)
     {
+        if(NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(ball1ID, out var ball1))
+        {
+            ball1.Despawn();
+        }
+
+        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(ball2ID, out var ball2))
+        {
+            ball2.Despawn();
+        }
+
         if (!nextBall) return;
         GameObject ball = Instantiate(nextBall, pos, Quaternion.identity);
         ball.GetComponent<NetworkObject>().Spawn();
