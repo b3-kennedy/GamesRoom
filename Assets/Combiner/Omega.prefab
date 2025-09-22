@@ -13,11 +13,11 @@ GameObject:
   - component: {fileID: 3604055431096870008}
   - component: {fileID: 6256060831458993754}
   - component: {fileID: 3685327291037249757}
-  - component: {fileID: 5318181331591570890}
+  - component: {fileID: 813153662811001994}
   - component: {fileID: 8685140667080112168}
-  - component: {fileID: -8431085657432419533}
+  - component: {fileID: -1226614301794084369}
   m_Layer: 0
-  m_Name: SmallBall
+  m_Name: Omega
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -33,7 +33,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 1.51}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalScale: {x: 5.5, y: 5.5, z: 5.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -69,7 +69,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 4e6ac71926d9bc64e867dbe93e24aebb, type: 2}
+  - {fileID: 2100000, guid: 47789f78de3cf1a45bc15625e88e1863, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -139,7 +139,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 8
   m_CollisionDetection: 0
---- !u!114 &5318181331591570890
+--- !u!114 &813153662811001994
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -151,7 +151,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3073786886
+  GlobalObjectIdHash: 4146611972
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -177,12 +177,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  ballType: 0
-  nextBall: {fileID: 5749909929823938717, guid: 169b4a628a2b780468ce13d8e8fc0ae0, type: 3}
+  ballType: 10
+  nextBall: {fileID: 0}
   follower: {fileID: 0}
   isDropped:
     m_InternalValue: 0
---- !u!114 &-8431085657432419533
+--- !u!114 &-1226614301794084369
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

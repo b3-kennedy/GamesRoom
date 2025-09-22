@@ -28,13 +28,14 @@ namespace Assets.Combiner
             }
             combinerPlayer = combinerGame.player;
             playerOwnerID = combinerPlayer.GetComponent<NetworkObject>().OwnerClientId;
+            SpawnBallServerRpc();
 
         }
         public override void OnStateEnter()
         {
 
             gameObject.SetActive(true);
-            SpawnBallServerRpc();
+            
         }
 
         public override void OnStateUpdate()
@@ -77,6 +78,8 @@ namespace Assets.Combiner
                 ball.GetComponent<CombineBall>().follower = ballSpawn;
                 ball.GetComponent<Rigidbody>().isKinematic = true;
                 ball.transform.localPosition = Vector3.zero;
+                ball.GetComponent<Collider>().enabled = false;
+                combinerPlayer.GetComponent<BoxCollider>().size = ball.transform.localScale;
                 
             }
             

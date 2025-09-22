@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 3604055431096870008}
   - component: {fileID: 6256060831458993754}
   - component: {fileID: 3685327291037249757}
-  - component: {fileID: 8685140667080112168}
   - component: {fileID: 1694678776984735269}
+  - component: {fileID: 8685140667080112168}
   - component: {fileID: -2740725934816508356}
   m_Layer: 0
   m_Name: Medium
@@ -139,20 +139,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 8
   m_CollisionDetection: 0
---- !u!114 &8685140667080112168
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5749909929823938717}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb61355d1489df8458e273610547ee37, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ballType: 1
-  nextBall: {fileID: 5749909929823938717, guid: 52e17a7de4bc27e41b3268fe39b18d49, type: 3}
 --- !u!114 &1694678776984735269
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -178,6 +164,24 @@ MonoBehaviour:
   AutoObjectParentSync: 1
   SyncOwnerTransformWhenParented: 1
   AllowOwnerToParent: 0
+--- !u!114 &8685140667080112168
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5749909929823938717}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb61355d1489df8458e273610547ee37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  ballType: 1
+  nextBall: {fileID: 5749909929823938717, guid: 52e17a7de4bc27e41b3268fe39b18d49, type: 3}
+  follower: {fileID: 0}
+  isDropped:
+    m_InternalValue: 0
 --- !u!114 &-2740725934816508356
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -44,6 +44,7 @@ public class CombinerPlayer : NetworkBehaviour
         ball.transform.SetParent(null);
         ball.GetComponent<Rigidbody>().isKinematic = false;
         ball.GetComponent<CombineBall>().isDropped.Value = true;
+        ball.GetComponent<Collider>().enabled = true;
         ball.GetComponent<Rigidbody>().AddForce(-Vector3.up * 3f, ForceMode.Impulse);
     }
 

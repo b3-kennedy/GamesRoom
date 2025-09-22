@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CombineBall : NetworkBehaviour
 {
-    public enum BallType {SMALL, MEDIUM, BIG, HUGE, MASSIVE};
+    public enum BallType {SMALL, MEDIUM, BIG, HUGE, MASSIVE, HUMONGOUS, COLLOSAL, MOUNTAINOUS, GARGANTUAN, COSMIC, OMEGA};
     public BallType ballType;
 
     public GameObject nextBall;
@@ -31,19 +31,23 @@ public class CombineBall : NetworkBehaviour
         {
             if (GetInstanceID() < otherBall.GetInstanceID())
             {
-                Destroy(gameObject);
-                Destroy(other.gameObject);
-                SpawnNextBallServerRpc();
+                if(otherBall.ballType != BallType.OMEGA)
+                {
+                    Destroy(gameObject);
+                    Destroy(other.gameObject);
+                    SpawnNextBallServerRpc(other.transform.position);
+                }
+
                 
             }
         }
     }
     
     [ServerRpc(RequireOwnership = false)]
-    void SpawnNextBallServerRpc()
+    void SpawnNextBallServerRpc(Vector3 pos)
     {
         if (!nextBall) return;
-        GameObject ball = Instantiate(nextBall, transform.position, Quaternion.identity);
+        GameObject ball = Instantiate(nextBall, pos, Quaternion.identity);
         ball.GetComponent<NetworkObject>().Spawn();
         ball.GetComponent<CombineBall>().isDropped.Value = true;
     }
