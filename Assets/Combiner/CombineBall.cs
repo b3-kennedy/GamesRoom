@@ -26,6 +26,7 @@ public class CombineBall : NetworkBehaviour
 
     void OnCollisionEnter(Collision other)
     {
+        if (!IsServer) return;
         CombineBall otherBall = other.gameObject.GetComponent<CombineBall>();
         if (otherBall != null && otherBall.ballType == ballType)
         {
@@ -33,8 +34,8 @@ public class CombineBall : NetworkBehaviour
             {
                 if(otherBall.ballType != BallType.OMEGA)
                 {
-                    Destroy(gameObject);
-                    Destroy(other.gameObject);
+                    gameObject.GetComponent<NetworkObject>().Despawn(true);
+                    other.gameObject.GetComponent<NetworkObject>().Despawn(true);
                     SpawnNextBallServerRpc(other.transform.position);
                 }
 
