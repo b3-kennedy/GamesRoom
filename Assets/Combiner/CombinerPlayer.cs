@@ -30,31 +30,26 @@ public class CombinerPlayer : NetworkBehaviour
         {
             if(transform.GetChild(0).childCount > 0)
             {
-                GameObject ball = transform.GetChild(0).GetChild(0).gameObject;
-                ulong netObjectID = ball.GetComponent<NetworkObject>().NetworkObjectId;
-                DropBallServerRpc(netObjectID);
+
+                DropBallServerRpc();
 
             }
         }
     }
     
     [ServerRpc(RequireOwnership = false)]
-    void DropBallServerRpc(ulong netobjID)
+    void DropBallServerRpc()
     {
-        DropBallClientRpc(netobjID);
+        DropBallClientRpc();
     }
     
     [ClientRpc]
-    void DropBallClientRpc(ulong netObjID)
+    void DropBallClientRpc()
     {
-        if(NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(netObjID, out var ball))
-        {
-            ball.transform.SetParent(null);
-            ball.GetComponent<Rigidbody>().isKinematic = false;
-            ball.GetComponent<Rigidbody>().AddForce(-Vector3.up * 3f, ForceMode.Impulse);
-        }
-    
-
+        GameObject ball = transform.GetChild(0).GetChild(0).gameObject;
+        ball.transform.SetParent(null);
+        ball.GetComponent<Rigidbody>().isKinematic = false;
+        ball.GetComponent<Rigidbody>().AddForce(-Vector3.up * 3f, ForceMode.Impulse);
     }
 
     void FixedUpdate()
