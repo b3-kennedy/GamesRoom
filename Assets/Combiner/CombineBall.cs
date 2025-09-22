@@ -34,7 +34,7 @@ public class CombineBall : NetworkBehaviour
                 if(otherBall.ballType != BallType.OMEGA)
                 {
                     ulong ball1ID = gameObject.GetComponent<NetworkObject>().NetworkObjectId;
-                    ulong ball2ID = gameObject.GetComponent<NetworkObject>().NetworkObjectId;
+                    ulong ball2ID = other.gameObject.GetComponent<NetworkObject>().NetworkObjectId;
                     SpawnNextBallServerRpc(ball1ID, ball2ID, other.transform.position);
                 }
 
