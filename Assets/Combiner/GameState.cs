@@ -23,8 +23,9 @@ namespace Assets.Combiner
         {
             if (IsServer)
             {
-                SpawnBallServerRpc();
                 AssignGame();
+                SpawnBallServerRpc();
+                
 
             }
         }
