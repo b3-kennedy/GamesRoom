@@ -2,7 +2,7 @@ using UnityEngine;
 using Unity.Netcode;
 using Assets.Combiner;
 
-public class CombinerPlayer : MonoBehaviour
+public class CombinerPlayer : NetworkBehaviour
 {
 
     Rigidbody rb;
@@ -23,32 +23,38 @@ public class CombinerPlayer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!IsOwner) return;
         xMove = Input.GetAxisRaw("ArrowHorizontal") * speed;
         
         if(Input.GetKeyDown(KeyCode.Space))
         {
             if(transform.GetChild(0).childCount > 0)
             {
-
-                DropBallServerRpc();
+                GameObject ball = transform.GetChild(0).GetChild(0).gameObject;
+                ulong netObjectID = ball.GetComponent<NetworkObject>().NetworkObjectId;
+                DropBallServerRpc(netObjectID);
 
             }
         }
     }
     
     [ServerRpc(RequireOwnership = false)]
-    void DropBallServerRpc()
+    void DropBallServerRpc(ulong netobjID)
     {
-        DropBallClientRpc();
+        DropBallClientRpc(netobjID);
     }
     
     [ClientRpc]
-    void DropBallClientRpc()
+    void DropBallClientRpc(ulong netObjID)
     {
-        GameObject ball = transform.GetChild(0).GetChild(0).gameObject;
-        ball.transform.SetParent(null);
-        ball.GetComponent<Rigidbody>().isKinematic = false;
-        ball.GetComponent<Rigidbody>().AddForce(-Vector3.up * 3f, ForceMode.Impulse);
+        if(NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(netObjID, out var ball))
+        {
+            ball.transform.SetParent(null);
+            ball.GetComponent<Rigidbody>().isKinematic = false;
+            ball.GetComponent<Rigidbody>().AddForce(-Vector3.up * 3f, ForceMode.Impulse);
+        }
+    
+
     }
 
     void FixedUpdate()
