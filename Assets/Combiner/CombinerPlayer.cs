@@ -29,14 +29,26 @@ public class CombinerPlayer : MonoBehaviour
         {
             if(transform.GetChild(0).childCount > 0)
             {
-                GameObject ball = transform.GetChild(0).GetChild(0).gameObject;
-                ball.transform.SetParent(null);
-                ball.GetComponent<Rigidbody>().isKinematic = false;
-                ball.GetComponent<Rigidbody>().AddForce(-Vector3.up * 3f, ForceMode.Impulse);
 
+                DropBallServerRpc();
 
             }
         }
+    }
+    
+    [ServerRpc(RequireOwnership = false)]
+    void DropBallServerRpc()
+    {
+        DropBallClientRpc();
+    }
+    
+    [ClientRpc]
+    void DropBallClientRpc()
+    {
+        GameObject ball = transform.GetChild(0).GetChild(0).gameObject;
+        ball.transform.SetParent(null);
+        ball.GetComponent<Rigidbody>().isKinematic = false;
+        ball.GetComponent<Rigidbody>().AddForce(-Vector3.up * 3f, ForceMode.Impulse);
     }
 
     void FixedUpdate()
