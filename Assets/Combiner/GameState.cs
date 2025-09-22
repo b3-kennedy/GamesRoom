@@ -64,11 +64,22 @@ namespace Assets.Combiner
         {
             int randomNum = Random.Range(0, spawnBalls.Count);
             spawnedBall = Instantiate(spawnBalls[randomNum], ballSpawn);
-            spawnedBall.GetComponent<Rigidbody>().isKinematic = true;
-            spawnedBall.transform.localPosition = Vector3.zero;
-            spawnedBall.GetComponent<CombineBall>().follower = ballSpawn;
             spawnedBall.GetComponent<CombineBall>().isDropped.Value = false;
-            spawnedBall.GetComponent<NetworkObject>().Spawn();
+            spawnedBall.GetComponent<NetworkObject>().SpawnWithOwnership(combinerPlayer.GetComponent<NetworkObject>().OwnerClientId);
+            SpawnBallClientRpc(spawnedBall.GetComponent<NetworkObject>().NetworkObjectId);
+        }
+        
+        [ClientRpc]
+        void SpawnBallClientRpc(ulong ballID)
+        {
+            if(NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(ballID, out var ball))
+            {
+                ball.GetComponent<CombineBall>().follower = ballSpawn;
+                ball.GetComponent<Rigidbody>().isKinematic = true;
+                ball.transform.localPosition = Vector3.zero;
+                
+            }
+            
         }
         
 

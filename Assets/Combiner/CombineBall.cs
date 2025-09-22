@@ -2,7 +2,7 @@ using Assets.Football;
 using Unity.Netcode;
 using UnityEngine;
 
-public class CombineBall : MonoBehaviour
+public class CombineBall : NetworkBehaviour
 {
     public enum BallType {SMALL, MEDIUM, BIG, HUGE, MASSIVE};
     public BallType ballType;
@@ -16,6 +16,8 @@ public class CombineBall : MonoBehaviour
 
     void Update()
     {
+        if (!IsOwner) return;
+    
         if(!isDropped.Value)
         {
             transform.position = follower.position;
