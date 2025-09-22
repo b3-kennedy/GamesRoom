@@ -87,7 +87,7 @@ namespace Assets.Combiner
             }
             if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(ballID, out var ball))
             {
-
+                spawnedBall = ball.gameObject;
                 ball.GetComponent<CombineBall>().follower = ballSpawn;
                 ball.GetComponent<Rigidbody>().isKinematic = true;
                 ball.transform.localPosition = Vector3.zero;
