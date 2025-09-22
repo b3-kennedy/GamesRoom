@@ -14,6 +14,8 @@ namespace Assets.Combiner
         public Transform ballSpawn;
         public List<GameObject> spawnBalls;
 
+        [HideInInspector] public GameObject spawnedBall;
+
         float spawnTimer;
 
         ulong playerOwnerID;
@@ -32,29 +34,28 @@ namespace Assets.Combiner
         {
 
             gameObject.SetActive(true);
+            SpawnBallServerRpc();
         }
 
         public override void OnStateUpdate()
         {
-            SpawnBall();
+
         }
         
 
         
-        void SpawnBall()
+        public void SpawnBall()
         {
             if (NetworkManager.Singleton.LocalClientId != playerOwnerID) return;
+
+            StartCoroutine(SpawnBallAfterTime());
+        }
         
-            if(ballSpawn.childCount == 0)
-            {
-                spawnTimer += Time.deltaTime;
-                if(spawnTimer >= 1f)
-                {
-                    SpawnBallServerRpc();
-                    spawnTimer = 0;
-                }
-                
-            }
+        IEnumerator SpawnBallAfterTime()
+        {
+            yield return new WaitForSeconds(1f);
+            SpawnBallServerRpc();
+
         }
 
 
@@ -62,17 +63,14 @@ namespace Assets.Combiner
         void SpawnBallServerRpc()
         {
             int randomNum = Random.Range(0, spawnBalls.Count);
-            SpawnBallClientRpc(randomNum);
-        }
-        
-        [ClientRpc]
-        void SpawnBallClientRpc(int index)
-        {
-            Debug.Log("spawn");
-            GameObject spawnedBall = Instantiate(spawnBalls[index], ballSpawn);
+            spawnedBall = Instantiate(spawnBalls[randomNum], ballSpawn);
             spawnedBall.GetComponent<Rigidbody>().isKinematic = true;
             spawnedBall.transform.localPosition = Vector3.zero;
+            spawnedBall.GetComponent<CombineBall>().follower = ballSpawn;
+            spawnedBall.GetComponent<CombineBall>().isDropped.Value = false;
+            spawnedBall.GetComponent<NetworkObject>().Spawn();
         }
+        
 
         public override void OnStateExit()
         {

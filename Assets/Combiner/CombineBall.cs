@@ -9,6 +9,19 @@ public class CombineBall : MonoBehaviour
 
     public GameObject nextBall;
 
+    [HideInInspector] public Transform follower;
+
+    public NetworkVariable<bool> isDropped = new NetworkVariable<bool>(false);
+
+
+    void Update()
+    {
+        if(!isDropped.Value)
+        {
+            transform.position = follower.position;
+        }
+    }
+
     void OnCollisionEnter(Collision other)
     {
         CombineBall otherBall = other.gameObject.GetComponent<CombineBall>();
@@ -27,13 +40,9 @@ public class CombineBall : MonoBehaviour
     [ServerRpc(RequireOwnership = false)]
     void SpawnNextBallServerRpc()
     {
-        SpawnBallClientRpc();
-    }
-    
-    [ClientRpc]
-    void SpawnBallClientRpc()
-    {
         if (!nextBall) return;
-        Instantiate(nextBall, transform.position, Quaternion.identity);
+        GameObject ball = Instantiate(nextBall, transform.position, Quaternion.identity);
+        ball.GetComponent<NetworkObject>().Spawn();
+        ball.GetComponent<CombineBall>().isDropped.Value = true;
     }
 }

@@ -28,9 +28,9 @@ public class CombinerPlayer : NetworkBehaviour
         
         if(Input.GetKeyDown(KeyCode.Space))
         {
-            if(transform.GetChild(0).childCount > 0)
+            if (!game.gameState.spawnedBall.GetComponent<CombineBall>().isDropped.Value)
             {
-
+                game.gameState.SpawnBall();
                 DropBallServerRpc();
 
             }
@@ -40,15 +40,10 @@ public class CombinerPlayer : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     void DropBallServerRpc()
     {
-        DropBallClientRpc();
-    }
-    
-    [ClientRpc]
-    void DropBallClientRpc()
-    {
-        GameObject ball = transform.GetChild(0).GetChild(0).gameObject;
+        GameObject ball = game.gameState.spawnedBall;
         ball.transform.SetParent(null);
         ball.GetComponent<Rigidbody>().isKinematic = false;
+        ball.GetComponent<CombineBall>().isDropped.Value = true;
         ball.GetComponent<Rigidbody>().AddForce(-Vector3.up * 3f, ForceMode.Impulse);
     }
 
