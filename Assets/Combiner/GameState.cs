@@ -21,16 +21,11 @@ namespace Assets.Combiner
         
         void Start()
         {
-            if (game is CombinerGame cg)
+            if (IsServer)
             {
-                combinerGame = cg;
-                Debug.Log(combinerGame);
-                playerOwnerID = combinerGame.player.GetComponent<NetworkObject>().OwnerClientId;
-                if (IsServer)
-                {
-                    SpawnBallServerRpc();
-                }
+                SpawnBallServerRpc();
             }
+
 
             
 
@@ -79,6 +74,12 @@ namespace Assets.Combiner
         {
             if(NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(ballID, out var ball))
             {
+                if (game is CombinerGame cg) //this is getting assigned after rpc call in start
+                {
+                    combinerGame = cg;
+                    playerOwnerID = combinerGame.player.GetComponent<NetworkObject>().OwnerClientId;
+
+                }
                 ball.GetComponent<CombineBall>().follower = ballSpawn;
                 ball.GetComponent<Rigidbody>().isKinematic = true;
                 ball.transform.localPosition = Vector3.zero;
