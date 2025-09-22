@@ -24,11 +24,19 @@ namespace Assets.Combiner
             if (IsServer)
             {
                 SpawnBallServerRpc();
+                AssignGame();
+
             }
+        }
 
+        void AssignGame()
+        {
+            if (game is CombinerGame cg)
+            {
+                combinerGame = cg;
+                playerOwnerID = combinerGame.player.GetComponent<NetworkObject>().OwnerClientId;
 
-            
-
+            }
         }
         public override void OnStateEnter()
         {
@@ -72,11 +80,9 @@ namespace Assets.Combiner
         [ClientRpc]
         void SpawnBallClientRpc(ulong ballID)
         {
-            if (game is CombinerGame cg) //this is getting assigned after rpc call in start
+            if(!combinerGame)
             {
-                combinerGame = cg;
-                playerOwnerID = combinerGame.player.GetComponent<NetworkObject>().OwnerClientId;
-
+                AssignGame();
             }
             if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(ballID, out var ball))
             {
