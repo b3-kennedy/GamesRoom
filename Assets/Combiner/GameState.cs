@@ -81,7 +81,7 @@ namespace Assets.Combiner
                 ball.GetComponent<Rigidbody>().isKinematic = true;
                 ball.transform.localPosition = Vector3.zero;
                 ball.GetComponent<Collider>().enabled = false;
-                Debug.Log(combinerGame.player);
+                Debug.Log(combinerGame);
                 combinerGame.player.GetComponent<BoxCollider>().size = ball.transform.localScale;
                 
             }
