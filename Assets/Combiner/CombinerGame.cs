@@ -63,6 +63,8 @@ namespace Assets.Combiner
 
             }
 
+            Debug.Log(player);
+
             if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(netID, out var playerObj))
             {
                 player.playerObject = playerObj.gameObject;
