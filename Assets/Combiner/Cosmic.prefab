@@ -178,7 +178,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   ballType: 9
-  nextBall: {fileID: 0}
+  nextBall: {fileID: 5749909929823938717, guid: 69c6ff89bb8e1a44494adc62ebab249f, type: 3}
   follower: {fileID: 0}
   isDropped:
     m_InternalValue: 0
