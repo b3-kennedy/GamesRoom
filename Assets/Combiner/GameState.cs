@@ -24,13 +24,14 @@ namespace Assets.Combiner
             if (game is CombinerGame cg)
             {
                 combinerGame = cg;
+                Debug.Log(combinerGame);
+                playerOwnerID = combinerGame.player.GetComponent<NetworkObject>().OwnerClientId;
+                if (IsServer)
+                {
+                    SpawnBallServerRpc();
+                }
             }
-            Debug.Log(combinerGame);
-            playerOwnerID = combinerGame.player.GetComponent<NetworkObject>().OwnerClientId;
-            if(IsServer)
-            {
-                SpawnBallServerRpc();
-            }
+
             
 
         }
