@@ -28,7 +28,11 @@ namespace Assets.Combiner
             }
             combinerPlayer = combinerGame.player;
             playerOwnerID = combinerPlayer.GetComponent<NetworkObject>().OwnerClientId;
-            SpawnBallServerRpc();
+            if(IsServer)
+            {
+                SpawnBallServerRpc();
+            }
+            
 
         }
         public override void OnStateEnter()
