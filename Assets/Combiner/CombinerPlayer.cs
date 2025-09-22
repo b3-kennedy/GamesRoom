@@ -40,6 +40,12 @@ public class CombinerPlayer : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     void DropBallServerRpc()
     {
+        DropBallClientRpc();
+    }
+
+    [ClientRpc]
+    void DropBallClientRpc()
+    {
         GameObject ball = game.gameState.spawnedBall;
         ball.transform.SetParent(null);
         ball.GetComponent<Rigidbody>().isKinematic = false;
