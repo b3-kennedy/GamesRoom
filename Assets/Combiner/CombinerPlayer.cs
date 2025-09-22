@@ -40,6 +40,8 @@ public class CombinerPlayer : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     void DropBallServerRpc()
     {
+        GameObject ball = game.gameState.spawnedBall;
+        ball.GetComponent<CombineBall>().isDropped.Value = true;
         DropBallClientRpc();
     }
 
@@ -49,7 +51,6 @@ public class CombinerPlayer : NetworkBehaviour
         GameObject ball = game.gameState.spawnedBall;
         ball.transform.SetParent(null);
         ball.GetComponent<Rigidbody>().isKinematic = false;
-        ball.GetComponent<CombineBall>().isDropped.Value = true;
         ball.GetComponent<Collider>().enabled = true;
         ball.GetComponent<Rigidbody>().AddForce(-Vector3.up * 3f, ForceMode.Impulse);
     }
