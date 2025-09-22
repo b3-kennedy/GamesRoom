@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 3685327291037249757}
   - component: {fileID: 813153662811001994}
   - component: {fileID: 8685140667080112168}
-  - component: {fileID: -1226614301794084369}
+  - component: {fileID: -4864738584378907039}
   m_Layer: 0
   m_Name: Collosal
   m_TagString: Untagged
@@ -182,7 +182,7 @@ MonoBehaviour:
   follower: {fileID: 0}
   isDropped:
     m_InternalValue: 0
---- !u!114 &-1226614301794084369
+--- !u!114 &-4864738584378907039
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -191,7 +191,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5749909929823938717}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+  m_Script: {fileID: 11500000, guid: ec20934b2aba7424d8b61b0767893767, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
@@ -206,7 +206,7 @@ MonoBehaviour:
   RotationMaxInterpolationTime: 0.1
   ScaleLerpSmoothing: 1
   ScaleMaxInterpolationTime: 0.1
-  AuthorityMode: 0
+  AuthorityMode: 1
   TickSyncChildren: 0
   UseUnreliableDeltas: 0
   SyncPositionX: 1
