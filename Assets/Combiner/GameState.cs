@@ -10,7 +10,6 @@ namespace Assets.Combiner
     public class GameState : State
     {
         CombinerGame combinerGame;
-        CombinerPlayer combinerPlayer;
         public Transform ballSpawn;
         public List<GameObject> spawnBalls;
 
@@ -26,8 +25,7 @@ namespace Assets.Combiner
             {
                 combinerGame = cg;
             }
-            combinerPlayer = combinerGame.player;
-            playerOwnerID = combinerPlayer.GetComponent<NetworkObject>().OwnerClientId;
+            playerOwnerID = combinerGame.player.GetComponent<NetworkObject>().OwnerClientId;
             if(IsServer)
             {
                 SpawnBallServerRpc();
@@ -70,7 +68,7 @@ namespace Assets.Combiner
             int randomNum = Random.Range(0, spawnBalls.Count);
             spawnedBall = Instantiate(spawnBalls[randomNum], ballSpawn);
             spawnedBall.GetComponent<CombineBall>().isDropped.Value = false;
-            spawnedBall.GetComponent<NetworkObject>().SpawnWithOwnership(combinerPlayer.GetComponent<NetworkObject>().OwnerClientId);
+            spawnedBall.GetComponent<NetworkObject>().SpawnWithOwnership(combinerGame.player.GetComponent<NetworkObject>().OwnerClientId);
             SpawnBallClientRpc(spawnedBall.GetComponent<NetworkObject>().NetworkObjectId);
         }
         
@@ -83,7 +81,7 @@ namespace Assets.Combiner
                 ball.GetComponent<Rigidbody>().isKinematic = true;
                 ball.transform.localPosition = Vector3.zero;
                 ball.GetComponent<Collider>().enabled = false;
-                combinerPlayer.GetComponent<BoxCollider>().size = ball.transform.localScale;
+                combinerGame.player.GetComponent<BoxCollider>().size = ball.transform.localScale;
                 
             }
             
