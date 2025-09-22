@@ -25,6 +25,7 @@ namespace Assets.Combiner
             {
                 combinerGame = cg;
             }
+            Debug.Log(combinerGame);
             playerOwnerID = combinerGame.player.GetComponent<NetworkObject>().OwnerClientId;
             if(IsServer)
             {
