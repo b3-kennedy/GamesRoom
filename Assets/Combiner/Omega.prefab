@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 813153662811001994}
   - component: {fileID: 8685140667080112168}
   - component: {fileID: 3794511121900952161}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Omega
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -69,7 +69,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 47789f78de3cf1a45bc15625e88e1863, type: 2}
+  - {fileID: 2100000, guid: 57ae57dd5aaee3041bb404b489d11c92, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -120,7 +120,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5749909929823938717}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 10
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -179,6 +179,8 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   ballType: 10
   nextBall: {fileID: 0}
+  spawnScore: 1024
+  game: {fileID: 0}
   follower: {fileID: 0}
   isDropped:
     m_InternalValue: 0

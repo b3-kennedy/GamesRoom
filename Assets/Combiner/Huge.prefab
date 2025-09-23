@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: -7692557204917395825}
   - component: {fileID: 8685140667080112168}
   - component: {fileID: 795286952484268815}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Huge
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -120,7 +120,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5749909929823938717}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 10
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -179,6 +179,8 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   ballType: 3
   nextBall: {fileID: 5749909929823938717, guid: 1dd13839ba7769641a3ecce1ebd7104f, type: 3}
+  spawnScore: 8
+  game: {fileID: 0}
   follower: {fileID: 0}
   isDropped:
     m_InternalValue: 0

@@ -24,6 +24,9 @@ public class CombinerPlayer : NetworkBehaviour
     void Update()
     {
         if (!IsOwner) return;
+        if (game && game.netGameState.Value != CombinerGame.GameState.GAME) return;
+        
+        
         xMove = Input.GetAxisRaw("ArrowHorizontal") * speed;
         
         if(Input.GetKeyDown(KeyCode.Space))

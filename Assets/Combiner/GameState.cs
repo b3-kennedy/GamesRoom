@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using Assets.Football;
+using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -15,6 +15,14 @@ namespace Assets.Combiner
 
         [HideInInspector] public GameObject spawnedBall;
 
+        public NetworkVariable<int> score;
+
+        public List<GameObject> spawnedBalls;
+
+        public Transform overFlowTrigger;
+
+        public TextMeshPro scoreTMP;
+
         float spawnTimer;
 
         ulong playerOwnerID;
@@ -28,7 +36,11 @@ namespace Assets.Combiner
                 
 
             }
+
+            score.OnValueChanged += UpdateScoreText;
         }
+
+
 
         void AssignGame()
         {
@@ -74,7 +86,10 @@ namespace Assets.Combiner
             int randomNum = Random.Range(0, spawnBalls.Count);
             spawnedBall = Instantiate(spawnBalls[randomNum], ballSpawn);
             spawnedBall.GetComponent<CombineBall>().isDropped.Value = false;
+            spawnedBall.GetComponent<CombineBall>().game = combinerGame;
             spawnedBall.GetComponent<NetworkObject>().SpawnWithOwnership(combinerGame.player.GetComponent<NetworkObject>().OwnerClientId);
+            
+            spawnedBalls.Add(spawnedBall);
             SpawnBallClientRpc(spawnedBall.GetComponent<NetworkObject>().NetworkObjectId);
         }
         
@@ -91,6 +106,7 @@ namespace Assets.Combiner
                 ball.GetComponent<CombineBall>().follower = ballSpawn;
                 ball.GetComponent<Rigidbody>().isKinematic = true;
                 ball.transform.localPosition = Vector3.zero;
+                ball.GetComponent<CombineBall>().game = combinerGame;
                 ball.GetComponent<Collider>().enabled = false;
                 Debug.Log(combinerGame);
                 combinerGame.player.GetComponent<BoxCollider>().size = ball.transform.localScale;
@@ -99,6 +115,17 @@ namespace Assets.Combiner
             
         }
         
+        [ServerRpc(RequireOwnership = false)]
+        public void IncreaseScoreServerRpc(int amount)
+        {
+            score.Value += amount;
+        }
+
+        private void UpdateScoreText(int previousValue, int newValue)
+        {
+            scoreTMP.text = $"Score: {newValue}";
+        }
+
 
         public override void OnStateExit()
         {

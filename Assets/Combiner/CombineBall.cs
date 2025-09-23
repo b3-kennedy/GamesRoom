@@ -1,6 +1,8 @@
+using Assets.Combiner;
 using Assets.Football;
 using Unity.Netcode;
 using UnityEngine;
+using System.Collections;
 
 public class CombineBall : NetworkBehaviour
 {
@@ -9,11 +11,22 @@ public class CombineBall : NetworkBehaviour
 
     public GameObject nextBall;
 
+    public int spawnScore;
+
+    [HideInInspector] public CombinerGame game;
+
     [HideInInspector] public Transform follower;
 
     public NetworkVariable<bool> isDropped = new NetworkVariable<bool>(false);
 
+    Rigidbody rb;
 
+
+    void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+    }
+    
     void Update()
     {
         if (!IsOwner) return;
@@ -35,14 +48,31 @@ public class CombineBall : NetworkBehaviour
                 {
                     ulong ball1ID = gameObject.GetComponent<NetworkObject>().NetworkObjectId;
                     ulong ball2ID = other.gameObject.GetComponent<NetworkObject>().NetworkObjectId;
-                    SpawnNextBallServerRpc(ball1ID, ball2ID, other.transform.position);
+                    SpawnNextBallServerRpc(ball1ID, ball2ID, transform.position);
                 }
 
                 
             }
         }
     }
-    
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.CompareTag("CombinerGameOver"))
+        {
+            StartCoroutine(CheckAboveLine(gameObject));
+        }
+    }
+
+    IEnumerator CheckAboveLine(GameObject ball)
+    {
+        yield return new WaitForSeconds(0.5f); // half-second grace period
+        if (ball != null && ball.transform.position.y > game.gameState.overFlowTrigger.position.y)
+        {
+            game.ChangeStateServerRpc(CombinerGame.GameState.GAME_OVER);
+        }
+    }
+
     [ServerRpc(RequireOwnership = false)]
     void SpawnNextBallServerRpc(ulong ball1ID, ulong ball2ID, Vector3 pos)
     {
@@ -58,7 +88,10 @@ public class CombineBall : NetworkBehaviour
 
         if (!nextBall) return;
         GameObject ball = Instantiate(nextBall, pos, Quaternion.identity);
+        int score = ball.GetComponent<CombineBall>().spawnScore;
+        ball.GetComponent<CombineBall>().game = game;
         ball.GetComponent<NetworkObject>().Spawn();
         ball.GetComponent<CombineBall>().isDropped.Value = true;
+        game.gameState.IncreaseScoreServerRpc(score);
     }
 }

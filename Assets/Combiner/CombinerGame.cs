@@ -9,6 +9,8 @@ namespace Assets.Combiner
 
         public MainMenu mainMenuState;
         public Combiner.GameState gameState;
+
+        public GameOver gameOverState;
         public CombinerPlayer player;
         
         public NetworkVariable<GameState> netGameState = new NetworkVariable<GameState>(
@@ -27,14 +29,17 @@ namespace Assets.Combiner
             // Apply initial state locally
             ApplyState(netGameState.Value);
             gameState.gameObject.SetActive(false);
+            gameOverState.gameObject.SetActive(false);
             mainMenuState.gameObject.SetActive(true);
+
+            Physics.IgnoreLayerCollision(6, 7);
         }
 
         void Awake()
         {
             mainMenuState.game = this;
             gameState.game = this;
-            //gameOverState.game = this;
+            gameOverState.game = this;
 
         }
 
@@ -75,6 +80,7 @@ namespace Assets.Combiner
             }
 
             playerID = clientID;
+            player.transform.localPosition = new Vector3(2f, 4.48999977f, 1.27999997f);
 
 
         }
@@ -83,6 +89,12 @@ namespace Assets.Combiner
         public override void ResetServerRpc()
         {
             ChangeStateServerRpc(GameState.MAIN_MENU);
+            for (int i = gameState.spawnedBalls.Count - 1; i >= 0 ; i--)
+            {
+                Destroy(gameState.spawnedBalls[i]);
+            }
+            gameState.spawnBalls.Clear();
+            gameState.score.Value = 0;
             ResetClientRpc();
         }
 
@@ -93,6 +105,8 @@ namespace Assets.Combiner
             {
                 player.playerObject.GetComponent<PlayerMovement>().canJump = true;
             }
+            player.transform.localPosition = new Vector3(2f, 4.48999977f, 1.27999997f);
+            gameState.scoreTMP.text = "Score: 0";
         }
 
         private void OnNetworkGameStateChanged(GameState oldState, GameState newState)
@@ -119,6 +133,7 @@ namespace Assets.Combiner
                     gameState.OnStateExit();             
                     break;
                 case GameState.GAME_OVER:
+                    gameOverState.OnStateExit();
                     break;
             }
         }
@@ -136,6 +151,7 @@ namespace Assets.Combiner
                     break;
 
                 case GameState.GAME_OVER:
+                    gameOverState.OnStateEnter();
                     break;
             }
         }
