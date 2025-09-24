@@ -58,6 +58,7 @@ public class CombineBall : NetworkBehaviour
 
     private void OnTriggerStay(Collider other)
     {
+        if (!IsServer) return;
         if (other.CompareTag("CombinerGameOver"))
         {
             StartCoroutine(CheckAboveLine(gameObject));
