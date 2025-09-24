@@ -5,12 +5,12 @@ namespace Assets.Combiner
 {
     public class CombinerGame : Game
     {
-        public enum GameState { MAIN_MENU, GAME, GAME_OVER }
+        public enum GameState { MAIN_MENU, GAME, GAME_OVER, LEADERBOARDS }
 
         public MainMenu mainMenuState;
         public Combiner.GameState gameState;
-
         public GameOver gameOverState;
+        public Leaderboards leaderboardState;
         public CombinerPlayer player;
         
         public NetworkVariable<GameState> netGameState = new NetworkVariable<GameState>(
@@ -31,6 +31,7 @@ namespace Assets.Combiner
             gameState.gameObject.SetActive(false);
             gameOverState.gameObject.SetActive(false);
             mainMenuState.gameObject.SetActive(true);
+            leaderboardState.gameObject.SetActive(false);
 
             Physics.IgnoreLayerCollision(6, 7);
         }
@@ -49,7 +50,7 @@ namespace Assets.Combiner
 
             if (netGameState.Value == GameState.MAIN_MENU)
             {
-                ChangeStateServerRpc(GameState.GAME);
+                ChangeStateServerRpc(GameState.LEADERBOARDS);
                 player.GetComponent<NetworkObject>().ChangeOwnership(clientID);
                 ulong playerObjID = player.GetComponent<NetworkObject>().NetworkObjectId;
                 ulong netObjID = NetworkManager.Singleton.ConnectedClients[clientID].PlayerObject.GetComponent<NetworkObject>().NetworkObjectId;
@@ -122,6 +123,38 @@ namespace Assets.Combiner
             netGameState.Value = newState;
         }
 
+        [ServerRpc(RequireOwnership = false)]
+        void CheckScoreServerRpc(ulong playerID)
+        {
+            var playerObj = NetworkManager.Singleton.ConnectedClients[playerID].PlayerObject;
+            CheckScoreClientRpc(playerObj.GetComponent<NetworkObject>().NetworkObjectId);
+        }
+
+        [ClientRpc]
+        void CheckScoreClientRpc(ulong objectID)
+        {
+            if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(objectID, out var player))
+            {
+                if (gameState.score.Value > LeaderboardHolder.Instance.GetHighScore(LeaderboardHolder.GameType.COMBINER))
+                {
+                    if (IsServer)
+                    {
+                        player.GetComponent<PlayerSaver>().combinerHighScore.Value = gameState.score.Value;
+                    }
+                }
+                else if (gameState.score.Value > player.GetComponent<PlayerSaver>().combinerHighScore.Value)
+                {
+                    if (IsServer)
+                    {
+                        player.GetComponent<PlayerSaver>().combinerHighScore.Value = gameState.score.Value;
+                    }
+                }
+
+
+            }
+            LeaderboardHolder.Instance.UpdateCombinerLeaderboardServerRpc();
+        }
+
         void LeaveState(GameState state)
         {
             switch (state)
@@ -134,6 +167,9 @@ namespace Assets.Combiner
                     break;
                 case GameState.GAME_OVER:
                     gameOverState.OnStateExit();
+                    break;
+                case GameState.LEADERBOARDS:
+                    leaderboardState.OnStateExit();
                     break;
             }
         }
@@ -152,6 +188,11 @@ namespace Assets.Combiner
 
                 case GameState.GAME_OVER:
                     gameOverState.OnStateEnter();
+                    CheckScoreServerRpc(playerID);
+                    break;
+
+                case GameState.LEADERBOARDS:
+                    leaderboardState.OnStateEnter();
                     break;
             }
         }

@@ -24,20 +24,30 @@ public class CombinerPlayer : NetworkBehaviour
     void Update()
     {
         if (!IsOwner) return;
-        if (game && game.netGameState.Value != CombinerGame.GameState.GAME) return;
-        
-        
-        xMove = Input.GetAxisRaw("ArrowHorizontal") * speed;
-        
-        if(Input.GetKeyDown(KeyCode.Space))
+        if (game && game.netGameState.Value == CombinerGame.GameState.GAME)
         {
-            if (!game.gameState.spawnedBall.GetComponent<CombineBall>().isDropped.Value)
-            {
-                game.gameState.SpawnBall();
-                DropBallServerRpc();
+            xMove = Input.GetAxisRaw("ArrowHorizontal") * speed;
 
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                if (!game.gameState.spawnedBall.GetComponent<CombineBall>().isDropped.Value)
+                {
+                    game.gameState.SpawnBall();
+                    DropBallServerRpc();
+
+                }
             }
         }
+        else if(game && game.netGameState.Value == CombinerGame.GameState.LEADERBOARDS)
+        {
+            if(Input.GetKeyDown(KeyCode.E))
+            {
+                game.ChangeStateServerRpc(CombinerGame.GameState.GAME);
+            }
+        }
+        
+        
+
     }
     
     [ServerRpc(RequireOwnership = false)]

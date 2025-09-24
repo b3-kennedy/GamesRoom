@@ -12,14 +12,16 @@ public class LeaderboardHolder : NetworkBehaviour
     public static LeaderboardHolder Instance;
     public Dictionary<string, int> flappyBirdLeaderboard = new Dictionary<string, int>();
     public Dictionary<string, int> dodgerLeaderboard = new Dictionary<string, int>();
+    public Dictionary<string, int> combinerLeaderboard = new Dictionary<string, int>();
 
 
     public GameObject leaderboardEntryPrefab;
 
     public Transform flappyBirdlayout;
     public Transform dodgeLayout;
+    public Transform combinerLayout;
     
-    public enum GameType {FLAPPY_BIRD, DODGER};
+    public enum GameType {FLAPPY_BIRD, DODGER, COMBINER};
 
 
     [ServerRpc(RequireOwnership = false)]
@@ -48,6 +50,21 @@ public class LeaderboardHolder : NetworkBehaviour
             string playerName = playerObject.GetComponent<SteamPlayer>().playerName;
             int score = playerObject.GetComponent<PlayerSaver>().dodgerHighScore.Value;
             AddEntryClientRpc(playerName, score, GameType.DODGER);
+        }
+
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void UpdateCombinerLeaderboardServerRpc()
+    {
+        foreach (var pair in NetworkManager.Singleton.ConnectedClients)
+        {
+            ulong id = pair.Key;
+            NetworkClient client = pair.Value;
+            NetworkObject playerObject = client.PlayerObject;
+            string playerName = playerObject.GetComponent<SteamPlayer>().playerName;
+            int score = playerObject.GetComponent<PlayerSaver>().combinerHighScore.Value;
+            AddEntryClientRpc(playerName, score, GameType.COMBINER);
         }
 
     }
@@ -81,6 +98,10 @@ public class LeaderboardHolder : NetworkBehaviour
             case GameType.DODGER:
                 layout = dodgeLayout;
                 leaderboard = dodgerLeaderboard;
+                break;
+            case GameType.COMBINER:
+                layout = combinerLayout;
+                leaderboard = combinerLeaderboard;
                 break;
         }
         if (leaderboard.ContainsKey(playerName))
@@ -129,6 +150,9 @@ public class LeaderboardHolder : NetworkBehaviour
                 break;
             case GameType.DODGER:
                 layout = dodgeLayout;
+                break;
+            case GameType.COMBINER:
+                layout = combinerLayout;
                 break;
         }
     

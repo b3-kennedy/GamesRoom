@@ -28422,7 +28422,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1476068222}
   - component: {fileID: 1476068221}
-  - component: {fileID: 1476068220}
+  - component: {fileID: 1476068223}
   m_Layer: 0
   m_Name: Leaderboards
   m_TagString: Untagged
@@ -28430,20 +28430,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
---- !u!114 &1476068220
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1476068219}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 870b07636a0244b479f8708a2737b6dd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  game: {fileID: 0}
 --- !u!114 &1476068221
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -28486,6 +28472,20 @@ Transform:
   - {fileID: 155959397}
   m_Father: {fileID: 1866025037}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1476068223
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1476068219}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52ee85dfcf89b9146b5082c6f77c0561, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  game: {fileID: 0}
 --- !u!1 &1478122378
 GameObject:
   m_ObjectHideFlags: 0
@@ -29966,6 +29966,7 @@ MonoBehaviour:
   leaderboardEntryPrefab: {fileID: 4572743593227670968, guid: e7130bedfed173d488f63376a3007ab7, type: 3}
   flappyBirdlayout: {fileID: 1138577353}
   dodgeLayout: {fileID: 65946729}
+  combinerLayout: {fileID: 818487881}
 --- !u!114 &1542838617
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -35231,6 +35232,7 @@ MonoBehaviour:
   mainMenuState: {fileID: 151320407}
   gameState: {fileID: 1949937760}
   gameOverState: {fileID: 218922475}
+  leaderboardState: {fileID: 1476068223}
   player: {fileID: 1245453518}
   netGameState:
     m_InternalValue: 0
