@@ -94,7 +94,7 @@ namespace Assets.Combiner
             {
                 Destroy(gameState.spawnedBalls[i]);
             }
-            gameState.spawnBalls.Clear();
+            gameState.spawnedBalls.Clear();
             gameState.score.Value = 0;
             ResetClientRpc();
         }
