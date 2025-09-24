@@ -17,6 +17,11 @@ TagManager:
   - Ball
   - LeftGoal
   - RightGoal
+  - DodgeGoal
+  - DodgeKillBox
+  - SpeedPowerUp
+  - Undefined
+  - CombinerGameOver
   layers:
   - Default
   - TransparentFX
@@ -24,8 +29,8 @@ TagManager:
   - Ground
   - Water
   - UI
-  - 
-  - 
+  - CombinerBall
+  - CombinerPlayer
   - 
   - 
   - 

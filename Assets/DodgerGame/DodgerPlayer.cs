@@ -1,11 +1,13 @@
+using Unity.Netcode;
 using UnityEngine;
 
 
 namespace Assets.Dodger
 {
-    public class DodgerPlayer : MonoBehaviour
+    public class DodgerPlayer : NetworkBehaviour
     {
-        public float speed = 10f;
+        public float baseSpeed = 10f;
+        float speed;
         Vector3 moveVec;
 
         [HideInInspector] public DodgerGame game;
@@ -26,11 +28,14 @@ namespace Assets.Dodger
         void Start()
         {
             rb = GetComponent<Rigidbody>();
+            speed = baseSpeed;
         }
 
         // Update is called once per frame
         void Update()
         {
+            if (!IsOwner) return;
+        
             float x = Input.GetAxisRaw("ArrowHorizontal");
             float y = Input.GetAxisRaw("ArrowVertical");
 
@@ -51,7 +56,7 @@ namespace Assets.Dodger
         {
             if (isDashing)
             {
-                rb.linearVelocity = moveVec * dashSpeed;
+                rb.linearVelocity = moveVec * (speed + 15);
             }
             else
             {
@@ -67,6 +72,29 @@ namespace Assets.Dodger
             isDashing = true;
             dashEndTime = Time.time + dashDuration;
             lastDashTime = Time.time;
+        }
+
+        void OnTriggerEnter(Collider other)
+        {
+            if (!IsOwner) return;
+            
+            if(other.CompareTag("DodgeGoal"))
+            {
+                game.gameState.IncreaseScoreServerRpc(1);
+                Destroy(other.gameObject);
+            }
+            
+            if(other.CompareTag("DodgeKillBox"))
+            {
+                game.ChangeStateServerRpc(DodgerGame.GameState.GAME_OVER);
+                game.gameOverState.UpdateScore();
+            }
+            
+            if(other.CompareTag("SpeedPowerUp"))
+            {
+                speed += 0.5f;
+                Destroy(other.gameObject);
+            }
         }
 
 

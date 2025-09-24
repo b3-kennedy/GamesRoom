@@ -1,31 +1,25 @@
 using UnityEngine;
 using Unity.Netcode;
-using Assets.DodgerGame;
 
-namespace Assets.Dodger
+namespace Assets.Combiner
 {
-    public class DodgerGame : Game
+    public class CombinerGame : Game
     {
         public enum GameState { MAIN_MENU, GAME, GAME_OVER, LEADERBOARDS }
 
         public MainMenu mainMenuState;
-        public Dodger.GameState gameState;
+        public Combiner.GameState gameState;
         public GameOver gameOverState;
         public Leaderboards leaderboardState;
-        public GameObject playerPrefab;
-        [HideInInspector] public DodgerPlayer player;
-
-        public Transform playerSpawn;
-
-        ulong playerID;
-
+        public CombinerPlayer player;
         
-
         public NetworkVariable<GameState> netGameState = new NetworkVariable<GameState>(
             GameState.MAIN_MENU,
             NetworkVariableReadPermission.Everyone,
             NetworkVariableWritePermission.Server
         );
+
+        [HideInInspector] public ulong playerID;
 
         void Start()
         {
@@ -34,21 +28,19 @@ namespace Assets.Dodger
 
             // Apply initial state locally
             ApplyState(netGameState.Value);
-
-            mainMenuState.gameObject.SetActive(true);
             gameState.gameObject.SetActive(false);
             gameOverState.gameObject.SetActive(false);
+            mainMenuState.gameObject.SetActive(true);
             leaderboardState.gameObject.SetActive(false);
 
+            Physics.IgnoreLayerCollision(6, 7);
         }
 
         void Awake()
         {
             mainMenuState.game = this;
             gameState.game = this;
-            //resultState.game = this;
             gameOverState.game = this;
-            //wagerState.game = this;
 
         }
 
@@ -56,12 +48,10 @@ namespace Assets.Dodger
         public override void BeginServerRpc(ulong clientID)
         {
 
-            if(netGameState.Value == GameState.MAIN_MENU)
+            if (netGameState.Value == GameState.MAIN_MENU)
             {
-                player = Instantiate(playerPrefab).GetComponent<DodgerPlayer>();
-                player.transform.position = new Vector3(-212.630005f, -120f, 143.293686f); 
-                player.GetComponent<NetworkObject>().SpawnWithOwnership(clientID);
                 ChangeStateServerRpc(GameState.LEADERBOARDS);
+                player.GetComponent<NetworkObject>().ChangeOwnership(clientID);
                 ulong playerObjID = player.GetComponent<NetworkObject>().NetworkObjectId;
                 ulong netObjID = NetworkManager.Singleton.ConnectedClients[clientID].PlayerObject.GetComponent<NetworkObject>().NetworkObjectId;
                 OnBeginClientRpc(netObjID, playerObjID, clientID);
@@ -72,14 +62,16 @@ namespace Assets.Dodger
         [ClientRpc]
         void OnBeginClientRpc(ulong netID, ulong playerObjID, ulong clientID)
         {
-            if (NetworkManager.SpawnManager.SpawnedObjects.TryGetValue(playerObjID, out var p))
+            if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(playerObjID, out var p))
             {
-                player = p.GetComponent<DodgerPlayer>();
+                player = p.GetComponent<CombinerPlayer>();
 
 
             }
 
-            if (NetworkManager.SpawnManager.SpawnedObjects.TryGetValue(netID, out var playerObj))
+            Debug.Log(player);
+
+            if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(netID, out var playerObj))
             {
                 player.playerObject = playerObj.gameObject;
                 player.playerObject.GetComponent<PlayerMovement>().canJump = false;
@@ -89,78 +81,33 @@ namespace Assets.Dodger
             }
 
             playerID = clientID;
+            player.transform.localPosition = new Vector3(2f, 4.48999977f, 1.27999997f);
 
 
         }
-
-        [ServerRpc(RequireOwnership = false)]
-        void CheckScoreServerRpc(ulong playerID)
-        {
-            var playerObj = NetworkManager.Singleton.ConnectedClients[playerID].PlayerObject;
-            CheckScoreClientRpc(playerObj.GetComponent<NetworkObject>().NetworkObjectId);
-        }
-
-        [ClientRpc]
-        void CheckScoreClientRpc(ulong objectID)
-        {
-            if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(objectID, out var player))
-            {
-                if (gameState.score.Value > LeaderboardHolder.Instance.GetHighScore(LeaderboardHolder.GameType.DODGER))
-                {
-                    if (IsServer)
-                    {
-                        player.GetComponent<PlayerSaver>().dodgerHighScore.Value = gameState.score.Value;
-                    }
-                }
-                else if (gameState.score.Value > player.GetComponent<PlayerSaver>().dodgerHighScore.Value)
-                {
-                    if (IsServer)
-                    {
-                        player.GetComponent<PlayerSaver>().dodgerHighScore.Value = gameState.score.Value;
-                    }
-                }
-
-
-            }
-            LeaderboardHolder.Instance.UpdateDodgeLeaderboardServerRpc();
-        }
-
 
         [ServerRpc(RequireOwnership = false)]
         public override void ResetServerRpc()
         {
             ChangeStateServerRpc(GameState.MAIN_MENU);
+            for (int i = gameState.spawnedBalls.Count - 1; i >= 0 ; i--)
+            {
+                Destroy(gameState.spawnedBalls[i]);
+            }
+            gameState.spawnedBalls.Clear();
             gameState.score.Value = 0;
-            player.GetComponent<NetworkObject>().Despawn(true);
             ResetClientRpc();
         }
-        
+
         [ClientRpc]
         void ResetClientRpc()
         {
             if (player.playerObject)
             {
                 player.playerObject.GetComponent<PlayerMovement>().canJump = true;
-                gameState.speed = gameState.baseSpeed;
-                
-                for (int i = gameState.pipeList.Count - 1; i >= 0 ; i--)
-                {
-                    Destroy(gameState.pipeList[i]);
-                }
-                gameState.pipeList.Clear();
-                gameState.speedTimer = 0;
-                
             }
-        }
-
-        void Update()
-        {
-            if (NetworkManager.Singleton.LocalClientId != playerID) return;
-            
-            if(Input.GetKeyDown(KeyCode.E) && netGameState.Value == GameState.LEADERBOARDS)
-            {
-                ChangeStateServerRpc(GameState.GAME);
-            }
+            player.transform.localPosition = new Vector3(2f, 4.48999977f, 1.27999997f);
+            gameState.scoreTMP.text = "Score: 0";
         }
 
         private void OnNetworkGameStateChanged(GameState oldState, GameState newState)
@@ -176,12 +123,44 @@ namespace Assets.Dodger
             netGameState.Value = newState;
         }
 
+        [ServerRpc(RequireOwnership = false)]
+        void CheckScoreServerRpc(ulong playerID)
+        {
+            var playerObj = NetworkManager.Singleton.ConnectedClients[playerID].PlayerObject;
+            CheckScoreClientRpc(playerObj.GetComponent<NetworkObject>().NetworkObjectId);
+        }
+
+        [ClientRpc]
+        void CheckScoreClientRpc(ulong objectID)
+        {
+            if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(objectID, out var player))
+            {
+                if (gameState.score.Value > LeaderboardHolder.Instance.GetHighScore(LeaderboardHolder.GameType.COMBINER))
+                {
+                    if (IsServer)
+                    {
+                        player.GetComponent<PlayerSaver>().combinerHighScore.Value = gameState.score.Value;
+                    }
+                }
+                else if (gameState.score.Value > player.GetComponent<PlayerSaver>().combinerHighScore.Value)
+                {
+                    if (IsServer)
+                    {
+                        player.GetComponent<PlayerSaver>().combinerHighScore.Value = gameState.score.Value;
+                    }
+                }
+
+
+            }
+            LeaderboardHolder.Instance.UpdateCombinerLeaderboardServerRpc();
+        }
+
         void LeaveState(GameState state)
         {
             switch (state)
             {
                 case GameState.MAIN_MENU:
-                    mainMenuState.OnStateExit();             
+                    mainMenuState.OnStateExit();               
                     break;
                 case GameState.GAME:
                     gameState.OnStateExit();             
@@ -211,6 +190,7 @@ namespace Assets.Dodger
                     gameOverState.OnStateEnter();
                     CheckScoreServerRpc(playerID);
                     break;
+
                 case GameState.LEADERBOARDS:
                     leaderboardState.OnStateEnter();
                     break;

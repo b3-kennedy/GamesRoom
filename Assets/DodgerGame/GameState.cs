@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -6,29 +7,34 @@ namespace Assets.Dodger
 {
     public class GameState : State
     {
-
         DodgerGame dodgerGame;
-
+        public GameObject playerPrefab;
         public Transform minSpawn;
         public Transform maxSpawn;
-
+        public Transform topLeft;
+        public Transform topRight;
+        public Transform bottomLeft;
+        public Transform bottomRight;
         public Transform obstacleParent;
-
         public GameObject obstaclePrefab;
-
         public float baseSpeed = 1f;
-        
-        float speed;
-
+        [HideInInspector] public float speed;
         public float distanceBetweenPipes = 3f;
-
-        float speedTimer;
-
+        [HideInInspector] public float speedTimer;
         public float speedIncreaseInterval = 30f;
-
         public float speedIncrease = 0.1f;
-
         public List<GameObject> pipeList;
+        public NetworkVariable<int> score;
+        public TextMeshPro scoreTMP;
+        
+        public GameObject powerUpPrefab;
+
+        float powerUpTimer;
+
+        float powerUpSpawnTime;
+        
+        public float minPowerUpSpawnTime = 5f;
+        public float maxPowerUpSpawnTime = 120f;
         
         void Start()
         {
@@ -38,12 +44,27 @@ namespace Assets.Dodger
             }
 
             speed = baseSpeed;
+
+            score.OnValueChanged += UpdateScoreText;
         }
+
+        private void UpdateScoreText(int previousValue, int newValue)
+        {
+            scoreTMP.text = newValue.ToString();
+        }
+
         public override void OnStateEnter()
         {
             gameObject.SetActive(true);
-            SpawnServerRpc();
+            if(IsServer)
+            {
+                SpawnServerRpc();
+                powerUpSpawnTime = Random.Range(minPowerUpSpawnTime, maxPowerUpSpawnTime);
+            }
+            
+            
         }
+        
 
         public override void OnStateUpdate()
         {
@@ -59,21 +80,37 @@ namespace Assets.Dodger
                     pipeList.RemoveAt(i);
                 }
             }
-            
-            
+
+            speedTimer += Time.deltaTime;
+            if (speedTimer >= speedIncreaseInterval)
+            {
+                speed += speedIncrease;
+                speedTimer = 0;
+            }
+
+
             if (!IsServer) return;
             
 
 
             Spawn();
 
-            speedTimer += Time.deltaTime;
-            if(speedTimer >= speedIncreaseInterval)
+            powerUpTimer += Time.deltaTime;
+            if(powerUpTimer >= powerUpSpawnTime)
             {
-                speed += speedIncrease;
-                speedTimer = 0;
-            }            
+                powerUpSpawnTime = Random.Range(minPowerUpSpawnTime, maxPowerUpSpawnTime);
+                Vector3 spawn = GetRandomPoint();
+                SpawnPowerUpClientRpc(spawn);
+                powerUpTimer = 0;
+            }
+         
 
+        }
+        
+        [ClientRpc]
+        void SpawnPowerUpClientRpc(Vector3 spawn)
+        {
+            GameObject powerUp = Instantiate(powerUpPrefab, spawn, Quaternion.identity);
         }
         
         void Spawn()
@@ -89,6 +126,12 @@ namespace Assets.Dodger
                     SpawnServerRpc();
                 }
             }
+        }
+        
+        [ServerRpc(RequireOwnership = false)]
+        public void IncreaseScoreServerRpc(int value)
+        {
+            score.Value += value;
         }
         
         [ServerRpc(RequireOwnership = false)]        
@@ -108,6 +151,13 @@ namespace Assets.Dodger
             GameObject obstacle = Instantiate(obstaclePrefab, obstacleParent);
             pipeList.Add(obstacle);
             obstacle.transform.position = pos;
+        }
+        
+        Vector3 GetRandomPoint()
+        {
+            float randomX = Random.Range(topLeft.position.x, topRight.position.x);
+            float randomY = Random.Range(topLeft.position.y, bottomLeft.position.y);
+            return new Vector3(randomX, randomY, topLeft.position.z);
         }
         
         public float GetSpawnPos()

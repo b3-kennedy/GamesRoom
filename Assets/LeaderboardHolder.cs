@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using TMPro;
 using Unity.Netcode;
-using Unity.VisualScripting;
 using UnityEngine;
 
 
@@ -11,15 +10,22 @@ using UnityEngine;
 public class LeaderboardHolder : NetworkBehaviour
 {
     public static LeaderboardHolder Instance;
-    public Dictionary<string, int> leaderboard = new Dictionary<string, int>();
+    public Dictionary<string, int> flappyBirdLeaderboard = new Dictionary<string, int>();
+    public Dictionary<string, int> dodgerLeaderboard = new Dictionary<string, int>();
+    public Dictionary<string, int> combinerLeaderboard = new Dictionary<string, int>();
+
 
     public GameObject leaderboardEntryPrefab;
 
-    public Transform layout;
+    public Transform flappyBirdlayout;
+    public Transform dodgeLayout;
+    public Transform combinerLayout;
+    
+    public enum GameType {FLAPPY_BIRD, DODGER, COMBINER};
 
 
     [ServerRpc(RequireOwnership = false)]
-    public void UpdateLeaderboardServerRpc()
+    public void UpdateFlappyBirdLeaderboardServerRpc()
     {
         foreach (var pair in NetworkManager.Singleton.ConnectedClients)
         {
@@ -28,10 +34,42 @@ public class LeaderboardHolder : NetworkBehaviour
             NetworkObject playerObject = client.PlayerObject;
             string playerName = playerObject.GetComponent<SteamPlayer>().playerName;
             int score = playerObject.GetComponent<PlayerSaver>().fbHighScore.Value;
-            AddEntryClientRpc(playerName, score);
+            AddEntryClientRpc(playerName, score, GameType.FLAPPY_BIRD);
         }
 
     }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void UpdateDodgeLeaderboardServerRpc()
+    {
+        foreach (var pair in NetworkManager.Singleton.ConnectedClients)
+        {
+            ulong id = pair.Key;
+            NetworkClient client = pair.Value;
+            NetworkObject playerObject = client.PlayerObject;
+            string playerName = playerObject.GetComponent<SteamPlayer>().playerName;
+            int score = playerObject.GetComponent<PlayerSaver>().dodgerHighScore.Value;
+            AddEntryClientRpc(playerName, score, GameType.DODGER);
+        }
+
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void UpdateCombinerLeaderboardServerRpc()
+    {
+        foreach (var pair in NetworkManager.Singleton.ConnectedClients)
+        {
+            ulong id = pair.Key;
+            NetworkClient client = pair.Value;
+            NetworkObject playerObject = client.PlayerObject;
+            string playerName = playerObject.GetComponent<SteamPlayer>().playerName;
+            int score = playerObject.GetComponent<PlayerSaver>().combinerHighScore.Value;
+            AddEntryClientRpc(playerName, score, GameType.COMBINER);
+        }
+
+    }
+
+
 
     void Awake()
     {
@@ -45,20 +83,34 @@ public class LeaderboardHolder : NetworkBehaviour
     }
 
 
-    [ServerRpc(RequireOwnership = false)]
-    public void AddEntryServerRpc(string playerName, int score)
-    {
-        AddEntryClientRpc(playerName, score);
-    }
 
     [ClientRpc]
-    void AddEntryClientRpc(string playerName, int score)
+    void AddEntryClientRpc(string playerName, int score, GameType gameType)
     {
+        Transform layout = null;
+        Dictionary<string, int> leaderboard = null;
+        switch (gameType)
+        {
+            case GameType.FLAPPY_BIRD:
+                layout = flappyBirdlayout;
+                leaderboard = flappyBirdLeaderboard;
+                break;
+            case GameType.DODGER:
+                layout = dodgeLayout;
+                leaderboard = dodgerLeaderboard;
+                break;
+            case GameType.COMBINER:
+                layout = combinerLayout;
+                leaderboard = combinerLeaderboard;
+                break;
+        }
         if (leaderboard.ContainsKey(playerName))
         {
             // Update the dictionary
             leaderboard[playerName] = score;
             Debug.Log($"Updated leaderboard: {playerName} with new score {score}");
+            
+
 
             // Update the existing UI
             foreach (Transform entry in layout)
@@ -84,11 +136,26 @@ public class LeaderboardHolder : NetworkBehaviour
             scoreText.text = score.ToString();
         }
 
-        SortLeaderboardUI();
+        SortLeaderboardUI(layout);
     }
 
-    public int GetHighScore()
+    public int GetHighScore(GameType type)
     {
+        Transform layout = null;
+    
+        switch(type)
+        {
+            case GameType.FLAPPY_BIRD:
+                layout = flappyBirdlayout;
+                break;
+            case GameType.DODGER:
+                layout = dodgeLayout;
+                break;
+            case GameType.COMBINER:
+                layout = combinerLayout;
+                break;
+        }
+    
         TextMeshProUGUI scoreText = layout.GetChild(0).GetChild(2).GetComponent<TextMeshProUGUI>();
         if (int.TryParse(scoreText.text, out int highScore))
         {
@@ -102,9 +169,11 @@ public class LeaderboardHolder : NetworkBehaviour
 
     }
 
-    private void SortLeaderboardUI()
+    private void SortLeaderboardUI(Transform layout)
     {
-        // Get all child entries
+    
+        
+        //Get all child entries
         List<Transform> entries = new List<Transform>();
         foreach (Transform child in layout)
             entries.Add(child);

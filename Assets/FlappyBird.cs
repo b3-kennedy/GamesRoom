@@ -154,7 +154,7 @@ public class FlappyBird : Game
 
         if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(objectID, out var player))
         {
-            if (score.Value > LeaderboardHolder.Instance.GetHighScore())
+            if (score.Value > LeaderboardHolder.Instance.GetHighScore(LeaderboardHolder.GameType.FLAPPY_BIRD))
             {
                 BeatServerHighScoreServerRpc(objectID, score.Value);
                 if (IsServer)
@@ -174,7 +174,7 @@ public class FlappyBird : Game
 
 
         }
-        LeaderboardHolder.Instance.UpdateLeaderboardServerRpc();
+        LeaderboardHolder.Instance.UpdateFlappyBirdLeaderboardServerRpc();
     }
 
     [ServerRpc(RequireOwnership = false)]
