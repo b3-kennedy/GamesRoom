@@ -81,6 +81,18 @@ namespace Assets.Snake
 
         }
 
+        [ServerRpc(RequireOwnership = false)]
+        public override void ResetServerRpc()
+        {
+            ChangeStateServerRpc(GameState.MAIN_MENU);
+            for (int i = 1; i < player.snakePositions.Count; i++)
+            {
+                player.snakePositions.RemoveAt(i);
+            }
+            player.snakePositions[0] = new Vector2Int(12, 12);
+            //ResetClientRpc();
+        }
+
         private void OnNetworkGameStateChanged(GameState oldState, GameState newState)
         {
             LeaveState(oldState);

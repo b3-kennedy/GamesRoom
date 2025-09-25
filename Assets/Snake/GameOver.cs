@@ -24,7 +24,10 @@ namespace Assets.Snake
 
         public override void OnStateUpdate()
         {
-            base.OnStateUpdate();
+            if(Input.GetKeyDown(KeyCode.R))
+            {
+                snakeGame.ResetServerRpc();
+            }
         }
 
         public override void OnStateExit()
