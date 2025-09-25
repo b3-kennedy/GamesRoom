@@ -5,7 +5,7 @@ namespace Assets.Snake
 {
     public class SnakeGame : Game
     {
-        public enum GameState { MAIN_MENU, GAME, GAME_OVER }
+        public enum GameState { MAIN_MENU, GAME, GAME_OVER, LEADERBOARD }
 
         public NetworkVariable<GameState> netGameState = new NetworkVariable<GameState>(
             GameState.MAIN_MENU,
@@ -16,6 +16,7 @@ namespace Assets.Snake
         public MainMenu mainMenuState;
         public Snake.GameState gameState;
         public GameOver gameOverState;
+        public Leaderboard leaderboardState;
 
         public SnakePlayer player;
 
@@ -31,7 +32,7 @@ namespace Assets.Snake
             gameState.gameObject.SetActive(false);
             gameOverState.gameObject.SetActive(false);
             mainMenuState.gameObject.SetActive(true);
-            // leaderboardState.gameObject.SetActive(false);
+            leaderboardState.gameObject.SetActive(false);
         }
 
         void Awake()
@@ -39,6 +40,7 @@ namespace Assets.Snake
             mainMenuState.game = this;
             gameState.game = this;
             gameOverState.game = this;
+            leaderboardState.game = this;
 
         }
 
@@ -48,7 +50,7 @@ namespace Assets.Snake
 
             if (netGameState.Value == GameState.MAIN_MENU)
             {
-                ChangeStateServerRpc(GameState.GAME);
+                ChangeStateServerRpc(GameState.LEADERBOARD);
                 player.GetComponent<NetworkObject>().ChangeOwnership(clientID);
                 ulong playerObjID = player.GetComponent<NetworkObject>().NetworkObjectId;
                 ulong netObjID = NetworkManager.Singleton.ConnectedClients[clientID].PlayerObject.GetComponent<NetworkObject>().NetworkObjectId;
@@ -93,6 +95,38 @@ namespace Assets.Snake
             //ResetClientRpc();
         }
 
+        [ServerRpc(RequireOwnership = false)]
+        void CheckScoreServerRpc(ulong playerID)
+        {
+            var playerObj = NetworkManager.Singleton.ConnectedClients[playerID].PlayerObject;
+            CheckScoreClientRpc(playerObj.GetComponent<NetworkObject>().NetworkObjectId);
+        }
+
+        [ClientRpc]
+        void CheckScoreClientRpc(ulong objectID)
+        {
+            if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(objectID, out var player))
+            {
+                if (gameState.score.Value > LeaderboardHolder.Instance.GetHighScore(LeaderboardHolder.GameType.SNAKE))
+                {
+                    if (IsServer)
+                    {
+                        player.GetComponent<PlayerSaver>().snakeHighScore.Value = gameState.score.Value;
+                    }
+                }
+                else if (gameState.score.Value > player.GetComponent<PlayerSaver>().snakeHighScore.Value)
+                {
+                    if (IsServer)
+                    {
+                        player.GetComponent<PlayerSaver>().snakeHighScore.Value = gameState.score.Value;
+                    }
+                }
+
+
+            }
+            LeaderboardHolder.Instance.UpdateSnakeLeaderboardServerRpc();
+        }
+
         private void OnNetworkGameStateChanged(GameState oldState, GameState newState)
         {
             LeaveState(oldState);
@@ -119,6 +153,9 @@ namespace Assets.Snake
                 case GameState.GAME_OVER:
                     gameOverState.OnStateExit();
                     break;
+                case GameState.LEADERBOARD:
+                    leaderboardState.OnStateExit();
+                    break;
             }
         }
 
@@ -136,6 +173,11 @@ namespace Assets.Snake
 
                 case GameState.GAME_OVER:
                     gameOverState.OnStateEnter();
+                    CheckScoreServerRpc(playerID);
+                    break;
+
+                case GameState.LEADERBOARD:
+                    leaderboardState.OnStateEnter();
                     break;
             }
         }

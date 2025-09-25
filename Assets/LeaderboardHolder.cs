@@ -13,6 +13,7 @@ public class LeaderboardHolder : NetworkBehaviour
     public Dictionary<string, int> flappyBirdLeaderboard = new Dictionary<string, int>();
     public Dictionary<string, int> dodgerLeaderboard = new Dictionary<string, int>();
     public Dictionary<string, int> combinerLeaderboard = new Dictionary<string, int>();
+    public Dictionary<string, int> snakeLeaderboard = new Dictionary<string, int>();
 
 
     public GameObject leaderboardEntryPrefab;
@@ -20,8 +21,9 @@ public class LeaderboardHolder : NetworkBehaviour
     public Transform flappyBirdlayout;
     public Transform dodgeLayout;
     public Transform combinerLayout;
+    public Transform snakeLayout;
     
-    public enum GameType {FLAPPY_BIRD, DODGER, COMBINER};
+    public enum GameType {FLAPPY_BIRD, DODGER, COMBINER, SNAKE};
 
 
     [ServerRpc(RequireOwnership = false)]
@@ -69,6 +71,21 @@ public class LeaderboardHolder : NetworkBehaviour
 
     }
 
+    [ServerRpc(RequireOwnership = false)]
+    public void UpdateSnakeLeaderboardServerRpc()
+    {
+        foreach (var pair in NetworkManager.Singleton.ConnectedClients)
+        {
+            ulong id = pair.Key;
+            NetworkClient client = pair.Value;
+            NetworkObject playerObject = client.PlayerObject;
+            string playerName = playerObject.GetComponent<SteamPlayer>().playerName;
+            int score = playerObject.GetComponent<PlayerSaver>().snakeHighScore.Value;
+            AddEntryClientRpc(playerName, score, GameType.SNAKE);
+        }
+
+    }
+
 
 
     void Awake()
@@ -102,6 +119,10 @@ public class LeaderboardHolder : NetworkBehaviour
             case GameType.COMBINER:
                 layout = combinerLayout;
                 leaderboard = combinerLeaderboard;
+                break;
+            case GameType.SNAKE:
+                layout = snakeLayout;
+                leaderboard = snakeLeaderboard;
                 break;
         }
         if (leaderboard.ContainsKey(playerName))
@@ -153,6 +174,9 @@ public class LeaderboardHolder : NetworkBehaviour
                 break;
             case GameType.COMBINER:
                 layout = combinerLayout;
+                break;
+            case GameType.SNAKE:
+                layout = snakeLayout;
                 break;
         }
     

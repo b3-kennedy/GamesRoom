@@ -30,23 +30,36 @@ namespace Assets.Snake
         void Update()
         {
             if (!IsOwner) return;
-        
-            if(Input.GetKeyDown(KeyCode.UpArrow))
+            
+            if(game && game.netGameState.Value == SnakeGame.GameState.LEADERBOARD)
             {
-                ChangeDirectionServerRpc(Direction.UP);
+                if(Input.GetKeyDown(KeyCode.E))
+                {
+                    game.ChangeStateServerRpc(SnakeGame.GameState.GAME);
+                }
             }
-            else if(Input.GetKeyDown(KeyCode.DownArrow))
+            
+            if(game && game.netGameState.Value == SnakeGame.GameState.GAME)
             {
-                ChangeDirectionServerRpc(Direction.DOWN);
+                if (Input.GetKeyDown(KeyCode.UpArrow))
+                {
+                    ChangeDirectionServerRpc(Direction.UP);
+                }
+                else if (Input.GetKeyDown(KeyCode.DownArrow))
+                {
+                    ChangeDirectionServerRpc(Direction.DOWN);
+                }
+                if (Input.GetKeyDown(KeyCode.RightArrow))
+                {
+                    ChangeDirectionServerRpc(Direction.RIGHT);
+                }
+                else if (Input.GetKeyDown(KeyCode.LeftArrow))
+                {
+                    ChangeDirectionServerRpc(Direction.LEFT);
+                }
             }
-            if (Input.GetKeyDown(KeyCode.RightArrow))
-            {
-                ChangeDirectionServerRpc(Direction.RIGHT);
-            }
-            else if (Input.GetKeyDown(KeyCode.LeftArrow))
-            {
-                ChangeDirectionServerRpc(Direction.LEFT);
-            }
+
+
         }
 
         [ServerRpc]

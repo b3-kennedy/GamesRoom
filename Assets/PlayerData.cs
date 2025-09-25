@@ -9,6 +9,7 @@ public class PlayerData
     public int flappyBirdHighScore;
     public int dodgerHighScore;
     public int combinerHighScore;
+    public int snakeHighScore;
 }
 
 

@@ -11,7 +11,7 @@ public class PlayerSaver : NetworkBehaviour
     public NetworkVariable<int> fbHighScore;
     public NetworkVariable<int> dodgerHighScore;
     public NetworkVariable<int> combinerHighScore;
-
+    public NetworkVariable<int> snakeHighScore;
     public override void OnNetworkSpawn()
     {
         if (!IsOwner) return;
@@ -71,16 +71,18 @@ public class PlayerSaver : NetworkBehaviour
             SetPlayerCreditsServerRpc(NetworkManager.Singleton.LocalClientId, creditCount);
         }
 
-        LoadScoreServerRpc(saveDataWrapper.playerData.flappyBirdHighScore, saveDataWrapper.playerData.dodgerHighScore, saveDataWrapper.playerData.combinerHighScore);
+        LoadScoreServerRpc(saveDataWrapper.playerData.flappyBirdHighScore, saveDataWrapper.playerData.dodgerHighScore, 
+        saveDataWrapper.playerData.combinerHighScore, saveDataWrapper.playerData.snakeHighScore);
         StartCoroutine(Wait());
     }
 
     [ServerRpc(RequireOwnership = false)]
-    void LoadScoreServerRpc(int flappyScore, int dodgerScore, int combinerScore)
+    void LoadScoreServerRpc(int flappyScore, int dodgerScore, int combinerScore, int snakeScore)
     {
         fbHighScore.Value = flappyScore;
         dodgerHighScore.Value = dodgerScore;
         combinerHighScore.Value = combinerScore;
+        snakeHighScore.Value = snakeScore;
         
     }
 
@@ -91,6 +93,7 @@ public class PlayerSaver : NetworkBehaviour
         LeaderboardHolder.Instance.UpdateFlappyBirdLeaderboardServerRpc();
         LeaderboardHolder.Instance.UpdateDodgeLeaderboardServerRpc();
         LeaderboardHolder.Instance.UpdateCombinerLeaderboardServerRpc();
+        LeaderboardHolder.Instance.UpdateSnakeLeaderboardServerRpc();
     }
 
     [ServerRpc(RequireOwnership = false)]

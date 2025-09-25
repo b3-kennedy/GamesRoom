@@ -9119,7 +9119,7 @@ GameObject:
   m_Component:
   - component: {fileID: 473329943}
   - component: {fileID: 473329942}
-  - component: {fileID: 473329941}
+  - component: {fileID: 473329944}
   m_Layer: 0
   m_Name: Leaderboards
   m_TagString: Untagged
@@ -9127,20 +9127,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
---- !u!114 &473329941
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 473329940}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 52ee85dfcf89b9146b5082c6f77c0561, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  game: {fileID: 0}
 --- !u!114 &473329942
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9183,6 +9169,20 @@ Transform:
   - {fileID: 1243421401}
   m_Father: {fileID: 1301507554}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &473329944
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 473329940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d65f615c205bf7c4eb87abb099110070, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  game: {fileID: 0}
 --- !u!1 &478701558
 GameObject:
   m_ObjectHideFlags: 0
@@ -27379,6 +27379,7 @@ MonoBehaviour:
   mainMenuState: {fileID: 270449190}
   gameState: {fileID: 1407905744}
   gameOverState: {fileID: 580606925}
+  leaderboardState: {fileID: 473329944}
   player: {fileID: 1407227809}
 --- !u!1 &1319316426
 GameObject:
@@ -32404,6 +32405,7 @@ MonoBehaviour:
   flappyBirdlayout: {fileID: 1138577353}
   dodgeLayout: {fileID: 65946729}
   combinerLayout: {fileID: 818487881}
+  snakeLayout: {fileID: 487987271}
 --- !u!114 &1542838617
 MonoBehaviour:
   m_ObjectHideFlags: 0
