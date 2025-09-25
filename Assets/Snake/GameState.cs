@@ -118,6 +118,7 @@ namespace Assets.Snake
         void UpdateGrid()
         {
             if (!player) return;
+            if (!IsServer) return;
 
                 for (int i = 0; i < grid.Count; i++)
             {
