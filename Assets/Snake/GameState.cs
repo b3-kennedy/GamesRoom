@@ -115,7 +115,9 @@ namespace Assets.Snake
         
         void UpdateGrid()
         {
-            for (int i = 0; i < grid.Count; i++)
+            if (!player) return;
+
+                for (int i = 0; i < grid.Count; i++)
             {
                 if (grid[i] != 0 && grid[i] != 2 && grid[i] != 3)
                 {
@@ -130,6 +132,7 @@ namespace Assets.Snake
                 isFoodSpawned = false;
             }
 
+           
             for (int i = 0; i < player.snakePositions.Count; i++)
             {
                 Vector2 location = player.snakePositions[i];
