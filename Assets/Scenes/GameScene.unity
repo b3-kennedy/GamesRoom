@@ -11450,13 +11450,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 580606924}
+  - component: {fileID: 580606925}
   m_Layer: 0
   m_Name: GameOver
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &580606924
 Transform:
   m_ObjectHideFlags: 0
@@ -11475,6 +11476,21 @@ Transform:
   - {fileID: 116830880}
   m_Father: {fileID: 1301507554}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &580606925
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 580606922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ae8774d8971dfa4599ceb13c2e86196, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  game: {fileID: 0}
+  scoreTMP: {fileID: 722426769}
 --- !u!1 &582472971
 GameObject:
   m_ObjectHideFlags: 0
@@ -27362,6 +27378,7 @@ MonoBehaviour:
     m_InternalValue: 0
   mainMenuState: {fileID: 270449190}
   gameState: {fileID: 1407905744}
+  gameOverState: {fileID: 580606925}
   player: {fileID: 1407227809}
 --- !u!1 &1319316426
 GameObject:
@@ -29029,8 +29046,8 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   game: {fileID: 0}
   playerObject: {fileID: 0}
-  direction: 0
-  snakePositions: []
+  direction:
+    m_InternalValue: 0
 --- !u!1 &1407905740
 GameObject:
   m_ObjectHideFlags: 0
@@ -29110,6 +29127,8 @@ MonoBehaviour:
   gridUpdateInterval: 0.1
   snakePiecePrefab: {fileID: 812139630756202969, guid: ed36ce57baa7b464c908375a0617ed87, type: 3}
   tilePrefab: {fileID: 812139630756202969, guid: 7ff8e69b3655c8643a3e91975490bbed, type: 3}
+  score:
+    m_InternalValue: 0
 --- !u!1 &1413340534
 GameObject:
   m_ObjectHideFlags: 0

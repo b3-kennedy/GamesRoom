@@ -8,19 +8,18 @@ namespace Assets.Snake
     {
         SnakeGame snakeGame;
         public float gridSize = 0.3f;
-        public int width = 25;
-        public int height = 25;
-
+        public int width = 26;
+        public int height = 26;
         public float gridUpdateInterval = 0.25f;
         float timer;
         public NetworkList<int> grid = new NetworkList<int>();
-
         public GameObject snakePiecePrefab;
-
         SnakePlayer player;
-
         public GameObject tilePrefab;
         private GameObject[,] tiles;
+
+        public NetworkVariable<int> score = new NetworkVariable<int>();
+        bool isFoodSpawned = false;
 
         void Start()
         {
@@ -41,6 +40,17 @@ namespace Assets.Snake
                 {
                     grid.Add(0);
                 }
+
+                for (int x = 0; x < width; x++)
+                {
+                    SetCell(x, 0, 3);             // bottom edge
+                    SetCell(x, height - 1, 3);    // top edge
+                }
+                for (int y = 0; y < height; y++)
+                {
+                    SetCell(0, y, 3);             // left edge
+                    SetCell(width - 1, y, 3);     // right edge
+                }
             }
 
             tiles = new GameObject[width, height];
@@ -55,12 +65,33 @@ namespace Assets.Snake
                     tiles[x, y] = tile;
                 }
             }
+
+            UpdateAllTiles();
         }
+
+        private void UpdateAllTiles()
+        {
+            for (int i = 0; i < grid.Count; i++)
+            {
+                int x = i % width;
+                int y = i / width;
+
+                MeshRenderer meshRenderer = tiles[x, y].GetComponent<MeshRenderer>();
+                switch (grid[i])
+                {
+                    case 0: meshRenderer.material.color = Color.black; break;
+                    case 1: meshRenderer.material.color = Color.white; break;
+                    case 2: meshRenderer.material.color = Color.red; break;
+                    case 3: meshRenderer.material.color = Color.white; break;
+                }
+            }
+        }
+
         public override void OnStateEnter()
         {
             gameObject.SetActive(true);
             UpdateGrid();
-            //Instantiate(snakePiecePrefab, GetGridPosition(5, 5), Quaternion.identity);
+            
         }
 
         public override void OnStateUpdate()
@@ -70,9 +101,15 @@ namespace Assets.Snake
             timer += Time.deltaTime;
             if(timer >= gridUpdateInterval)
             {
-                player.Move();
+                
                 UpdateGrid();
                 timer = 0;
+            }
+            
+            if(!isFoodSpawned)
+            {
+                SpawnFood();
+                isFoodSpawned = true;
             }
         }
         
@@ -80,10 +117,17 @@ namespace Assets.Snake
         {
             for (int i = 0; i < grid.Count; i++)
             {
-                if (grid[i] != 0)
+                if (grid[i] != 0 && grid[i] != 2 && grid[i] != 3)
                 {
                     grid[i] = 0;
                 }
+            }
+            
+            if(IsSnakeHeadAtValue(2))
+            {
+                player.Grow();
+                score.Value += 10;
+                isFoodSpawned = false;
             }
 
             for (int i = 0; i < player.snakePositions.Count; i++)
@@ -94,6 +138,20 @@ namespace Assets.Snake
                 Vector3 pos = GetGridPosition(x, y);
                 SetCell(x, y, 1);
             }
+
+            player.Move();
+
+            if (IsSnakeHeadAtValue(1) || IsSnakeHeadAtValue(3))
+            {
+                snakeGame.ChangeStateServerRpc(SnakeGame.GameState.GAME_OVER);
+            }
+        }
+        
+        void SpawnFood()
+        {
+            int x = Random.Range(1, width);
+            int y = Random.Range(1, height);
+            SetCell(x, y, 2);
         }
 
         private void OnGridChanged(NetworkListEvent<int> changeEvent)
@@ -103,11 +161,37 @@ namespace Assets.Snake
             int y = index / height;
 
             MeshRenderer meshRenderer = tiles[x, y].GetComponent<MeshRenderer>();
-            if (grid[index] == 1)
+            if (grid[index] == 1 || grid[index] == 3)
+            {
                 meshRenderer.material.color = Color.white;
+            }
+            else if(grid[index] == 2)
+            {
+                meshRenderer.material.color = Color.red;
+            }
             else
+            {
                 meshRenderer.material.color = Color.black;
+            }
+                
         }
+
+        public bool IsSnakeHeadAtValue(int value)
+        {
+            if (player == null || !player.IsSpawned) return false;
+            if (player.snakePositions == null || player.snakePositions.Count == 0) return false;
+
+            Vector2Int headPosition = player.snakePositions[0];
+
+            // Check bounds first
+            if (headPosition.x < 0 || headPosition.x >= width ||
+                headPosition.y < 0 || headPosition.y >= height)
+                return false;
+
+            return GetCell(headPosition.x, headPosition.y) == value;
+        }
+
+        
 
         public override void OnStateExit()
         {

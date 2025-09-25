@@ -12,6 +12,8 @@ namespace Assets.Snake
         public enum Direction {UP, DOWN, RIGHT, LEFT};
         public NetworkVariable<Direction> direction = new NetworkVariable<Direction>(Direction.UP);
         public NetworkList<Vector2Int> snakePositions = new NetworkList<Vector2Int>();
+
+        bool shouldGrow = false;
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
@@ -20,9 +22,6 @@ namespace Assets.Snake
                 if (snakePositions.Count == 0)
                 {
                     snakePositions.Add(new Vector2Int(12, 12));
-                    snakePositions.Add(new Vector2Int(12, 11));
-                    snakePositions.Add(new Vector2Int(12, 10));
-                    snakePositions.Add(new Vector2Int(12, 9));
                 }
             }
 
@@ -30,6 +29,8 @@ namespace Assets.Snake
 
         void Update()
         {
+            if (!IsOwner) return;
+        
             if(Input.GetKeyDown(KeyCode.UpArrow))
             {
                 ChangeDirectionServerRpc(Direction.UP);
@@ -59,6 +60,13 @@ namespace Assets.Snake
             if (!IsServer) return;
             if (snakePositions.Count == 0) return;
 
+            Vector2Int tailPos = snakePositions[snakePositions.Count - 1];
+
+            for (int i = snakePositions.Count - 1; i > 0; i--)
+            {
+                snakePositions[i] = snakePositions[i - 1];
+            }
+
             var currentPos = snakePositions[0];
             Vector2Int newPos;
 
@@ -81,10 +89,19 @@ namespace Assets.Snake
             }
             snakePositions[0] = newPos;
 
-            for (int i = snakePositions.Count - 1; i > 0; i--)
+
+
+            if (shouldGrow)
             {
-                snakePositions[i] = snakePositions[i - 1];
+                snakePositions.Add(tailPos); // add new segment at old tail
+                shouldGrow = false;           // reset flag
             }
+        }
+        
+        public void Grow()
+        {
+            if (!IsServer) return;
+            shouldGrow = true; // growth happens on next Move()
         }
         
     }

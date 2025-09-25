@@ -15,6 +15,7 @@ namespace Assets.Snake
 
         public MainMenu mainMenuState;
         public Snake.GameState gameState;
+        public GameOver gameOverState;
 
         public SnakePlayer player;
 
@@ -28,7 +29,7 @@ namespace Assets.Snake
             // Apply initial state locally
             ApplyState(netGameState.Value);
             gameState.gameObject.SetActive(false);
-            // gameOverState.gameObject.SetActive(false);
+            gameOverState.gameObject.SetActive(false);
             mainMenuState.gameObject.SetActive(true);
             // leaderboardState.gameObject.SetActive(false);
         }
@@ -37,7 +38,7 @@ namespace Assets.Snake
         {
             mainMenuState.game = this;
             gameState.game = this;
-            //gameOverState.game = this;
+            gameOverState.game = this;
 
         }
 
@@ -65,8 +66,6 @@ namespace Assets.Snake
 
 
             }
-
-            Debug.Log(player);
 
             if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(netID, out var playerObj))
             {
@@ -106,6 +105,7 @@ namespace Assets.Snake
                     gameState.OnStateExit();                    
                     break;
                 case GameState.GAME_OVER:
+                    gameOverState.OnStateExit();
                     break;
             }
         }
@@ -123,6 +123,7 @@ namespace Assets.Snake
                     break;
 
                 case GameState.GAME_OVER:
+                    gameOverState.OnStateEnter();
                     break;
             }
         }
