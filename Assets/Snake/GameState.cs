@@ -98,6 +98,12 @@ namespace Assets.Snake
         {
             if (!IsServer) return;
             
+            if (!isFoodSpawned)
+            {
+                SpawnFood();
+                isFoodSpawned = true;
+            }
+
             timer += Time.deltaTime;
             if(timer >= gridUpdateInterval)
             {
@@ -106,11 +112,7 @@ namespace Assets.Snake
                 timer = 0;
             }
             
-            if(!isFoodSpawned)
-            {
-                SpawnFood();
-                isFoodSpawned = true;
-            }
+
         }
         
         void UpdateGrid()
@@ -152,8 +154,8 @@ namespace Assets.Snake
         
         void SpawnFood()
         {
-            int x = Random.Range(1, width);
-            int y = Random.Range(1, height);
+            int x = Random.Range(1, width-1);
+            int y = Random.Range(1, height-1);
             SetCell(x, y, 2);
         }
 
