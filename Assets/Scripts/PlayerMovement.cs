@@ -1,4 +1,5 @@
 using Unity.Netcode;
+using Unity.Netcode.Components;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
