@@ -44,7 +44,7 @@ public class PlayerMovement : NetworkBehaviour
 
     void Update()
     {
-        Animation();
+        
 
         if (!IsOwner) return;
 
@@ -64,8 +64,10 @@ public class PlayerMovement : NetworkBehaviour
 
         // Apply drag based on grounded state
         rb.linearDamping = IsGrounded() ? groundDrag : 0f;
-        
-        
+
+        Animation();
+
+
 
     }
     
