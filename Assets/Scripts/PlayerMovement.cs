@@ -1,4 +1,5 @@
 using Unity.Netcode;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
@@ -23,7 +24,9 @@ public class PlayerMovement : NetworkBehaviour
 
     [Header("References")]
     public Transform orientation;
+    public Animator anim;
 
+    public Transform model;
     private float horizontal;
     private float vertical;
     private bool isSprinting = false;
@@ -60,6 +63,71 @@ public class PlayerMovement : NetworkBehaviour
 
         // Apply drag based on grounded state
         rb.linearDamping = IsGrounded() ? groundDrag : 0f;
+        
+        Animation();
+
+    }
+    
+    void Animation()
+    {
+        if (IsGrounded() && (horizontal != 0 || vertical != 0))
+        {
+            // Normalize input so diagonals don't exceed 1
+            Vector2 input = new Vector2(horizontal, vertical).normalized;
+            Vector3 moveDir = orientation.forward * input.y + orientation.right * input.x;
+
+            if (input.x != 0 && input.y != 0)
+            {
+                if (input.magnitude > 0.1f)
+                {
+                    Quaternion targetRotation;
+
+                    // If moving backward, rotate 180 degrees from moveDir
+                    if (input.y < -0.1f)
+                    {
+                        targetRotation = Quaternion.LookRotation(-moveDir, Vector3.up); // back faces forward
+                    }
+                    else // forward or sideways movement
+                    {
+                        targetRotation = Quaternion.LookRotation(moveDir, Vector3.up);
+                    }
+
+                    // Smoothly rotate model
+                    model.transform.rotation = Quaternion.Slerp(model.transform.rotation, targetRotation, Time.deltaTime * 10f);
+                }
+            }
+            else
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(orientation.forward, Vector3.up);
+                model.transform.rotation = Quaternion.Slerp(model.transform.rotation, targetRotation, Time.deltaTime * 10f);
+            }
+
+            // Forward/backward
+            anim.SetFloat("isBackwards", input.y);  // -1 = backward, 1 = forward
+
+            // Left/right
+            anim.SetFloat("isRight", input.x);       // -1 = left, 1 = right
+            
+            if(input.x != 0 && input.y == 0)
+            {
+                anim.SetBool("isWalkStrafing", true);
+                anim.SetBool("isWalking", false);
+            }
+            else
+            {
+                anim.SetBool("isWalking", true);
+                anim.SetBool("isWalkStrafing", false);
+            }
+
+            
+        }
+        else
+        {
+            anim.SetFloat("isBackwards", 0f);
+            anim.SetFloat("isRight", 0f);
+            anim.SetBool("isWalking", false);
+            anim.SetBool("isWalkStrafing", false);
+        }
     }
 
     void FixedUpdate()
