@@ -18,7 +18,7 @@ public class Interact : NetworkBehaviour
 
     void Start()
     {
-        cam = GetComponent<PlayerLook>().cam;
+        cam = GetComponent<PlayerLook>().normalCamera;
     }
 
     // Update is called once per frame

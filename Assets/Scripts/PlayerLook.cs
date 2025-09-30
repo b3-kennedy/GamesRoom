@@ -5,7 +5,8 @@ public class PlayerLook : NetworkBehaviour
 {
     [Header("References")]
     public Transform playerBody; // Assign the player's body (usually the parent of the camera)
-    public Transform cam;        // Assign the camera
+    public Transform normalCamera;        // Assign the camera
+    public Transform ragdollCamera;
 
     [Header("Settings")]
     public float mouseSensitivity = 100f;
@@ -23,7 +24,8 @@ public class PlayerLook : NetworkBehaviour
     {
         if (!IsOwner)
         {
-            cam.gameObject.SetActive(false);
+            normalCamera.gameObject.SetActive(false);
+            ragdollCamera.gameObject.SetActive(false);
         }
     }
 
@@ -38,7 +40,8 @@ public class PlayerLook : NetworkBehaviour
         xRotation -= mouseY;
         xRotation = Mathf.Clamp(xRotation, -clampAngle, clampAngle);
 
-        cam.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+        normalCamera.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+        ragdollCamera.localRotation = normalCamera.localRotation;
 
         // Rotate player body left/right
         playerBody.Rotate(Vector3.up * mouseX);

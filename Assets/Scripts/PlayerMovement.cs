@@ -62,6 +62,15 @@ public class PlayerMovement : NetworkBehaviour
         {
             Jump();
         }
+        
+        if(Input.GetKeyDown(KeyCode.O) && !GetComponent<RagdollEnabler>().isRagdoll)
+        {
+            GetComponent<RagdollEnabler>().EnableRagdoll();
+        }
+        else if (Input.GetKeyDown(KeyCode.O) && GetComponent<RagdollEnabler>().isRagdoll)
+        {
+            GetComponent<RagdollEnabler>().EnableAnimator();
+        }
 
         // Apply drag based on grounded state
         rb.linearDamping = IsGrounded() ? groundDrag : 0f;
