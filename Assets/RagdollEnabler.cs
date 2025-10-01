@@ -42,6 +42,7 @@ public class RagdollEnabler : NetworkBehaviour
         {
             rigidbody.detectCollisions = false;
             rigidbody.useGravity = false;
+            rigidbody.isKinematic = true;
         }
     }
 
@@ -87,6 +88,7 @@ public class RagdollEnabler : NetworkBehaviour
             rigidbody.linearVelocity = GetComponent<Rigidbody>().linearVelocity;
             rigidbody.detectCollisions = true;
             rigidbody.useGravity = true;
+            rigidbody.isKinematic = false;
         }
         
         if(IsOwner)
@@ -116,6 +118,7 @@ public class RagdollEnabler : NetworkBehaviour
         {
             rigidbody.detectCollisions = false;
             rigidbody.useGravity = false;
+            rigidbody.isKinematic = true;
         }
         
         if(IsOwner)
