@@ -20,6 +20,13 @@ public class RagdollEnabler : NetworkBehaviour
 
     void Awake()
     {
+
+        
+    }
+
+    public override void OnNetworkSpawn()
+    {
+        Physics.IgnoreLayerCollision(8, 9);
         rigidbodies = ragdollRoot.GetComponentsInChildren<Rigidbody>();
         joints = ragdollRoot.GetComponentsInChildren<CharacterJoint>();
         colliders = ragdollRoot.GetComponentsInChildren<Collider>();
@@ -36,12 +43,6 @@ public class RagdollEnabler : NetworkBehaviour
             rigidbody.detectCollisions = false;
             rigidbody.useGravity = false;
         }
-        
-    }
-
-    public override void OnNetworkSpawn()
-    {
-        Physics.IgnoreLayerCollision(8, 9);
     }
 
     [ServerRpc(RequireOwnership = false)]
