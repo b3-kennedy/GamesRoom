@@ -42,6 +42,8 @@ public class RagdollEnabler : NetworkBehaviour
 
     public void EnableRagdoll()
     {
+        if (!IsOwner) return;
+        
         animator.enabled = false;
         foreach(var joint in joints)
         {
@@ -65,6 +67,7 @@ public class RagdollEnabler : NetworkBehaviour
 
     public void EnableAnimator()
     {
+        if (!IsOwner) return;
 
         transform.position = ragdollRoot.position;
         animator.enabled = true;
@@ -85,6 +88,7 @@ public class RagdollEnabler : NetworkBehaviour
         ragdollCamera.SetActive(false);
         normalCamera.SetActive(true);
         isRagdoll = false;
+        GetComponent<PlayerMovement>().enabled = true;
         GetComponent<CapsuleCollider>().height = 2f;
     }
 

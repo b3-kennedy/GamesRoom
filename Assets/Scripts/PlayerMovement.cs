@@ -136,6 +136,7 @@ public class PlayerMovement : NetworkBehaviour
     {
         if(NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(playerObjectID, out var player))
         {
+            player.GetComponent<PlayerMovement>().enabled = false;
             player.GetComponent<Rigidbody>().AddForce(dir * force, ForceMode.Impulse);
             player.GetComponent<RagdollEnabler>().EnableRagdoll();
         }
