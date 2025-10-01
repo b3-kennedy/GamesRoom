@@ -1,6 +1,7 @@
+using Unity.Netcode;
 using UnityEngine;
 
-public class RagdollEnabler : MonoBehaviour
+public class RagdollEnabler : NetworkBehaviour
 {
     public Animator animator;
     public Transform ragdollRoot;
