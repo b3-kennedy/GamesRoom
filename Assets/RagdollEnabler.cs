@@ -66,9 +66,7 @@ public class RagdollEnabler : NetworkBehaviour
 
 
     public void EnableRagdoll()
-    {
-        if (!IsOwner) return;
-        
+    {        
         animator.enabled = false;
         foreach(var joint in joints)
         {
@@ -92,8 +90,6 @@ public class RagdollEnabler : NetworkBehaviour
 
     public void EnableAnimator()
     {
-        if (!IsOwner) return;
-
         transform.position = ragdollRoot.position;
         animator.enabled = true;
         
