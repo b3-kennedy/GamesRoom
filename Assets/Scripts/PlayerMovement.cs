@@ -72,7 +72,7 @@ public class PlayerMovement : NetworkBehaviour
         
         if(Input.GetKeyDown(KeyCode.O) && !GetComponent<RagdollEnabler>().isRagdoll)
         {
-            GetComponent<RagdollEnabler>().SetRagdollServerRpc(true);
+            GetComponent<RagdollEnabler>().SetRagdollServerRpc(true, Vector3.zero, NetworkManager.Singleton.LocalClientId);
         }
         else if (Input.GetKeyDown(KeyCode.O) && GetComponent<RagdollEnabler>().isRagdoll)
         {
