@@ -48,7 +48,7 @@ public class Interact : NetworkBehaviour
                     PlayerMovement playerMovement = hit.collider.GetComponent<PlayerMovement>();
                     NetworkObject networkObject = hit.collider.GetComponent<NetworkObject>();
                     Vector3 dir = (hit.collider.transform.position - transform.position).normalized;
-                    playerMovement.RagdollAndAddForceToPlayerServerRpc(networkObject.NetworkObjectId, dir, 100);
+                    playerMovement.RagdollAndAddForceToPlayerServerRpc(networkObject.OwnerClientId, dir, 100);
                 }
 
             }
