@@ -36,6 +36,11 @@ public class RagdollEnabler : NetworkBehaviour
             rigidbody.detectCollisions = false;
             rigidbody.useGravity = false;
         }
+        
+    }
+
+    public override void OnNetworkSpawn()
+    {
         Physics.IgnoreLayerCollision(8, 9);
     }
 
