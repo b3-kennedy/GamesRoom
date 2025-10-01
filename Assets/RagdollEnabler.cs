@@ -81,7 +81,7 @@ public class RagdollEnabler : NetworkBehaviour
         }
         foreach(var collider in colliders)
         {
-            collider.enabled = true;
+            //collider.enabled = true;
         }
         foreach (var rigidbody in rigidbodies)
         {
