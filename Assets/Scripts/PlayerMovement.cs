@@ -72,11 +72,11 @@ public class PlayerMovement : NetworkBehaviour
         
         if(Input.GetKeyDown(KeyCode.O) && !GetComponent<RagdollEnabler>().isRagdoll)
         {
-            GetComponent<RagdollEnabler>().EnableRagdoll();
+            GetComponent<RagdollEnabler>().SetRagdollServerRpc(true);
         }
         else if (Input.GetKeyDown(KeyCode.O) && GetComponent<RagdollEnabler>().isRagdoll)
         {
-            GetComponent<RagdollEnabler>().EnableAnimator();
+            GetComponent<RagdollEnabler>().SetRagdollServerRpc(false);
         }
 
         // Apply drag based on grounded state
@@ -124,23 +124,6 @@ public class PlayerMovement : NetworkBehaviour
         }
     }
     
-    [ServerRpc(RequireOwnership = false)]
-    public void RagdollAndAddForceToPlayerServerRpc(ulong clientID, Vector3 dir, float force)
-    {
-        ulong playerObjectID = NetworkManager.Singleton.ConnectedClients[clientID].PlayerObject.GetComponent<NetworkObject>().NetworkObjectId;
-        RagdollAndAddForceToPlayerClientRpc(playerObjectID,dir,force);
-    }
-    
-    [ClientRpc]
-    void RagdollAndAddForceToPlayerClientRpc(ulong playerObjectID,Vector3 dir, float force)
-    {
-        if(NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(playerObjectID, out var player))
-        {
-            player.GetComponent<PlayerMovement>().enabled = false;
-            player.GetComponent<Rigidbody>().AddForce(dir * force, ForceMode.Impulse);
-            player.GetComponent<RagdollEnabler>().EnableRagdoll();
-        }
-    }
 
 
     void Animation()

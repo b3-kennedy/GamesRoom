@@ -43,13 +43,6 @@ public class Interact : NetworkBehaviour
                     Debug.Log(table.tableGame);
                     table.tableGame.BeginServerRpc(NetworkManager.Singleton.LocalClientId);
                 }
-                else if(hit.collider.CompareTag("Player"))
-                {
-                    PlayerMovement playerMovement = hit.collider.GetComponent<PlayerMovement>();
-                    NetworkObject networkObject = hit.collider.GetComponent<NetworkObject>();
-                    Vector3 dir = (hit.collider.transform.position - transform.position).normalized;
-                    playerMovement.RagdollAndAddForceToPlayerServerRpc(networkObject.OwnerClientId, dir, 100);
-                }
 
             }
         }
