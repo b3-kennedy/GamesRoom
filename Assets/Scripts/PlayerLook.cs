@@ -14,10 +14,13 @@ public class PlayerLook : NetworkBehaviour
 
     private float xRotation = 0f;
 
+    RagdollEnabler ragdollEnabler;
+
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        ragdollEnabler = GetComponent<RagdollEnabler>();
     }
 
     public override void OnNetworkSpawn()
@@ -44,6 +47,10 @@ public class PlayerLook : NetworkBehaviour
         ragdollCamera.localRotation = normalCamera.localRotation;
 
         // Rotate player body left/right
-        playerBody.Rotate(Vector3.up * mouseX);
+        if(!ragdollEnabler.isRagdoll)
+        {
+            playerBody.Rotate(Vector3.up * mouseX);
+        }
+        
     }
 }

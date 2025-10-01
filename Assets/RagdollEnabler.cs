@@ -4,6 +4,8 @@ public class RagdollEnabler : MonoBehaviour
 {
     public Animator animator;
     public Transform ragdollRoot;
+    public Transform head;
+    public Transform spine;
     public bool startRagdoll = false;
     Rigidbody[] rigidbodies;
     CharacterJoint[] joints;
@@ -12,24 +14,30 @@ public class RagdollEnabler : MonoBehaviour
     public GameObject normalCamera;
     public GameObject ragdollCamera;
 
-    [HideInInspector] public bool isRagdoll;
+    [HideInInspector] public bool isRagdoll = false;
+    public Vector3 headPosition;
 
     void Awake()
     {
         rigidbodies = ragdollRoot.GetComponentsInChildren<Rigidbody>();
         joints = ragdollRoot.GetComponentsInChildren<CharacterJoint>();
         colliders = ragdollRoot.GetComponentsInChildren<Collider>();
-        
-        if(startRagdoll)
+        foreach (var joint in joints)
         {
-            EnableRagdoll();
+            joint.enableCollision = false;
         }
-        else
+        foreach (var collider in colliders)
         {
-            EnableAnimator();
+            collider.enabled = false;
+        }
+        foreach (var rigidbody in rigidbodies)
+        {
+            rigidbody.detectCollisions = false;
+            rigidbody.useGravity = false;
         }
         Physics.IgnoreLayerCollision(8, 9);
     }
+    
 
     public void EnableRagdoll()
     {
@@ -53,11 +61,13 @@ public class RagdollEnabler : MonoBehaviour
         isRagdoll = true;
         GetComponent<CapsuleCollider>().height = 0.1f;
     }
-    
+
     public void EnableAnimator()
     {
-        transform.position = new Vector3(transform.position.x, transform.position.y + 1, transform.position.z);
+
+        transform.position = ragdollRoot.position;
         animator.enabled = true;
+        
         foreach (var joint in joints)
         {
             joint.enableCollision = false;
@@ -76,6 +86,5 @@ public class RagdollEnabler : MonoBehaviour
         isRagdoll = false;
         GetComponent<CapsuleCollider>().height = 2f;
     }
-    
-    
+
 }

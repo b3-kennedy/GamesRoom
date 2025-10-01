@@ -36,11 +36,18 @@ public class PlayerMovement : NetworkBehaviour
 
     public bool canJump = true;
 
+    RagdollEnabler ragdollEnabler;
+    float getUpTimer;
+    bool getUp = false;
+    bool hasRagdollHit = false;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
         state = PlayerState.NORMAL;
+        ragdollEnabler = GetComponent<RagdollEnabler>();
+        ragdollEnabler.spine.GetComponent<RagdollCollision>().hitObject.AddListener(OnRagdollHit);
     }
 
     void Update()
@@ -77,8 +84,44 @@ public class PlayerMovement : NetworkBehaviour
 
         Animation();
 
+        if(hasRagdollHit)
+        {
+            getUpTimer += Time.deltaTime;
+            if(getUpTimer >= 2)
+            {
+                getUp = true;
+                getUpTimer = 0;
+            }
+        }
 
+        GetUp();
 
+    }
+    
+    void OnRagdollHit()
+    {
+        Debug.Log("hit");
+        hasRagdollHit = true;
+    }
+    
+    void GetUp()
+    {
+        
+        if (getUp)
+        {
+            if (ragdollEnabler.head.position.y <= 1.75f)
+            {
+                ragdollEnabler.head.GetComponent<Rigidbody>().linearVelocity = Vector3.up * 5;
+            }
+            else
+            {
+                getUp = false;
+                hasRagdollHit = false;
+                ragdollEnabler.head.GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
+                ragdollEnabler.EnableAnimator();
+            }
+            
+        }
     }
     
     void Animation()
