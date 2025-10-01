@@ -82,8 +82,13 @@ public class RagdollEnabler : NetworkBehaviour
             rigidbody.detectCollisions = true;
             rigidbody.useGravity = true;
         }
-        ragdollCamera.SetActive(true);
-        normalCamera.SetActive(false);
+        
+        if(IsOwner)
+        {
+            ragdollCamera.SetActive(true);
+            normalCamera.SetActive(false);
+        }
+
         isRagdoll = true;
         GetComponent<CapsuleCollider>().height = 0.1f;
     }
@@ -106,8 +111,13 @@ public class RagdollEnabler : NetworkBehaviour
             rigidbody.detectCollisions = false;
             rigidbody.useGravity = false;
         }
-        ragdollCamera.SetActive(false);
-        normalCamera.SetActive(true);
+        
+        if(IsOwner)
+        {
+            ragdollCamera.SetActive(false);
+            normalCamera.SetActive(true);
+        }
+
         isRagdoll = false;
         GetComponent<PlayerMovement>().enabled = true;
         GetComponent<CapsuleCollider>().height = 2f;
