@@ -85,10 +85,11 @@ public class RagdollEnabler : NetworkBehaviour
         }
         foreach (var rigidbody in rigidbodies)
         {
-            rigidbody.linearVelocity = GetComponent<Rigidbody>().linearVelocity;
+            
             rigidbody.detectCollisions = true;
             rigidbody.useGravity = true;
             rigidbody.isKinematic = false;
+            rigidbody.linearVelocity = GetComponent<Rigidbody>().linearVelocity;
         }
         
         if(IsOwner)
@@ -98,7 +99,7 @@ public class RagdollEnabler : NetworkBehaviour
         }
 
         isRagdoll = true;
-        GetComponent<CapsuleCollider>().height = 0.1f;
+        //GetComponent<CapsuleCollider>().height = 0.1f;
     }
 
     public void EnableAnimator()
