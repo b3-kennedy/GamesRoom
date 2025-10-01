@@ -74,7 +74,7 @@ public class RagdollEnabler : NetworkBehaviour
 
     public void EnableRagdoll()
     {
-        GetComponent<Rigidbody>().isKinematic = true;
+        
         animator.enabled = false;
         foreach(var joint in joints)
         {
@@ -100,12 +100,13 @@ public class RagdollEnabler : NetworkBehaviour
         }
 
         isRagdoll = true;
+        GetComponent<Rigidbody>().isKinematic = true;
         GetComponent<CapsuleCollider>().enabled = false;
     }
 
     public void EnableAnimator()
     {
-        GetComponent<Rigidbody>().isKinematic = false;
+        
         transform.position = ragdollRoot.position;
         animator.enabled = true;
         
@@ -133,6 +134,7 @@ public class RagdollEnabler : NetworkBehaviour
         isRagdoll = false;
         GetComponent<PlayerMovement>().enabled = true;
         GetComponent<CapsuleCollider>().enabled = true;
+        GetComponent<Rigidbody>().isKinematic = false;
     }
 
 }
