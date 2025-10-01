@@ -99,7 +99,7 @@ public class RagdollEnabler : NetworkBehaviour
         }
 
         isRagdoll = true;
-        //GetComponent<CapsuleCollider>().height = 0.1f;
+        GetComponent<CapsuleCollider>().enabled = false;
     }
 
     public void EnableAnimator()
@@ -130,7 +130,7 @@ public class RagdollEnabler : NetworkBehaviour
 
         isRagdoll = false;
         GetComponent<PlayerMovement>().enabled = true;
-        GetComponent<CapsuleCollider>().height = 2f;
+        GetComponent<CapsuleCollider>().enabled = true;
     }
 
 }
