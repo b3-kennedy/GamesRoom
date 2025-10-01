@@ -109,7 +109,7 @@ public class PlayerMovement : NetworkBehaviour
         
         if (getUp)
         {
-            if (ragdollEnabler.head.position.y <= 1.75f)
+            if (ragdollEnabler.head.position.y <= 1.5f)
             {
                 ragdollEnabler.head.GetComponent<Rigidbody>().linearVelocity = Vector3.up * 5;
             }
@@ -124,6 +124,24 @@ public class PlayerMovement : NetworkBehaviour
         }
     }
     
+    [ServerRpc(RequireOwnership = false)]
+    public void RagdollAndAddForceToPlayerServerRpc(ulong clientID, Vector3 dir, float force)
+    {
+        ulong playerObjectID = NetworkManager.Singleton.ConnectedClients[clientID].PlayerObject.GetComponent<NetworkObject>().NetworkObjectId;
+        RagdollAndAddForceToPlayerClientRpc(playerObjectID,dir,force);
+    }
+    
+    [ClientRpc]
+    void RagdollAndAddForceToPlayerClientRpc(ulong playerObjectID,Vector3 dir, float force)
+    {
+        if(NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(playerObjectID, out var player))
+        {
+            player.GetComponent<Rigidbody>().AddForce(dir * force, ForceMode.Impulse);
+            player.GetComponent<RagdollEnabler>().EnableRagdoll();
+        }
+    }
+
+
     void Animation()
     {
         if (IsGrounded() && (horizontal != 0 || vertical != 0))

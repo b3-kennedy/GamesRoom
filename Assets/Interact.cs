@@ -1,4 +1,5 @@
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Interact : NetworkBehaviour
@@ -42,38 +43,15 @@ public class Interact : NetworkBehaviour
                     Debug.Log(table.tableGame);
                     table.tableGame.BeginServerRpc(NetworkManager.Singleton.LocalClientId);
                 }
-
-            }
-        }
-        if (Input.GetKey(interactKey))
-        {
-            if (Physics.Raycast(cam.transform.position, cam.transform.forward, out RaycastHit hit, range))
-            {
-                if (hit.collider.CompareTag("Player"))
+                else if(hit.collider.CompareTag("Player"))
                 {
-                    SteamPlayer steamPlayer = hit.collider.GetComponent<SteamPlayer>();
-                    if (!playerInteractMenu.gameObject.activeSelf)
-                    {
-                        playerInteractingWith = hit.collider.GetComponent<NetworkObject>();
-                        clientID = NetworkManager.Singleton.LocalClientId;
-                        otherClientID = playerInteractingWith.OwnerClientId;
-                        
-                        playerInteractMenu.title.text = $"Interact With {steamPlayer.playerName}";
-                        playerInteractMenu.clientID = NetworkManager.Singleton.LocalClientId;
-                        playerInteractMenu.otherClientID = playerInteractingWith.OwnerClientId;
-                        playerInteractMenu.gameObject.SetActive(true);
-                        Cursor.lockState = CursorLockMode.Confined;
-                        
-                    }
+                    PlayerMovement playerMovement = hit.collider.GetComponent<PlayerMovement>();
+                    NetworkObject networkObject = hit.collider.GetComponent<NetworkObject>();
+                    Vector3 dir = (hit.collider.transform.position - transform.position).normalized;
+                    playerMovement.RagdollAndAddForceToPlayerServerRpc(networkObject.NetworkObjectId, dir, 100);
                 }
 
             }
-        }
-        else if (Input.GetKeyUp(interactKey) && playerInteractMenu.gameObject.activeSelf)
-        {
-            playerInteractMenu.gameObject.SetActive(false);
-            Cursor.lockState = CursorLockMode.Locked;
-            playerInteractingWith = null;
         }
 
     }
