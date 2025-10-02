@@ -130,16 +130,24 @@ public class RagdollEnabler : NetworkBehaviour
 
     public void EnableAnimator()
     {
-        // STORE the ragdoll end position FIRST before changing anything
-        Vector3 ragdollEndPosition = Vector3.zero;
+        if (!isRagdoll)
+            return;
+
+        // Get ragdoll position BEFORE disabling physics
+        Vector3 ragdollHipPosition = ragdollRoot.GetComponent<Rigidbody>().position;
+
         if (IsOwner)
         {
-            ragdollEndPosition = ragdollRoot.GetComponent<Rigidbody>().position;
-            Debug.Log($"Ragdoll ended at: {ragdollEndPosition}");
-            Debug.Log($"Player currently at: {transform.position}");
+            Debug.Log($"Ragdoll hip at: {ragdollHipPosition}");
+            Debug.Log($"Base player at: {transform.position}");
+
+            // Move base player to ragdoll position FIRST
+            transform.position = ragdollHipPosition;
+            Debug.Log($"Moved base player to: {transform.position}");
         }
 
-        // Disable ragdoll physics
+        // NOW disable ragdoll physics - bones will snap to their local positions
+        // but since we moved the parent, they snap to the correct world position
         foreach (var joint in joints)
         {
             joint.enableCollision = false;
@@ -155,15 +163,10 @@ public class RagdollEnabler : NetworkBehaviour
             rigidbody.isKinematic = true;
         }
 
-        // Teleport IMMEDIATELY on owner, then sync to server
         if (IsOwner && !hasTeleported)
         {
-            // Teleport locally first
-            transform.position = ragdollEndPosition;
-            Debug.Log($"Teleported locally to: {transform.position}");
-
-            // Then tell server about the new position
-            TeleportServerRpc(GetComponent<NetworkObject>().NetworkObjectId, ragdollEndPosition, OwnerClientId);
+            // Sync to server
+            TeleportServerRpc(GetComponent<NetworkObject>().NetworkObjectId, ragdollHipPosition, OwnerClientId);
 
             ragdollCamera.SetActive(false);
             normalCamera.SetActive(true);
