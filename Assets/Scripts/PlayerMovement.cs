@@ -144,22 +144,26 @@ public class PlayerMovement : NetworkBehaviour
         if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectID, out var player))
         {
             RagdollEnabler ragdollEnabler = player.GetComponent<RagdollEnabler>();
-            ragdollEnabler.SetRagdollServerRpc(true);
+            ragdollEnabler.EnableRagdoll();
+
             Rigidbody root = ragdollEnabler.ragdollRoot.GetComponent<Rigidbody>();
             root.AddForce(dir * force, ForceMode.Impulse);
         }
 
-        // then tell clients to visually update (no physics)
-        RagdollAndAddForceClientRpc(networkObjectID);
+        // Tell everyone (including server/host client) to simulate it locally too
+        RagdollAndAddForceClientRpc(networkObjectID, force, dir);
     }
 
     [ClientRpc]
-    void RagdollAndAddForceClientRpc(ulong networkObjectID)
+    void RagdollAndAddForceClientRpc(ulong networkObjectID, float force, Vector3 dir)
     {
         if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectID, out var player))
         {
             RagdollEnabler ragdollEnabler = player.GetComponent<RagdollEnabler>();
-            ragdollEnabler.SetRagdollServerRpc(true); // Just enable visuals/animations
+            ragdollEnabler.EnableRagdoll();
+
+            Rigidbody root = ragdollEnabler.ragdollRoot.GetComponent<Rigidbody>();
+            root.AddForce(dir * force, ForceMode.Impulse); // each client does this locally
         }
     }
 
