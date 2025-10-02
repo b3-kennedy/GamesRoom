@@ -107,27 +107,6 @@ public class RagdollEnabler : NetworkBehaviour
         GetComponent<CapsuleCollider>().enabled = false;
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    public void TeleportServerRpc(ulong netObjID, Vector3 pos, ulong clientID)
-    {
-        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(netObjID, out var player))
-        {
-            Debug.Log($"Server teleporting to: {pos}");
-            TeleportClientRpc(pos, clientID);
-        }
-    }
-
-    [ClientRpc]
-    void TeleportClientRpc(Vector3 pos, ulong clientID)
-    {
-        if (clientID != OwnerClientId)
-            return;
-
-        Debug.Log($"Client teleporting to: {pos}, current position: {transform.position}");
-        transform.position = pos;
-        Debug.Log($"After teleport: {transform.position}");
-    }
-
     public void EnableAnimator()
     {
         if (!isRagdoll)
@@ -139,15 +118,18 @@ public class RagdollEnabler : NetworkBehaviour
         if (IsOwner)
         {
             Debug.Log($"Ragdoll hip at: {ragdollHipPosition}");
-            Debug.Log($"Base player at: {transform.position}");
 
-            // Move base player to ragdoll position FIRST
+            // Move base player to ragdoll position IMMEDIATELY (no RPC)
             transform.position = ragdollHipPosition;
-            Debug.Log($"Moved base player to: {transform.position}");
+
+            // Let NetworkTransform handle syncing to other clients automatically
+
+            ragdollCamera.SetActive(false);
+            normalCamera.SetActive(true);
+            hasTeleported = true;
         }
 
-        // NOW disable ragdoll physics - bones will snap to their local positions
-        // but since we moved the parent, they snap to the correct world position
+        // Disable ragdoll physics AFTER moving parent
         foreach (var joint in joints)
         {
             joint.enableCollision = false;
@@ -161,16 +143,6 @@ public class RagdollEnabler : NetworkBehaviour
             rigidbody.detectCollisions = false;
             rigidbody.useGravity = false;
             rigidbody.isKinematic = true;
-        }
-
-        if (IsOwner && !hasTeleported)
-        {
-            // Sync to server
-            TeleportServerRpc(GetComponent<NetworkObject>().NetworkObjectId, ragdollHipPosition, OwnerClientId);
-
-            ragdollCamera.SetActive(false);
-            normalCamera.SetActive(true);
-            hasTeleported = true;
         }
 
         animator.enabled = true;
