@@ -126,7 +126,7 @@ public class RagdollEnabler : NetworkBehaviour
     {
         if(IsOwner)
         {
-            TeleportServerRpc(GetComponent<NetworkObject>().NetworkObjectId, ragdollRoot.position, OwnerClientId);
+            TeleportServerRpc(GetComponent<NetworkObject>().NetworkObjectId, ragdollRoot.GetComponent<Rigidbody>().position, OwnerClientId);
         }
         
         
