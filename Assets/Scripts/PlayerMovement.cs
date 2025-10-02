@@ -115,7 +115,7 @@ public class PlayerMovement : NetworkBehaviour
                 getUp = false;
                 hasRagdollHit = false;
                 ragdollEnabler.head.GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
-                ragdollEnabler.SetRagdollServerRpc(false, Vector3.zero);
+                ragdollEnabler.SetRagdollServerRpc(false);
             }
             
         }
@@ -146,22 +146,25 @@ public class PlayerMovement : NetworkBehaviour
             RagdollEnabler ragdollEnabler = player.GetComponent<RagdollEnabler>();
             ragdollEnabler.EnableRagdoll(player.GetComponent<Rigidbody>().linearVelocity);
 
+            Vector3 vel = player.GetComponent<Rigidbody>().linearVelocity;
+
             Rigidbody root = ragdollEnabler.ragdollRoot.GetComponent<Rigidbody>();
             root.AddForce(dir * force, ForceMode.Impulse);
+            RagdollAndAddForceClientRpc(networkObjectID, force, dir, vel);
         }
 
-        RagdollAndAddForceClientRpc(networkObjectID, force, dir);
+        
     }
 
     [ClientRpc]
-    void RagdollAndAddForceClientRpc(ulong networkObjectID, float force, Vector3 dir)
+    void RagdollAndAddForceClientRpc(ulong networkObjectID, float force, Vector3 dir, Vector3 velocity)
     {
         if (IsServer) return; //stops force being applied twice on host
     
         if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectID, out var player))
         {
             RagdollEnabler ragdollEnabler = player.GetComponent<RagdollEnabler>();
-            ragdollEnabler.EnableRagdoll(player.GetComponent<Rigidbody>().linearVelocity);
+            ragdollEnabler.EnableRagdoll(velocity);
 
             Rigidbody root = ragdollEnabler.ragdollRoot.GetComponent<Rigidbody>();
             root.AddForce(dir * force, ForceMode.Impulse); // each client does this locally

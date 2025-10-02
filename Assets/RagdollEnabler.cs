@@ -47,10 +47,11 @@ public class RagdollEnabler : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void SetRagdollServerRpc(bool enable, Vector3 currentVelocity, ulong targetClientId = 0)
+    public void SetRagdollServerRpc(bool enable, ulong targetClientId = 0)
     {
-        // Server tells all clients what to do
-        SetRagdollClientRpc(enable, currentVelocity, targetClientId);
+        var player = NetworkManager.Singleton.ConnectedClients[targetClientId].PlayerObject;
+        Vector3 vel = player.GetComponent<Rigidbody>().linearVelocity;
+        SetRagdollClientRpc(enable, vel, targetClientId);
     }
 
     [ClientRpc]
