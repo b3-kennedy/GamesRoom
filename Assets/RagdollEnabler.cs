@@ -18,6 +18,8 @@ public class RagdollEnabler : NetworkBehaviour
     [HideInInspector] public bool isRagdoll = false;
     public Vector3 headPosition;
 
+    bool hasTeleported = false;
+
     void Awake()
     {
 
@@ -75,7 +77,7 @@ public class RagdollEnabler : NetworkBehaviour
 
     public void EnableRagdoll(Vector3 vel)
     {
-        
+        hasTeleported = false;
         animator.enabled = false;
         foreach(var joint in joints)
         {
@@ -156,10 +158,15 @@ public class RagdollEnabler : NetworkBehaviour
         // Teleport after disabling physics
         if (IsOwner)
         {
-            TeleportServerRpc(GetComponent<NetworkObject>().NetworkObjectId, ragdollEndPosition, OwnerClientId);
+            if(!hasTeleported)
+            {
+                TeleportServerRpc(GetComponent<NetworkObject>().NetworkObjectId, ragdollEndPosition, OwnerClientId);
 
-            ragdollCamera.SetActive(false);
-            normalCamera.SetActive(true);
+                ragdollCamera.SetActive(false);
+                normalCamera.SetActive(true);
+                hasTeleported = true;
+            }
+
         }
 
         animator.enabled = true;
