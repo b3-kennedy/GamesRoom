@@ -117,7 +117,7 @@ public class RagdollEnabler : NetworkBehaviour
     [ClientRpc]
     void TeleportClientRpc(Vector3 pos)
     {
-        transform.position = ragdollRoot.position;
+        transform.position = pos;
     }
 
     public void EnableAnimator()
