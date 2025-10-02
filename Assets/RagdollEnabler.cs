@@ -110,7 +110,7 @@ public class RagdollEnabler : NetworkBehaviour
     {
         if(NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(netObjID, out var player))
         {
-            TeleportClientRpc(player.transform.position);
+            TeleportClientRpc(player.GetComponent<RagdollEnabler>().ragdollRoot.position);
         }
     }
     
