@@ -106,11 +106,11 @@ public class RagdollEnabler : NetworkBehaviour
     }
     
     [ServerRpc(RequireOwnership = false)]
-    public void TeleportServerRpc(ulong netObjID)
+    public void TeleportServerRpc(ulong netObjID, Vector3 pos)
     {
         if(NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(netObjID, out var player))
         {
-            TeleportClientRpc(player.GetComponent<RagdollEnabler>().ragdollRoot.position);
+            TeleportClientRpc(pos);
         }
     }
     
@@ -123,7 +123,7 @@ public class RagdollEnabler : NetworkBehaviour
 
     public void EnableAnimator()
     {
-        TeleportServerRpc(GetComponent<NetworkObject>().NetworkObjectId);
+        TeleportServerRpc(GetComponent<NetworkObject>().NetworkObjectId, ragdollRoot.position);
         animator.enabled = true;
         
         foreach (var joint in joints)
