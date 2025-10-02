@@ -42,7 +42,7 @@ public class RagdollEnabler : NetworkBehaviour
         {
             rigidbody.detectCollisions = false;
             rigidbody.useGravity = false;
-            rigidbody.isKinematic = true;
+            rigidbody.linearDamping = 2f;
         }
     }
 
@@ -90,7 +90,6 @@ public class RagdollEnabler : NetworkBehaviour
             
             rigidbody.detectCollisions = true;
             rigidbody.useGravity = true;
-            rigidbody.isKinematic = false;
             rigidbody.linearVelocity = vel;
         }
         
