@@ -118,6 +118,7 @@ public class RagdollEnabler : NetworkBehaviour
     void TeleportClientRpc(Vector3 pos)
     {
         transform.position = pos;
+        Debug.Log(pos);
     }
 
     public void EnableAnimator()
