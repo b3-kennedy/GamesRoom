@@ -47,14 +47,14 @@ public class RagdollEnabler : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void SetRagdollServerRpc(bool enable, Vector3 force = default, ulong targetClientId = 0)
+    public void SetRagdollServerRpc(bool enable, ulong targetClientId = 0)
     {
         // Server tells all clients what to do
-        SetRagdollClientRpc(enable, force, targetClientId);
+        SetRagdollClientRpc(enable, targetClientId);
     }
 
     [ClientRpc]
-    private void SetRagdollClientRpc(bool enable, Vector3 force, ulong targetClientId)
+    private void SetRagdollClientRpc(bool enable, ulong targetClientId)
     {
         // If targeting a specific player
         if (targetClientId != 0 && targetClientId != OwnerClientId)

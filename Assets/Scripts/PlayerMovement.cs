@@ -72,11 +72,7 @@ public class PlayerMovement : NetworkBehaviour
         
         if(Input.GetKeyDown(KeyCode.O) && !GetComponent<RagdollEnabler>().isRagdoll)
         {
-            GetComponent<RagdollEnabler>().SetRagdollServerRpc(true, Vector3.zero, NetworkManager.Singleton.LocalClientId);
-        }
-        else if (Input.GetKeyDown(KeyCode.O) && GetComponent<RagdollEnabler>().isRagdoll)
-        {
-            GetComponent<RagdollEnabler>().SetRagdollServerRpc(false);
+            RagdollAndAddForceServerRpc(OwnerClientId, 100, Vector3.up);
         }
 
         // Apply drag based on grounded state
@@ -89,7 +85,7 @@ public class PlayerMovement : NetworkBehaviour
             getUpTimer += Time.deltaTime;
             if(getUpTimer >= 2)
             {
-                getUp = true;
+                GetUpServerRpc(OwnerClientId);
                 getUpTimer = 0;
             }
         }
@@ -100,7 +96,6 @@ public class PlayerMovement : NetworkBehaviour
     
     void OnRagdollHit()
     {
-        Debug.Log("hit");
         hasRagdollHit = true;
     }
     
@@ -122,6 +117,36 @@ public class PlayerMovement : NetworkBehaviour
             }
             
         }
+    }
+    
+    [ServerRpc(RequireOwnership = false)]
+    void GetUpServerRpc(ulong clientID)
+    {
+        GetUpClientRpc(clientID);
+    }
+    
+    [ClientRpc]
+    void GetUpClientRpc(ulong clientID)
+    {
+        if (NetworkManager.Singleton.LocalClientId != clientID) return;
+
+        getUp = true;
+    }
+    
+    [ServerRpc(RequireOwnership = false)]
+    public void RagdollAndAddForceServerRpc(ulong clientID,float force, Vector3 dir)
+    {
+        RagdollAndAddForceClientRpc(clientID, force, dir);
+    }
+    
+    [ClientRpc]
+    void RagdollAndAddForceClientRpc(ulong clientID, float force, Vector3 dir)
+    {
+        if (NetworkManager.Singleton.LocalClientId != clientID) return;
+
+        ragdollEnabler.SetRagdollServerRpc(true);
+        Rigidbody root = ragdollEnabler.ragdollRoot.GetComponent<Rigidbody>();
+        root.AddForce(dir * force, ForceMode.Impulse);
     }
     
 
