@@ -52,7 +52,8 @@ public class PlayerMovement : NetworkBehaviour
 
     void Update()
     {
-        
+
+        GetUp();
 
         if (!IsOwner) return;
 
@@ -91,7 +92,7 @@ public class PlayerMovement : NetworkBehaviour
             }
         }
 
-        GetUp();
+        
 
     }
     
