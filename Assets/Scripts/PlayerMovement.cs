@@ -137,17 +137,11 @@ public class PlayerMovement : NetworkBehaviour
             player.GetComponent<PlayerMovement>().getUp = true;
         }
     }
-    
+
     [ServerRpc(RequireOwnership = false)]
-    public void RagdollAndAddForceServerRpc(ulong networkObjectID,float force, Vector3 dir)
+    public void RagdollAndAddForceServerRpc(ulong networkObjectID, float force, Vector3 dir)
     {
-        RagdollAndAddForceClientRpc(networkObjectID, force, dir);
-    }
-    
-    [ClientRpc]
-    void RagdollAndAddForceClientRpc(ulong networkObjectID, float force, Vector3 dir)
-    {
-        if(NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectID, out var player))
+        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectID, out var player))
         {
             RagdollEnabler ragdollEnabler = player.GetComponent<RagdollEnabler>();
             ragdollEnabler.SetRagdollServerRpc(true);
@@ -155,9 +149,20 @@ public class PlayerMovement : NetworkBehaviour
             root.AddForce(dir * force, ForceMode.Impulse);
         }
 
-
+        // then tell clients to visually update (no physics)
+        RagdollAndAddForceClientRpc(networkObjectID);
     }
-    
+
+    [ClientRpc]
+    void RagdollAndAddForceClientRpc(ulong networkObjectID)
+    {
+        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectID, out var player))
+        {
+            RagdollEnabler ragdollEnabler = player.GetComponent<RagdollEnabler>();
+            ragdollEnabler.SetRagdollServerRpc(true); // Just enable visuals/animations
+        }
+    }
+
 
 
     void Animation()
