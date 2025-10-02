@@ -104,26 +104,28 @@ public class RagdollEnabler : NetworkBehaviour
         GetComponent<Rigidbody>().isKinematic = true;
         GetComponent<CapsuleCollider>().enabled = false;
     }
-    
+
     [ServerRpc(RequireOwnership = false)]
     public void TeleportServerRpc(ulong netObjID, Vector3 pos, ulong clientID)
     {
-        if(NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(netObjID, out var player))
+        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(netObjID, out var player))
         {
-            player.transform.position = pos;
+            TeleportClientRpc(pos, clientID);
         }
     }
 
+    [ClientRpc]
+    void TeleportClientRpc(Vector3 pos, ulong clientID)
+    {
+        if (clientID != OwnerClientId)
+            return;
+
+        transform.position = pos;
+    }
 
     public void EnableAnimator()
     {
-        if(IsOwner)
-        {
-            TeleportServerRpc(GetComponent<NetworkObject>().NetworkObjectId, ragdollRoot.GetComponent<Rigidbody>().position, OwnerClientId);
-        }
-        
-        
-        
+        // Disable ragdoll physics first
         foreach (var joint in joints)
         {
             joint.enableCollision = false;
@@ -138,13 +140,18 @@ public class RagdollEnabler : NetworkBehaviour
             rigidbody.useGravity = false;
             rigidbody.isKinematic = true;
         }
-        
-        if(IsOwner)
+
+        // Now teleport the parent to the ragdoll position
+        if (IsOwner)
         {
+            Vector3 ragdollEndPosition = ragdollRoot.GetComponent<Rigidbody>().position;
+            TeleportServerRpc(GetComponent<NetworkObject>().NetworkObjectId, ragdollEndPosition, OwnerClientId);
+
             ragdollCamera.SetActive(false);
             normalCamera.SetActive(true);
         }
 
+        animator.enabled = true;
         isRagdoll = false;
         GetComponent<PlayerMovement>().enabled = true;
         GetComponent<CapsuleCollider>().enabled = true;
