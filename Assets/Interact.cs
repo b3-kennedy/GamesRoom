@@ -46,6 +46,7 @@ public class Interact : NetworkBehaviour
                 
                 if(hit.collider.CompareTag("Player"))
                 {
+                    Debug.Log("hit player");
                     Vector3 direction = (hit.collider.transform.position - transform.position).normalized;
                     ulong id = hit.collider.GetComponent<NetworkObject>().NetworkObjectId;
                     hit.collider.GetComponent<PlayerMovement>().RagdollAndAddForceServerRpc(id, 100, direction);
