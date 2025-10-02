@@ -112,32 +112,29 @@ public class RagdollEnabler : NetworkBehaviour
         if (!isRagdoll)
             return;
 
-        // Get ragdoll position BEFORE disabling physics
+        // Get ragdoll root position BEFORE disabling physics
         Vector3 ragdollHipPosition = ragdollRoot.GetComponent<Rigidbody>().position;
 
+        // Only the server can reposition the player root
+        if (IsServer)
+        {
+            transform.position = ragdollHipPosition;
+        }
+
+        // Owner handles camera
         if (IsOwner)
         {
-            Debug.Log($"Ragdoll hip at: {ragdollHipPosition}");
-
-            // Move base player to ragdoll position IMMEDIATELY (no RPC)
-            transform.position = ragdollHipPosition;
-
-            // Let NetworkTransform handle syncing to other clients automatically
-
             ragdollCamera.SetActive(false);
             normalCamera.SetActive(true);
-            hasTeleported = true;
         }
 
         // Disable ragdoll physics AFTER moving parent
         foreach (var joint in joints)
-        {
             joint.enableCollision = false;
-        }
+
         foreach (var collider in colliders)
-        {
             collider.enabled = false;
-        }
+
         foreach (var rigidbody in rigidbodies)
         {
             rigidbody.detectCollisions = false;
