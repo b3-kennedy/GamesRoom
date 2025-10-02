@@ -110,7 +110,7 @@ public class RagdollEnabler : NetworkBehaviour
     {
         if(NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(netObjID, out var player))
         {
-            transform.position = pos;
+            player.transform.position = pos;
         }
     }
 
