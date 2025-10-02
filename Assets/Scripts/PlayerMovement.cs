@@ -87,15 +87,6 @@ public class PlayerMovement : NetworkBehaviour
                 getUpTimer = 0;
             }
         }
-
-        if(ragdollEnabler.isRagdoll)
-        {
-            transform.position = ragdollEnabler.ragdollRoot.position;
-        }
-        
-
-
-
     }
     
     void OnRagdollHit()

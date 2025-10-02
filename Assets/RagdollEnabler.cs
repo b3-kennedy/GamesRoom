@@ -1,4 +1,5 @@
 using Unity.Netcode;
+using Unity.Netcode.Components;
 using UnityEngine;
 
 public class RagdollEnabler : NetworkBehaviour
@@ -75,7 +76,7 @@ public class RagdollEnabler : NetworkBehaviour
 
     public void EnableRagdoll(Vector3 vel)
     {
-        ragdollRoot.SetParent(null);
+        
         animator.enabled = false;
         foreach(var joint in joints)
         {
@@ -104,11 +105,17 @@ public class RagdollEnabler : NetworkBehaviour
         GetComponent<Rigidbody>().isKinematic = true;
         GetComponent<CapsuleCollider>().enabled = false;
     }
+    
+    [ServerRpc(RequireOwnership = false)]
+    void TeleportServerRpc()
+    {
+        GetComponent<NetworkTransform>().Teleport(ragdollRoot.position, transform.rotation, transform.localScale);
+    }
 
     public void EnableAnimator()
     {
 
-        ragdollRoot.SetParent(transform.GetChild(0));
+        TeleportServerRpc();
         animator.enabled = true;
         
         foreach (var joint in joints)
