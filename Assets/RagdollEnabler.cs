@@ -42,8 +42,6 @@ public class RagdollEnabler : NetworkBehaviour
         {
             rigidbody.detectCollisions = false;
             rigidbody.useGravity = false;
-            rigidbody.solverIterations = 12;          
-            rigidbody.solverVelocityIterations = 12;
         }
     }
 
