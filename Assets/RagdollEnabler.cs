@@ -47,14 +47,14 @@ public class RagdollEnabler : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void SetRagdollServerRpc(bool enable, ulong targetClientId = 0)
+    public void SetRagdollServerRpc(bool enable, Vector3 currentVelocity, ulong targetClientId = 0)
     {
         // Server tells all clients what to do
-        SetRagdollClientRpc(enable, targetClientId);
+        SetRagdollClientRpc(enable, currentVelocity, targetClientId);
     }
 
     [ClientRpc]
-    private void SetRagdollClientRpc(bool enable, ulong targetClientId)
+    private void SetRagdollClientRpc(bool enable, Vector3 velocity,ulong targetClientId)
     {
         // If targeting a specific player
         if (targetClientId != 0 && targetClientId != OwnerClientId)
@@ -62,7 +62,7 @@ public class RagdollEnabler : NetworkBehaviour
 
         if (enable)
         {
-            EnableRagdoll();
+            EnableRagdoll(velocity);
         }
         else
         {
@@ -72,7 +72,7 @@ public class RagdollEnabler : NetworkBehaviour
     }
 
 
-    public void EnableRagdoll()
+    public void EnableRagdoll(Vector3 vel)
     {
         
         animator.enabled = false;
@@ -90,7 +90,7 @@ public class RagdollEnabler : NetworkBehaviour
             rigidbody.detectCollisions = true;
             rigidbody.useGravity = true;
             rigidbody.isKinematic = false;
-            rigidbody.linearVelocity = GetComponent<Rigidbody>().linearVelocity;
+            rigidbody.linearVelocity = vel;
         }
         
         if(IsOwner)

@@ -115,7 +115,7 @@ public class PlayerMovement : NetworkBehaviour
                 getUp = false;
                 hasRagdollHit = false;
                 ragdollEnabler.head.GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
-                ragdollEnabler.SetRagdollServerRpc(false);
+                ragdollEnabler.SetRagdollServerRpc(false, Vector3.zero);
             }
             
         }
@@ -144,7 +144,7 @@ public class PlayerMovement : NetworkBehaviour
         if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectID, out var player))
         {
             RagdollEnabler ragdollEnabler = player.GetComponent<RagdollEnabler>();
-            ragdollEnabler.EnableRagdoll();
+            ragdollEnabler.EnableRagdoll(rb.linearVelocity);
 
             Rigidbody root = ragdollEnabler.ragdollRoot.GetComponent<Rigidbody>();
             root.AddForce(dir * force, ForceMode.Impulse);
@@ -161,7 +161,7 @@ public class PlayerMovement : NetworkBehaviour
         if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectID, out var player))
         {
             RagdollEnabler ragdollEnabler = player.GetComponent<RagdollEnabler>();
-            ragdollEnabler.EnableRagdoll();
+            ragdollEnabler.EnableRagdoll(rb.linearVelocity);
 
             Rigidbody root = ragdollEnabler.ragdollRoot.GetComponent<Rigidbody>();
             root.AddForce(dir * force, ForceMode.Impulse); // each client does this locally
