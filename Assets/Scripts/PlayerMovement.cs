@@ -71,12 +71,7 @@ public class PlayerMovement : NetworkBehaviour
         {
             Jump();
         }
-        
-        if(Input.GetKeyDown(KeyCode.O) && !GetComponent<RagdollEnabler>().isRagdoll)
-        {
-            
-            RagdollAndAddForceServerRpc(NetworkObjectId, 100, Vector3.up);
-        }
+    
 
         // Apply drag based on grounded state
         rb.linearDamping = IsGrounded() ? groundDrag : 0f;
@@ -93,7 +88,13 @@ public class PlayerMovement : NetworkBehaviour
             }
         }
 
+        if(ragdollEnabler.isRagdoll)
+        {
+            transform.position = ragdollEnabler.ragdollRoot.position;
+        }
         
+
+
 
     }
     
