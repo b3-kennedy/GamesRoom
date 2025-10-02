@@ -123,7 +123,11 @@ public class RagdollEnabler : NetworkBehaviour
 
     public void EnableAnimator()
     {
-        TeleportServerRpc(GetComponent<NetworkObject>().NetworkObjectId, ragdollRoot.position);
+        if(IsOwner)
+        {
+            TeleportServerRpc(GetComponent<NetworkObject>().NetworkObjectId, ragdollRoot.position);
+        }
+        
         animator.enabled = true;
         
         foreach (var joint in joints)
