@@ -110,6 +110,7 @@ public class RagdollEnabler : NetworkBehaviour
     {
         if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(netObjID, out var player))
         {
+            Debug.Log($"Server teleporting to: {pos}");
             TeleportClientRpc(pos, clientID);
         }
     }
@@ -120,12 +121,23 @@ public class RagdollEnabler : NetworkBehaviour
         if (clientID != OwnerClientId)
             return;
 
+        Debug.Log($"Client teleporting to: {pos}, current position: {transform.position}");
         transform.position = pos;
+        Debug.Log($"After teleport: {transform.position}");
     }
 
     public void EnableAnimator()
     {
-        // Disable ragdoll physics first
+        // STORE the ragdoll end position FIRST before changing anything
+        Vector3 ragdollEndPosition = Vector3.zero;
+        if (IsOwner)
+        {
+            ragdollEndPosition = ragdollRoot.GetComponent<Rigidbody>().position;
+            Debug.Log($"Ragdoll ended at: {ragdollEndPosition}");
+            Debug.Log($"Player currently at: {transform.position}");
+        }
+
+        // Disable ragdoll physics
         foreach (var joint in joints)
         {
             joint.enableCollision = false;
@@ -141,10 +153,9 @@ public class RagdollEnabler : NetworkBehaviour
             rigidbody.isKinematic = true;
         }
 
-        // Now teleport the parent to the ragdoll position
+        // Teleport after disabling physics
         if (IsOwner)
         {
-            Vector3 ragdollEndPosition = ragdollRoot.GetComponent<Rigidbody>().position;
             TeleportServerRpc(GetComponent<NetworkObject>().NetworkObjectId, ragdollEndPosition, OwnerClientId);
 
             ragdollCamera.SetActive(false);
