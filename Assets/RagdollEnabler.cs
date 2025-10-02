@@ -75,7 +75,7 @@ public class RagdollEnabler : NetworkBehaviour
 
     public void EnableRagdoll(Vector3 vel)
     {
-        
+        ragdollRoot.SetParent(null);
         animator.enabled = false;
         foreach(var joint in joints)
         {
@@ -107,8 +107,8 @@ public class RagdollEnabler : NetworkBehaviour
 
     public void EnableAnimator()
     {
-        
-        
+
+        ragdollRoot.SetParent(transform.GetChild(0));
         animator.enabled = true;
         
         foreach (var joint in joints)
