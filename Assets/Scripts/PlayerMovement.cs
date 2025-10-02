@@ -129,8 +129,6 @@ public class PlayerMovement : NetworkBehaviour
     [ClientRpc]
     void GetUpClientRpc(ulong networkObjectID)
     {
-        if (NetworkManager.Singleton.LocalClientId != networkObjectID) return;
-
         if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectID, out var player))
         {
             player.GetComponent<PlayerMovement>().getUp = true;
