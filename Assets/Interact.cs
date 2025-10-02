@@ -43,6 +43,13 @@ public class Interact : NetworkBehaviour
                     Debug.Log(table.tableGame);
                     table.tableGame.BeginServerRpc(NetworkManager.Singleton.LocalClientId);
                 }
+                
+                if(hit.collider.CompareTag("Player"))
+                {
+                    Vector3 direction = (hit.collider.transform.position - transform.position).normalized;
+                    ulong id = hit.collider.GetComponent<NetworkObject>().NetworkObjectId;
+                    hit.collider.GetComponent<PlayerMovement>().RagdollAndAddForceServerRpc(id, 100, direction);
+                }
 
             }
         }
