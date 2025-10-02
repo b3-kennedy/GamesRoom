@@ -144,10 +144,6 @@ public class PlayerMovement : NetworkBehaviour
         if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectID, out var player))
         {
             Debug.Log(player);
-            player.transform.position = player.GetComponent<RagdollEnabler>().ragdollRoot.position;
-            player.GetComponent<RagdollEnabler>().ragdollRoot.position = player.transform.position;
-
-
             player.GetComponent<PlayerMovement>().getUp = true;
         }
     }
@@ -163,6 +159,7 @@ public class PlayerMovement : NetworkBehaviour
             Vector3 vel = player.GetComponent<Rigidbody>().linearVelocity;
             
             Rigidbody root = ragdollEnabler.ragdollRoot.GetComponent<Rigidbody>();
+
             root.AddForce(dir * force, ForceMode.Impulse);
             RagdollAndAddForceClientRpc(networkObjectID, force, dir, vel);
         }

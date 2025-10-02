@@ -108,7 +108,7 @@ public class RagdollEnabler : NetworkBehaviour
     public void EnableAnimator()
     {
         
-        //transform.position = ragdollRoot.position;
+        transform.position = ragdollRoot.position;
         animator.enabled = true;
         
         foreach (var joint in joints)
