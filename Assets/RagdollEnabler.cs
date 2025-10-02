@@ -110,17 +110,10 @@ public class RagdollEnabler : NetworkBehaviour
     {
         if(NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(netObjID, out var player))
         {
-            TeleportClientRpc(pos, clientID);
+            transform.position = pos;
         }
     }
-    
-    [ClientRpc]
-    void TeleportClientRpc(Vector3 pos, ulong clientID)
-    {
-        transform.position = pos;
-        Debug.Log(pos);
-        animator.enabled = true;
-    }
+
 
     public void EnableAnimator()
     {
