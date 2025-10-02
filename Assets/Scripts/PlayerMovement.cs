@@ -38,7 +38,7 @@ public class PlayerMovement : NetworkBehaviour
 
     RagdollEnabler ragdollEnabler;
     float getUpTimer;
-    bool getUp = false;
+    public bool getUp = false;
     bool hasRagdollHit = false;
 
     void Start()
