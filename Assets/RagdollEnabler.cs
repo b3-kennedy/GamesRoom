@@ -155,18 +155,19 @@ public class RagdollEnabler : NetworkBehaviour
             rigidbody.isKinematic = true;
         }
 
-        // Teleport after disabling physics
-        if (IsOwner)
+        // Teleport IMMEDIATELY on owner, then sync to server
+        if (IsOwner && !hasTeleported)
         {
-            if(!hasTeleported)
-            {
-                TeleportServerRpc(GetComponent<NetworkObject>().NetworkObjectId, ragdollEndPosition, OwnerClientId);
+            // Teleport locally first
+            transform.position = ragdollEndPosition;
+            Debug.Log($"Teleported locally to: {transform.position}");
 
-                ragdollCamera.SetActive(false);
-                normalCamera.SetActive(true);
-                hasTeleported = true;
-            }
+            // Then tell server about the new position
+            TeleportServerRpc(GetComponent<NetworkObject>().NetworkObjectId, ragdollEndPosition, OwnerClientId);
 
+            ragdollCamera.SetActive(false);
+            normalCamera.SetActive(true);
+            hasTeleported = true;
         }
 
         animator.enabled = true;
