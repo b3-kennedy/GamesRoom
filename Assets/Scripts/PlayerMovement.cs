@@ -86,7 +86,7 @@ public class PlayerMovement : NetworkBehaviour
             getUpTimer += Time.deltaTime;
             if(getUpTimer >= 2)
             {
-                GetUpServerRpc(OwnerClientId);
+                GetUpServerRpc(NetworkObjectId);
                 getUpTimer = 0;
             }
         }
@@ -129,8 +129,10 @@ public class PlayerMovement : NetworkBehaviour
     [ClientRpc]
     void GetUpClientRpc(ulong networkObjectID)
     {
+        Debug.Log("get up");
         if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectID, out var player))
         {
+            Debug.Log(player);
             player.GetComponent<PlayerMovement>().getUp = true;
         }
     }
