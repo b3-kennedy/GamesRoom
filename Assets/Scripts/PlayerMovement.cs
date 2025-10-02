@@ -144,7 +144,7 @@ public class PlayerMovement : NetworkBehaviour
         if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectID, out var player))
         {
             RagdollEnabler ragdollEnabler = player.GetComponent<RagdollEnabler>();
-            ragdollEnabler.EnableRagdoll(rb.linearVelocity);
+            ragdollEnabler.EnableRagdoll(player.GetComponent<Rigidbody>().linearVelocity);
 
             Rigidbody root = ragdollEnabler.ragdollRoot.GetComponent<Rigidbody>();
             root.AddForce(dir * force, ForceMode.Impulse);
