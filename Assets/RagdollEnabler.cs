@@ -104,10 +104,23 @@ public class RagdollEnabler : NetworkBehaviour
         GetComponent<Rigidbody>().isKinematic = true;
         GetComponent<CapsuleCollider>().enabled = false;
     }
+    
+    [ServerRpc(RequireOwnership = false)]
+    public void TeleportServerRpc(ulong netObjID)
+    {
+        if(NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(netObjID, out var player))
+        {
+            TeleportClientRpc(player.transform.position);
+        }
+    }
+    
+    void TeleportClientRpc(Vector3 pos)
+    {
+        transform.position = ragdollRoot.position;
+    }
 
     public void EnableAnimator()
     {
-        transform.position = ragdollRoot.position;
         animator.enabled = true;
         
         foreach (var joint in joints)

@@ -117,15 +117,7 @@ public class PlayerMovement : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     void GetUpServerRpc(ulong networkObjectID)
     {
-        // if(NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectID, out var player))
-        // {
-        //     NetworkTransform networkTransform = player.GetComponent<NetworkTransform>();
-        //     Transform ragdollRoot = player.GetComponent<RagdollEnabler>().ragdollRoot;
-        //     player.transform.position = ragdollRoot.position;
-        //     ragdollRoot.SetParent(player.transform.GetChild(0));
-        //     ragdollRoot.transform.localPosition = new Vector3(0, -1f, 0);
-            
-        // }
+        ragdollEnabler.TeleportServerRpc(networkObjectID);
         GetUpClientRpc(networkObjectID);
     }
     
