@@ -1,5 +1,4 @@
 using Unity.Netcode;
-using Unity.Netcode.Components;
 using UnityEngine;
 
 public class RagdollEnabler : NetworkBehaviour
@@ -105,17 +104,10 @@ public class RagdollEnabler : NetworkBehaviour
         GetComponent<Rigidbody>().isKinematic = true;
         GetComponent<CapsuleCollider>().enabled = false;
     }
-    
-    [ServerRpc(RequireOwnership = false)]
-    void TeleportServerRpc()
-    {
-        transform.position = ragdollRoot.position;
-    }
 
     public void EnableAnimator()
     {
-
-        TeleportServerRpc();
+        transform.position = ragdollRoot.position;
         animator.enabled = true;
         
         foreach (var joint in joints)
