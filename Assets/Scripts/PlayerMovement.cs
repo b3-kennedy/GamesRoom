@@ -150,13 +150,14 @@ public class PlayerMovement : NetworkBehaviour
             root.AddForce(dir * force, ForceMode.Impulse);
         }
 
-        // Tell everyone (including server/host client) to simulate it locally too
         RagdollAndAddForceClientRpc(networkObjectID, force, dir);
     }
 
     [ClientRpc]
     void RagdollAndAddForceClientRpc(ulong networkObjectID, float force, Vector3 dir)
     {
+        if (IsServer) return; //stops force being applied twice on host
+    
         if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectID, out var player))
         {
             RagdollEnabler ragdollEnabler = player.GetComponent<RagdollEnabler>();
