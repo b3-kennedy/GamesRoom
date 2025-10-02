@@ -109,7 +109,7 @@ public class RagdollEnabler : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     void TeleportServerRpc()
     {
-        GetComponent<NetworkTransform>().Teleport(ragdollRoot.position, transform.rotation, transform.localScale);
+        transform.position = ragdollRoot.position;
     }
 
     public void EnableAnimator()
