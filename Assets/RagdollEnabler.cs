@@ -122,6 +122,7 @@ public class RagdollEnabler : NetworkBehaviour
 
     public void EnableAnimator()
     {
+        TeleportServerRpc(GetComponent<NetworkObject>().NetworkObjectId);
         animator.enabled = true;
         
         foreach (var joint in joints)

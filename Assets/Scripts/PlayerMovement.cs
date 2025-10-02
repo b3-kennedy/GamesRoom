@@ -117,7 +117,7 @@ public class PlayerMovement : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     void GetUpServerRpc(ulong networkObjectID)
     {
-        ragdollEnabler.TeleportServerRpc(networkObjectID);
+        
         GetUpClientRpc(networkObjectID);
     }
     
