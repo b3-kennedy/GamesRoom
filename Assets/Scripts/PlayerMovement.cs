@@ -72,7 +72,8 @@ public class PlayerMovement : NetworkBehaviour
         
         if(Input.GetKeyDown(KeyCode.O) && !GetComponent<RagdollEnabler>().isRagdoll)
         {
-            RagdollAndAddForceServerRpc(OwnerClientId, 100, Vector3.up);
+            
+            RagdollAndAddForceServerRpc(NetworkObjectId, 100, Vector3.up);
         }
 
         // Apply drag based on grounded state
@@ -120,33 +121,40 @@ public class PlayerMovement : NetworkBehaviour
     }
     
     [ServerRpc(RequireOwnership = false)]
-    void GetUpServerRpc(ulong clientID)
+    void GetUpServerRpc(ulong networkObjectID)
     {
-        GetUpClientRpc(clientID);
+        GetUpClientRpc(networkObjectID);
     }
     
     [ClientRpc]
-    void GetUpClientRpc(ulong clientID)
+    void GetUpClientRpc(ulong networkObjectID)
     {
-        if (NetworkManager.Singleton.LocalClientId != clientID) return;
+        if (NetworkManager.Singleton.LocalClientId != networkObjectID) return;
 
-        getUp = true;
+        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectID, out var player))
+        {
+            player.GetComponent<PlayerMovement>().getUp = true;
+        }
     }
     
     [ServerRpc(RequireOwnership = false)]
-    public void RagdollAndAddForceServerRpc(ulong clientID,float force, Vector3 dir)
+    public void RagdollAndAddForceServerRpc(ulong networkObjectID,float force, Vector3 dir)
     {
-        RagdollAndAddForceClientRpc(clientID, force, dir);
+        RagdollAndAddForceClientRpc(networkObjectID, force, dir);
     }
     
     [ClientRpc]
-    void RagdollAndAddForceClientRpc(ulong clientID, float force, Vector3 dir)
+    void RagdollAndAddForceClientRpc(ulong networkObjectID, float force, Vector3 dir)
     {
-        if (NetworkManager.Singleton.LocalClientId != clientID) return;
+        if(NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectID, out var player))
+        {
+            RagdollEnabler ragdollEnabler = player.GetComponent<RagdollEnabler>();
+            ragdollEnabler.SetRagdollServerRpc(true);
+            Rigidbody root = ragdollEnabler.ragdollRoot.GetComponent<Rigidbody>();
+            root.AddForce(dir * force, ForceMode.Impulse);
+        }
 
-        ragdollEnabler.SetRagdollServerRpc(true);
-        Rigidbody root = ragdollEnabler.ragdollRoot.GetComponent<Rigidbody>();
-        root.AddForce(dir * force, ForceMode.Impulse);
+
     }
     
 
