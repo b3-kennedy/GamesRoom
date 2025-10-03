@@ -100,6 +100,7 @@ public class RagdollEnabler : NetworkBehaviour
         }
 
         isRagdoll = true;
+        GetComponent<Rigidbody>().isKinematic = true;
         GetComponent<CapsuleCollider>().enabled = false;
     }
 
@@ -140,6 +141,7 @@ public class RagdollEnabler : NetworkBehaviour
 
         animator.enabled = true;
         isRagdoll = false;
+        GetComponent<Rigidbody>().isKinematic = false;
         GetComponent<PlayerMovement>().enabled = true;
         GetComponent<CapsuleCollider>().enabled = true;
     }

@@ -72,6 +72,10 @@ public class PlayerMovement : NetworkBehaviour
             Jump();
         }
     
+        if(Input.GetKeyDown(KeyCode.O))
+        {
+            RagdollAndAddForceServerRpc(GetComponent<NetworkObject>().NetworkObjectId, 20, Vector3.up);
+        }
 
         // Apply drag based on grounded state
         rb.linearDamping = IsGrounded() ? groundDrag : 0f;
@@ -142,7 +146,7 @@ public class PlayerMovement : NetworkBehaviour
 
             Vector3 vel = player.GetComponent<Rigidbody>().linearVelocity;
 
-            player.GetComponent<Rigidbody>().AddForce(dir * force, ForceMode.Impulse);
+            ragdollEnabler.ragdollRoot.GetComponent<Rigidbody>().AddForce(dir * force, ForceMode.Impulse);
             RagdollAndAddForceClientRpc(networkObjectID, force, dir, vel);
         }
 
