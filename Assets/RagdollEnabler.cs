@@ -119,6 +119,7 @@ public class RagdollEnabler : NetworkBehaviour
         if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(netID, out var player))
         {
             player.transform.position = pos;
+            Debug.Log(pos);
             player.GetComponent<RagdollEnabler>().animator.enabled = true;
             player.GetComponent<RagdollEnabler>().isRagdoll = false;
             player.GetComponent<Rigidbody>().isKinematic = false;
