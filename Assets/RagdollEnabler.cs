@@ -110,6 +110,10 @@ public class RagdollEnabler : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     void RepositionPlayerServerRpc(ulong netID, Vector3 pos)
     {
+        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(netID, out var player))
+        {
+            player.transform.position = pos;
+        }
         RepositionPlayerClientRpc(netID, pos);
     }
 
@@ -117,9 +121,7 @@ public class RagdollEnabler : NetworkBehaviour
     void RepositionPlayerClientRpc(ulong netID, Vector3 pos)
     {
         if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(netID, out var player))
-        {
-            player.transform.position = pos;
-            Debug.Log(pos);
+        {            
             player.GetComponent<RagdollEnabler>().animator.enabled = true;
             player.GetComponent<RagdollEnabler>().isRagdoll = false;
             player.GetComponent<Rigidbody>().isKinematic = false;
