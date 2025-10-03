@@ -1,4 +1,5 @@
 using Unity.Netcode;
+using Unity.Netcode.Components;
 using UnityEngine;
 
 public class RagdollEnabler : NetworkBehaviour
@@ -107,10 +108,20 @@ public class RagdollEnabler : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     void RepositionPlayerServerRpc(ulong netID, Vector3 pos)
     {
-        if(NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(netID, out var player))
+        RepositionPlayerClientRpc(netID, pos);
+    }
+    
+    [ClientRpc]
+    void RepositionPlayerClientRpc(ulong netID, Vector3 pos)
+    {
+        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(netID, out var player))
         {
             player.transform.position = pos;
-            Debug.Log(pos);
+            player.GetComponent<RagdollEnabler>().animator.enabled = true;
+            player.GetComponent<RagdollEnabler>().isRagdoll = false;
+            player.GetComponent<Rigidbody>().isKinematic = false;
+            player.GetComponent<PlayerMovement>().enabled = true;
+            player.GetComponent<CapsuleCollider>().enabled = true;
         }
     }
 
@@ -131,14 +142,6 @@ public class RagdollEnabler : NetworkBehaviour
             rigidbody.useGravity = false;
             rigidbody.isKinematic = true;
         }
-
-
-
-        animator.enabled = true;
-        isRagdoll = false;
-        GetComponent<Rigidbody>().isKinematic = false;
-        GetComponent<PlayerMovement>().enabled = true;
-        GetComponent<CapsuleCollider>().enabled = true;
 
         // Owner handles camera
         if (IsOwner)
