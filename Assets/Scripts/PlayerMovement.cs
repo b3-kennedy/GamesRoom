@@ -112,7 +112,7 @@ public class PlayerMovement : NetworkBehaviour
                 getUp = false;
                 hasRagdollHit = false;
                 ragdollEnabler.head.GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
-                ragdollEnabler.SetRagdollServerRpc(false);
+                ragdollEnabler.SetRagdollServerRpc(false,GetComponent<NetworkObject>().NetworkObjectId, ragdollEnabler.ragdollRoot.position);
             }
             
         }

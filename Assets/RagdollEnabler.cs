@@ -48,11 +48,19 @@ public class RagdollEnabler : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void SetRagdollServerRpc(bool enable, ulong targetClientId = 0)
+    public void SetRagdollServerRpc(bool enable, ulong targetClientId = 0, Vector3 ragdollPos = default)
     {
         var player = NetworkManager.Singleton.ConnectedClients[targetClientId].PlayerObject;
         Vector3 vel = player.GetComponent<Rigidbody>().linearVelocity;
-        SetRagdollClientRpc(enable, vel, targetClientId);
+        if(enable)
+        {
+            SetRagdollClientRpc(enable, vel, targetClientId);
+        }
+        else
+        {
+            RepositionPlayerClientRpc(player.GetComponent<NetworkObject>().NetworkObjectId, ragdollPos);
+        }
+        
     }
 
     [ClientRpc]
@@ -66,12 +74,9 @@ public class RagdollEnabler : NetworkBehaviour
         {
             EnableRagdoll(velocity);
         }
-        else
-        {
-            EnableAnimator();
-        }
             
     }
+
 
 
     public void EnableRagdoll(Vector3 vel)
@@ -146,10 +151,6 @@ public class RagdollEnabler : NetworkBehaviour
         // Owner handles camera
         if (IsOwner)
         {
-
-            Vector3 ragdollHipPosition = ragdollRoot.GetComponent<Rigidbody>().position;
-            Debug.Log(ragdollHipPosition);
-            RepositionPlayerServerRpc(GetComponent<NetworkObject>().NetworkObjectId, ragdollHipPosition);
             ragdollCamera.SetActive(false);
             normalCamera.SetActive(true);
         }
