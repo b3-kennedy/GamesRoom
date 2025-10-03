@@ -108,7 +108,6 @@ public class PlayerMovement : NetworkBehaviour
                 getUp = false;
                 hasRagdollHit = false;
                 ragdollEnabler.head.GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
-                Debug.Log("test");
                 ragdollEnabler.SetRagdollServerRpc(false);
             }
             
@@ -142,10 +141,8 @@ public class PlayerMovement : NetworkBehaviour
             ragdollEnabler.EnableRagdoll(player.GetComponent<Rigidbody>().linearVelocity);
 
             Vector3 vel = player.GetComponent<Rigidbody>().linearVelocity;
-            
-            Rigidbody root = ragdollEnabler.ragdollRoot.GetComponent<Rigidbody>();
 
-            root.AddForce(dir * force, ForceMode.Impulse);
+            player.GetComponent<Rigidbody>().AddForce(dir * force, ForceMode.Impulse);
             RagdollAndAddForceClientRpc(networkObjectID, force, dir, vel);
         }
 

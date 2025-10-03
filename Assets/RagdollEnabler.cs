@@ -18,8 +18,6 @@ public class RagdollEnabler : NetworkBehaviour
     [HideInInspector] public bool isRagdoll = false;
     public Vector3 headPosition;
 
-    bool hasTeleported = false;
-
     void Awake()
     {
 
@@ -77,7 +75,6 @@ public class RagdollEnabler : NetworkBehaviour
 
     public void EnableRagdoll(Vector3 vel)
     {
-        hasTeleported = false;
         animator.enabled = false;
         foreach(var joint in joints)
         {
@@ -103,7 +100,6 @@ public class RagdollEnabler : NetworkBehaviour
         }
 
         isRagdoll = true;
-        GetComponent<Rigidbody>().isKinematic = true;
         GetComponent<CapsuleCollider>().enabled = false;
     }
 
@@ -146,7 +142,6 @@ public class RagdollEnabler : NetworkBehaviour
         isRagdoll = false;
         GetComponent<PlayerMovement>().enabled = true;
         GetComponent<CapsuleCollider>().enabled = true;
-        GetComponent<Rigidbody>().isKinematic = false;
     }
 
 }
