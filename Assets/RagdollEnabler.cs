@@ -118,8 +118,7 @@ public class RagdollEnabler : NetworkBehaviour
         if (!isRagdoll)
             return;
 
-        // Get ragdoll root position BEFORE disabling physics
-        Vector3 ragdollHipPosition = ragdollRoot.GetComponent<Rigidbody>().position;
+        
 
         
         
@@ -127,6 +126,9 @@ public class RagdollEnabler : NetworkBehaviour
         // Owner handles camera
         if (IsOwner)
         {
+        
+            Vector3 ragdollHipPosition = ragdollRoot.GetComponent<Rigidbody>().position;
+            Debug.Log(ragdollHipPosition);
             RepositionPlayerServerRpc(GetComponent<NetworkObject>().NetworkObjectId, ragdollHipPosition);
             ragdollCamera.SetActive(false);
             normalCamera.SetActive(true);
