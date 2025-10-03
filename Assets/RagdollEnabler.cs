@@ -12,17 +12,19 @@ public class RagdollEnabler : NetworkBehaviour
     Rigidbody[] rigidbodies;
     CharacterJoint[] joints;
     Collider[] colliders;
-    
+
     public GameObject normalCamera;
     public GameObject ragdollCamera;
 
     [HideInInspector] public bool isRagdoll = false;
     public Vector3 headPosition;
 
+    GameObject fakeRagDoll;
+
     void Awake()
     {
 
-        
+
     }
 
     public override void OnNetworkSpawn()
@@ -48,23 +50,15 @@ public class RagdollEnabler : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void SetRagdollServerRpc(bool enable, ulong targetClientId = 0, Vector3 ragdollPos = default)
+    public void SetRagdollServerRpc(bool enable, ulong targetClientId = 0)
     {
         var player = NetworkManager.Singleton.ConnectedClients[targetClientId].PlayerObject;
         Vector3 vel = player.GetComponent<Rigidbody>().linearVelocity;
-        if(enable)
-        {
-            SetRagdollClientRpc(enable, vel, targetClientId);
-        }
-        else
-        {
-            RepositionPlayerClientRpc(player.GetComponent<NetworkObject>().NetworkObjectId, ragdollPos);
-        }
-        
+        SetRagdollClientRpc(enable, vel, targetClientId);
     }
 
     [ClientRpc]
-    private void SetRagdollClientRpc(bool enable, Vector3 velocity,ulong targetClientId)
+    private void SetRagdollClientRpc(bool enable, Vector3 velocity, ulong targetClientId)
     {
         // If targeting a specific player
         if (targetClientId != 0 && targetClientId != OwnerClientId)
@@ -74,32 +68,35 @@ public class RagdollEnabler : NetworkBehaviour
         {
             EnableRagdoll(velocity);
         }
-            
-    }
+        else
+        {
+            EnableAnimator();
+        }
 
+    }
 
 
     public void EnableRagdoll(Vector3 vel)
     {
         animator.enabled = false;
-        foreach(var joint in joints)
+        foreach (var joint in joints)
         {
             joint.enableCollision = true;
         }
-        foreach(var collider in colliders)
+        foreach (var collider in colliders)
         {
             collider.enabled = true;
         }
         foreach (var rigidbody in rigidbodies)
         {
-            
+
             rigidbody.detectCollisions = true;
             rigidbody.useGravity = true;
             rigidbody.isKinematic = false;
             rigidbody.linearVelocity = vel;
         }
-        
-        if(IsOwner)
+
+        if (IsOwner)
         {
             ragdollCamera.SetActive(true);
             normalCamera.SetActive(false);
@@ -109,13 +106,13 @@ public class RagdollEnabler : NetworkBehaviour
         GetComponent<Rigidbody>().isKinematic = true;
         GetComponent<CapsuleCollider>().enabled = false;
     }
-    
+
     [ServerRpc(RequireOwnership = false)]
     void RepositionPlayerServerRpc(ulong netID, Vector3 pos)
     {
         RepositionPlayerClientRpc(netID, pos);
     }
-    
+
     [ClientRpc]
     void RepositionPlayerClientRpc(ulong netID, Vector3 pos)
     {
@@ -127,6 +124,8 @@ public class RagdollEnabler : NetworkBehaviour
             player.GetComponent<Rigidbody>().isKinematic = false;
             player.GetComponent<PlayerMovement>().enabled = true;
             player.GetComponent<CapsuleCollider>().enabled = true;
+            player.GetComponent<RagdollEnabler>().ragdollRoot.parent.GetChild(1).GetComponent<SkinnedMeshRenderer>().enabled = true;
+            player.GetComponent<RagdollEnabler>().ragdollRoot.parent.GetChild(2).GetComponent<SkinnedMeshRenderer>().enabled = true;
         }
     }
 
@@ -148,9 +147,15 @@ public class RagdollEnabler : NetworkBehaviour
             rigidbody.isKinematic = true;
         }
 
+        ragdollRoot.parent.GetChild(1).GetComponent<SkinnedMeshRenderer>().enabled = false;
+        ragdollRoot.parent.GetChild(2).GetComponent<SkinnedMeshRenderer>().enabled = false;
+
         // Owner handles camera
         if (IsOwner)
         {
+
+            Vector3 ragdollHipPosition = ragdollRoot.GetComponent<Rigidbody>().position;
+            RepositionPlayerServerRpc(GetComponent<NetworkObject>().NetworkObjectId, ragdollHipPosition);
             ragdollCamera.SetActive(false);
             normalCamera.SetActive(true);
         }
