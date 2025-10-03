@@ -132,6 +132,14 @@ public class RagdollEnabler : NetworkBehaviour
             rigidbody.isKinematic = true;
         }
 
+
+
+        animator.enabled = true;
+        isRagdoll = false;
+        GetComponent<Rigidbody>().isKinematic = false;
+        GetComponent<PlayerMovement>().enabled = true;
+        GetComponent<CapsuleCollider>().enabled = true;
+
         // Owner handles camera
         if (IsOwner)
         {
@@ -142,12 +150,6 @@ public class RagdollEnabler : NetworkBehaviour
             ragdollCamera.SetActive(false);
             normalCamera.SetActive(true);
         }
-
-        animator.enabled = true;
-        isRagdoll = false;
-        GetComponent<Rigidbody>().isKinematic = false;
-        GetComponent<PlayerMovement>().enabled = true;
-        GetComponent<CapsuleCollider>().enabled = true;
     }
 
 }
