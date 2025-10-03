@@ -103,6 +103,15 @@ public class RagdollEnabler : NetworkBehaviour
         GetComponent<Rigidbody>().isKinematic = true;
         GetComponent<CapsuleCollider>().enabled = false;
     }
+    
+    [ServerRpc(RequireOwnership = false)]
+    void RepositionPlayerServerRpc(ulong netID, Vector3 pos)
+    {
+        if(NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(netID, out var player))
+        {
+            player.transform.position = pos;
+        }
+    }
 
     public void EnableAnimator()
     {
@@ -113,10 +122,7 @@ public class RagdollEnabler : NetworkBehaviour
         Vector3 ragdollHipPosition = ragdollRoot.GetComponent<Rigidbody>().position;
 
         // Only the server can reposition the player root
-        if (IsServer)
-        {
-            transform.position = ragdollHipPosition;
-        }
+        RepositionPlayerServerRpc(GetComponent<NetworkObject>().NetworkObjectId, ragdollHipPosition);
 
         // Owner handles camera
         if (IsOwner)
