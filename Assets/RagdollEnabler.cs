@@ -119,23 +119,6 @@ public class RagdollEnabler : NetworkBehaviour
         if (!isRagdoll)
             return;
 
-        
-
-        
-        
-
-        // Owner handles camera
-        if (IsOwner)
-        {
-        
-            Vector3 ragdollHipPosition = ragdollRoot.GetComponent<Rigidbody>().position;
-            Debug.Log(ragdollHipPosition);
-            RepositionPlayerServerRpc(GetComponent<NetworkObject>().NetworkObjectId, ragdollHipPosition);
-            ragdollCamera.SetActive(false);
-            normalCamera.SetActive(true);
-        }
-
-        // Disable ragdoll physics AFTER moving parent
         foreach (var joint in joints)
             joint.enableCollision = false;
 
@@ -147,6 +130,17 @@ public class RagdollEnabler : NetworkBehaviour
             rigidbody.detectCollisions = false;
             rigidbody.useGravity = false;
             rigidbody.isKinematic = true;
+        }
+
+        // Owner handles camera
+        if (IsOwner)
+        {
+
+            Vector3 ragdollHipPosition = ragdollRoot.GetComponent<Rigidbody>().position;
+            Debug.Log(ragdollHipPosition);
+            RepositionPlayerServerRpc(GetComponent<NetworkObject>().NetworkObjectId, ragdollHipPosition);
+            ragdollCamera.SetActive(false);
+            normalCamera.SetActive(true);
         }
 
         animator.enabled = true;
