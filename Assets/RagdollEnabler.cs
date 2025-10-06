@@ -155,7 +155,7 @@ public class RagdollEnabler : NetworkBehaviour
         {
             
             
-            Vector3 ragdollHipPosition = ragdollRoot.parent.GetComponent<Rigidbody>().position;
+            Vector3 ragdollHipPosition = ragdollRoot.parent.position;
             GetComponent<NetworkTransform>().Teleport(ragdollHipPosition, transform.rotation, transform.localScale);
             RepositionPlayerServerRpc(GetComponent<NetworkObject>().NetworkObjectId, ragdollHipPosition);
             ragdollCamera.SetActive(false);
