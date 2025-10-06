@@ -125,7 +125,7 @@ public class RagdollEnabler : NetworkBehaviour
             player.GetComponent<CapsuleCollider>().enabled = true;
             player.GetComponent<RagdollEnabler>().ragdollRoot.parent.GetChild(1).GetComponent<SkinnedMeshRenderer>().enabled = true;
             player.GetComponent<RagdollEnabler>().ragdollRoot.parent.GetChild(2).GetComponent<SkinnedMeshRenderer>().enabled = true;
-            player.GetComponent<NetworkTransform>().Teleport(pos, player.transform.rotation, player.transform.localScale);
+            
         }
     }
 
@@ -153,8 +153,10 @@ public class RagdollEnabler : NetworkBehaviour
         // Owner handles camera
         if (IsOwner)
         {
-
+            
+            
             Vector3 ragdollHipPosition = ragdollRoot.GetComponent<Rigidbody>().position;
+            GetComponent<NetworkTransform>().Teleport(ragdollHipPosition, transform.rotation, transform.localScale);
             RepositionPlayerServerRpc(GetComponent<NetworkObject>().NetworkObjectId, ragdollHipPosition);
             ragdollCamera.SetActive(false);
             normalCamera.SetActive(true);
