@@ -27,11 +27,10 @@ public class PlayerMovement : NetworkBehaviour
     [Header("References")]
     public Transform orientation;
     public Animator anim;
-
     public Transform model;
     private float horizontal;
     private float vertical;
-    private bool isSprinting = false;
+    public bool isSprinting = false;
 
     private Rigidbody rb;
 
@@ -41,6 +40,12 @@ public class PlayerMovement : NetworkBehaviour
     float getUpTimer;
     public bool getUp = false;
     bool hasRagdollHit = false;
+    bool wasGroundedLastFrame = true;
+    bool isFalling;
+
+    public SkinnedMeshRenderer[] renderers;
+
+    Vector3 sprintMomentum = Vector3.zero;
 
     void Start()
     {
@@ -49,6 +54,17 @@ public class PlayerMovement : NetworkBehaviour
         state = PlayerState.NORMAL;
         ragdollEnabler = GetComponent<RagdollEnabler>();
         ragdollEnabler.spine.GetComponent<RagdollCollision>().hitObject.AddListener(OnRagdollHit);
+    }
+
+    public override void OnNetworkSpawn()
+    {
+        if(IsOwner)
+        {
+            foreach (var r in renderers)
+            {
+                r.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
+            }
+        }
     }
 
     void Update()
@@ -91,6 +107,8 @@ public class PlayerMovement : NetworkBehaviour
                 getUpTimer = 0;
             }
         }
+
+        CheckLanding();
     }
     
     void OnRagdollHit()
@@ -172,6 +190,21 @@ public class PlayerMovement : NetworkBehaviour
 
     void Animation()
     {
+        anim.SetBool("isSprinting", isSprinting);
+
+        if (!IsGrounded())
+        {
+            if (rb.linearVelocity.y < 0 && !isFalling)
+            {
+                anim.SetTrigger("Falling");
+                isFalling = true;
+            }
+        }
+        else
+        {
+            isFalling = false;
+        }
+
         if (IsGrounded() && (horizontal != 0 || vertical != 0))
         {
             // Normalize input so diagonals don't exceed 1
@@ -232,6 +265,22 @@ public class PlayerMovement : NetworkBehaviour
         }
     }
 
+    void CheckLanding()
+    {
+        bool isGroundedNow = IsGrounded();
+        if (!wasGroundedLastFrame && isGroundedNow)
+        {
+            OnLand();
+        }
+
+        wasGroundedLastFrame = isGroundedNow;
+    }
+
+    void OnLand()
+    {
+        anim.SetTrigger("Landed");
+    }
+
     void FixedUpdate()
     {
         if (!IsOwner) return;
@@ -269,6 +318,7 @@ public class PlayerMovement : NetworkBehaviour
 
     void Jump()
     {
+        anim.SetTrigger("Jump");
         rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
         rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
     }
