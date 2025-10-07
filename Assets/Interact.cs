@@ -10,8 +10,6 @@ public class Interact : NetworkBehaviour
 
     public KeyCode interactKey = KeyCode.E;
 
-    public PlayerInteractPanel playerInteractMenu;
-
     NetworkObject playerInteractingWith;
 
     ulong clientID;

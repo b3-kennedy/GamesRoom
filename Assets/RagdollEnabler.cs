@@ -158,6 +158,8 @@ public class RagdollEnabler : NetworkBehaviour
             Vector3 ragdollHipPosition = ragdollRoot.GetComponent<Rigidbody>().position;
             GetComponent<NetworkTransform>().Teleport(ragdollHipPosition, transform.rotation, transform.localScale);
             RepositionPlayerServerRpc(GetComponent<NetworkObject>().NetworkObjectId, ragdollHipPosition);
+            GetComponent<PlayerMovement>().DisableModel();
+
             ragdollCamera.SetActive(false);
             normalCamera.SetActive(true);
         }

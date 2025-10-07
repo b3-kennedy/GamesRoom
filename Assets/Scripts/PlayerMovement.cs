@@ -60,10 +60,23 @@ public class PlayerMovement : NetworkBehaviour
     {
         if(IsOwner)
         {
-            foreach (var r in renderers)
-            {
-                r.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
-            }
+            DisableModel();
+        }
+    }
+    
+    public void DisableModel()
+    {
+        foreach (var r in renderers)
+        {
+            r.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
+        }
+    }
+    
+    public void EnableModel()
+    {
+        foreach (var r in renderers)
+        {
+            r.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
         }
     }
 
@@ -146,7 +159,6 @@ public class PlayerMovement : NetworkBehaviour
     [ClientRpc]
     void GetUpClientRpc(ulong networkObjectID)
     {
-        Debug.Log("get up");
         if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectID, out var player))
         {
             Debug.Log(player);
@@ -174,6 +186,10 @@ public class PlayerMovement : NetworkBehaviour
     [ClientRpc]
     void RagdollAndAddForceClientRpc(ulong networkObjectID, float force, Vector3 dir, Vector3 velocity)
     {
+        if(IsOwner)
+        {
+            EnableModel();
+        }
         if (IsServer) return; //stops force being applied twice on host
     
         if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectID, out var player))
