@@ -1,9 +1,8 @@
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.Experimental.GlobalIllumination;
 using UnityEngine.UI;
 
-public class ItemHotbarGraphic : MonoBehaviour
+public class ItemHotbarGraphic : NetworkBehaviour
 {
     [HideInInspector] public Image selectGraphic;
     public bool isSelected;
