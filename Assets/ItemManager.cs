@@ -34,6 +34,7 @@ public class ItemManager : NetworkBehaviour
             {
                 slot.item = item;
                 slot.item.cam = GetComponent<PlayerLook>().normalCamera;
+                slot.item.player = gameObject;
                 return;
             }
         }
