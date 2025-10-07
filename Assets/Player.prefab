@@ -1255,6 +1255,7 @@ GameObject:
   - component: {fileID: 7067778551015217070}
   - component: {fileID: 7926026257562442125}
   - component: {fileID: 2625994596369477365}
+  - component: {fileID: -6828076833820794260}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -1592,7 +1593,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  hand: {fileID: 4560182157142959642}
   hammer: {fileID: 1142257703133725938, guid: 7550294e61fa5c349a4e110a70a9639c, type: 3}
+--- !u!114 &-6828076833820794260
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3594527728878532603}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5921b3ec8a35eea4cbc73940af67dcc4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hand: {fileID: 1878091061814224149}
 --- !u!1 &3616033060279320120
 GameObject:
   m_ObjectHideFlags: 0
@@ -2891,6 +2906,37 @@ Transform:
   - {fileID: 9044349072250362039}
   m_Father: {fileID: 6330355626072252276}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &6362961882715366341
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1878091061814224149}
+  m_Layer: 9
+  m_Name: Hold
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1878091061814224149
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6362961882715366341}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.072, z: -0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6330355626072252276}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6461575607133966391
 GameObject:
   m_ObjectHideFlags: 0
@@ -3785,6 +3831,7 @@ Transform:
   - {fileID: 6840496374900844756}
   - {fileID: 3521861713714104240}
   - {fileID: 4275689663992919106}
+  - {fileID: 1878091061814224149}
   m_Father: {fileID: 7926056917575996692}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7894759012053773122

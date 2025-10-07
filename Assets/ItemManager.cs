@@ -9,6 +9,8 @@ public class ItemManager : NetworkBehaviour
     ItemHotbarGraphic selectedSlot;
     int index;
 
+    public Transform hand;
+
     public Item hammer;
     public override void OnNetworkSpawn()
     {
@@ -19,6 +21,7 @@ public class ItemManager : NetworkBehaviour
             for (int i = 0; i < itemSlots.Length; i++)
             {
                 itemSlots[i] = itemUIParent.GetChild(i).GetComponent<ItemHotbarGraphic>();
+                itemSlots[i].GetComponent<ItemHotbarGraphic>().holdPos = hand;
             }
 
             OnPickUpItem(hammer);

@@ -5,6 +5,7 @@ public class Item : NetworkBehaviour
 {
     [HideInInspector] public Transform cam;
     [HideInInspector] public GameObject player;
+    
     public virtual void Use() { }
     
     public virtual void AltUse() { }

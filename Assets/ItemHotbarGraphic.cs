@@ -1,4 +1,6 @@
+using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.Experimental.GlobalIllumination;
 using UnityEngine.UI;
 
 public class ItemHotbarGraphic : MonoBehaviour
@@ -8,6 +10,10 @@ public class ItemHotbarGraphic : MonoBehaviour
 
     public Item item;
 
+    public Transform holdPos;
+
+    GameObject spawnedItem;
+
     Color normalOutlineColour;
 
     void Start()
@@ -16,15 +22,68 @@ public class ItemHotbarGraphic : MonoBehaviour
         normalOutlineColour = selectGraphic.color;
     }
 
+
+    
+    [ServerRpc(RequireOwnership = false)]
+    void SpawnItemServerRpc(ulong clientID, string itemName)
+    {
+        ulong playerObjectID = NetworkManager.Singleton.ConnectedClients[clientID].PlayerObject.NetworkObjectId;
+        SpawnItemClientRpc(playerObjectID, itemName, clientID);
+    }
+    
+    [ClientRpc]
+    void SpawnItemClientRpc(ulong netObjID, string itemName, ulong clientID)
+    {
+        if (NetworkManager.Singleton.LocalClientId == clientID) return;
+    
+        if(NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(netObjID, out var player))
+        {
+            Transform hand = player.GetComponent<BodyPartManager>().hand;
+            GameObject item = ItemHolder.Instance.GetItem(itemName);
+            spawnedItem = Instantiate(item, hand);
+        }
+    }
+    
+    [ServerRpc(RequireOwnership = false)]
+    void ChangeIitemVisibilityServerRpc(ulong clientID, bool value)
+    {
+        ChangeItemVisibilityClientRpc(clientID, value);
+    }
+    
+    [ClientRpc]
+    void ChangeItemVisibilityClientRpc(ulong clientID, bool value)
+    {
+        if (NetworkManager.Singleton.LocalClientId == clientID) return;
+        if(spawnedItem)
+        {
+            spawnedItem.SetActive(value);
+        }
+    }
+
     public void OnSelect()
     {
         isSelected = true;
         selectGraphic.color = Color.white;
+        if (spawnedItem == null && item)
+        {
+            spawnedItem = Instantiate(item.gameObject, holdPos);
+            SpawnItemServerRpc(NetworkManager.Singleton.LocalClientId, spawnedItem.name);
+        }
+        else if (spawnedItem != null)
+        {
+            spawnedItem.SetActive(true);
+            ChangeIitemVisibilityServerRpc(NetworkManager.Singleton.LocalClientId, true);
+        }
     }
-    
+
     public void OnDeselect()
     {
         isSelected = false;
         selectGraphic.color = normalOutlineColour;
+        if(spawnedItem)
+        {
+            spawnedItem.SetActive(false);
+            ChangeIitemVisibilityServerRpc(NetworkManager.Singleton.LocalClientId,false);
+        }
     }
 }

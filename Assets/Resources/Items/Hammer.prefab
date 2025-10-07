@@ -290,4 +290,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   cam: {fileID: 0}
+  player: {fileID: 0}
   range: 5
