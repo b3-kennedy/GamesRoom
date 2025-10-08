@@ -49,6 +49,12 @@ public class Interact : NetworkBehaviour
                     ulong id = hit.collider.GetComponent<NetworkObject>().NetworkObjectId;
                     hit.collider.GetComponent<PlayerMovement>().RagdollAndAddForceServerRpc(id, 200, direction);
                 }
+                
+                if(hit.collider.CompareTag("Shop"))
+                {
+
+                    hit.collider.GetComponent<Shop>().OpenShop(gameObject);
+                }
 
             }
         }
