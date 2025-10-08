@@ -40,16 +40,16 @@ public class Soundboard : NetworkBehaviour
     {
         if (!IsOwner) return;
 
-        for (int i = 0; i <= 9; i++)
-        {
-            if (Input.GetKeyDown(i.ToString()))
-            {
-                int index = (i == 0) ? audioClips.Count - 1 : i - 1;
-                PlaySoundAtIndex(index);
-            }
-        }
+        // for (int i = 0; i <= 9; i++)
+        // {
+        //     if (Input.GetKeyDown(i.ToString()))
+        //     {
+        //         int index = (i == 0) ? audioClips.Count - 1 : i - 1;
+        //         PlaySoundAtIndex(index);
+        //     }
+        // }
     }
-    void PlaySoundAtIndex(int index)
+    public void PlaySoundAtIndex(int index)
     {
         if (audioClips == null || audioClips.Count == 0)
         {

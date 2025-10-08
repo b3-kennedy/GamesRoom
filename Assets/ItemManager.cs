@@ -15,6 +15,9 @@ public class ItemManager : NetworkBehaviour
     public Transform hand;
 
     public Item hammer;
+    public Item soundboard;
+
+    [HideInInspector] public bool canSwitch = true;
     public override void OnNetworkSpawn()
     {
         itemSlots = new ItemHotbarGraphic[5];
@@ -30,6 +33,7 @@ public class ItemManager : NetworkBehaviour
         if (IsOwner)
         {
             OnPickUpItem(hammer);
+            OnPickUpItem(soundboard);
         }
         else
         {
@@ -55,18 +59,29 @@ public class ItemManager : NetworkBehaviour
     void Update()
     {
         if (!IsOwner) return;
+        if(canSwitch)
+        {
+            SlotSelection();
+        }
         
-        SlotSelection();
         if(selectedSlot != null && selectedSlot.item != null)
         {
             if(Input.GetButtonDown("Fire1"))
             {
-                selectedSlot.item.Use();
+                selectedSlot.spawnedItem.GetComponent<Item>().Use();
             }
-            else if(Input.GetButtonDown("Fire2"))
+            
+            if(Input.GetButtonDown("Fire2"))
             {
-                selectedSlot.item.AltUse();
+                selectedSlot.spawnedItem.GetComponent<Item>().isAltUse = true;
             }
+            else if(Input.GetButtonUp("Fire2"))
+            {
+                selectedSlot.spawnedItem.GetComponent<Item>().isAltUse = false;
+            }
+            
+            
+            
         }
     }
     
