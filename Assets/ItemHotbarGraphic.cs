@@ -68,6 +68,7 @@ public class ItemHotbarGraphic : NetworkBehaviour
         if (spawnedItem == null && item)
         {
             spawnedItem = Instantiate(item.gameObject, holdPos);
+            spawnedItem.name = item.name;
             manager.SpawnItemServerRpc(manager.OwnerClientId, spawnedItem.name);
         }
         else if (spawnedItem != null)
