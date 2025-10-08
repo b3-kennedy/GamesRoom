@@ -37,6 +37,7 @@ public class ItemHotbarGraphic : MonoBehaviour
         }
         else if (spawnedItem != null)
         {
+            manager.ChangeItemVisibilityServerRpc(manager.OwnerClientId, true, index);
             spawnedItem.SetActive(true);
         }
     }
@@ -47,6 +48,7 @@ public class ItemHotbarGraphic : MonoBehaviour
         selectGraphic.color = normalOutlineColour;
         if(spawnedItem)
         {
+            manager.ChangeItemVisibilityServerRpc(manager.OwnerClientId, false, index);
             spawnedItem.SetActive(false);
         }
     }

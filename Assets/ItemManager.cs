@@ -90,14 +90,14 @@ public class ItemManager : NetworkBehaviour
         {
             Transform hand = player.GetComponent<BodyPartManager>().hand;
             GameObject item = ItemHolder.Instance.GetItem(itemName);
-            Debug.Log("client: " + clientID);
-            Debug.Log("slot: " + slotIndex);
-            player.GetComponent<ItemManager>().itemSlots[slotIndex].spawnedItem = Instantiate(item, hand);
+            GameObject newItem = Instantiate(item, hand);
+            player.GetComponent<ItemManager>().itemSlots[slotIndex].spawnedItem = newItem;
+            player.GetComponent<ItemManager>().itemSlots[slotIndex].item = newItem.GetComponent<Item>();
         }
     }
 
     [ServerRpc(RequireOwnership = false)]
-    void ChangeItemVisibilityServerRpc(ulong clientID, bool value, int slotIndex)
+    public void ChangeItemVisibilityServerRpc(ulong clientID, bool value, int slotIndex)
     {
         ChangeItemVisibilityClientRpc(clientID, value, slotIndex);
     }
