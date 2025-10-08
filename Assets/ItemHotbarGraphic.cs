@@ -11,9 +11,11 @@ public class ItemHotbarGraphic : NetworkBehaviour
 
     public Transform holdPos;
 
-    GameObject spawnedItem;
+    [HideInInspector]public GameObject spawnedItem;
 
     Color normalOutlineColour;
+
+    [HideInInspector] public ItemManager manager;
 
     void Start()
     {
@@ -23,41 +25,41 @@ public class ItemHotbarGraphic : NetworkBehaviour
 
 
     
-    [ServerRpc(RequireOwnership = false)]
-    void SpawnItemServerRpc(ulong clientID, string itemName)
-    {
-        ulong playerObjectID = NetworkManager.Singleton.ConnectedClients[clientID].PlayerObject.NetworkObjectId;
-        SpawnItemClientRpc(playerObjectID, itemName, clientID);
-    }
+    // [ServerRpc(RequireOwnership = false)]
+    // void SpawnItemServerRpc(ulong clientID, string itemName)
+    // {
+    //     ulong playerObjectID = NetworkManager.Singleton.ConnectedClients[clientID].PlayerObject.NetworkObjectId;
+    //     SpawnItemClientRpc(playerObjectID, itemName, clientID);
+    // }
     
-    [ClientRpc]
-    void SpawnItemClientRpc(ulong netObjID, string itemName, ulong clientID)
-    {
-        if (NetworkManager.Singleton.LocalClientId == clientID) return;
+    // [ClientRpc]
+    // void SpawnItemClientRpc(ulong netObjID, string itemName, ulong clientID)
+    // {
+    //     if (NetworkManager.Singleton.LocalClientId == clientID) return;
     
-        if(NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(netObjID, out var player))
-        {
-            Transform hand = player.GetComponent<BodyPartManager>().hand;
-            GameObject item = ItemHolder.Instance.GetItem(itemName);
-            spawnedItem = Instantiate(item, hand);
-        }
-    }
+    //     if(NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(netObjID, out var player))
+    //     {
+    //         Transform hand = player.GetComponent<BodyPartManager>().hand;
+    //         GameObject item = ItemHolder.Instance.GetItem(itemName);
+    //         spawnedItem = Instantiate(item, hand);
+    //     }
+    // }
     
-    [ServerRpc(RequireOwnership = false)]
-    void ChangeIitemVisibilityServerRpc(ulong clientID, bool value)
-    {
-        ChangeItemVisibilityClientRpc(clientID, value);
-    }
+    // [ServerRpc(RequireOwnership = false)]
+    // void ChangeItemVisibilityServerRpc(ulong clientID, bool value)
+    // {
+    //     ChangeItemVisibilityClientRpc(clientID, value);
+    // }
     
-    [ClientRpc]
-    void ChangeItemVisibilityClientRpc(ulong clientID, bool value)
-    {
-        if (NetworkManager.Singleton.LocalClientId == clientID) return;
-        if(spawnedItem)
-        {
-            spawnedItem.SetActive(value);
-        }
-    }
+    // [ClientRpc]
+    // void ChangeItemVisibilityClientRpc(ulong clientID, bool value)
+    // {
+    //     if (NetworkManager.Singleton.LocalClientId == clientID) return;
+    //     if(spawnedItem)
+    //     {
+    //         spawnedItem.SetActive(value);
+    //     }
+    // }
 
     public void OnSelect()
     {
@@ -66,12 +68,11 @@ public class ItemHotbarGraphic : NetworkBehaviour
         if (spawnedItem == null && item)
         {
             spawnedItem = Instantiate(item.gameObject, holdPos);
-            SpawnItemServerRpc(NetworkManager.Singleton.LocalClientId, spawnedItem.name);
+            manager.SpawnItemServerRpc(manager.OwnerClientId, spawnedItem.name);
         }
         else if (spawnedItem != null)
         {
             spawnedItem.SetActive(true);
-            ChangeIitemVisibilityServerRpc(NetworkManager.Singleton.LocalClientId, true);
         }
     }
 
@@ -82,7 +83,6 @@ public class ItemHotbarGraphic : NetworkBehaviour
         if(spawnedItem)
         {
             spawnedItem.SetActive(false);
-            ChangeIitemVisibilityServerRpc(NetworkManager.Singleton.LocalClientId,false);
         }
     }
 }

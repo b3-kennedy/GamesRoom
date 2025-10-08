@@ -24333,6 +24333,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1208539698}
     m_Modifications:
+    - target: {fileID: -8271754952108001597, guid: 202e7101d99ddf542a2c56ff5cddab5e, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 297211869
+      objectReference: {fileID: 0}
+    - target: {fileID: -8271754952108001597, guid: 202e7101d99ddf542a2c56ff5cddab5e, type: 3}
+      propertyPath: SceneMigrationSynchronization
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8271754952108001597, guid: 202e7101d99ddf542a2c56ff5cddab5e, type: 3}
+      propertyPath: InScenePlacedSourceGlobalObjectIdHash
+      value: 3771434667
+      objectReference: {fileID: 0}
     - target: {fileID: 338484249275698925, guid: 202e7101d99ddf542a2c56ff5cddab5e, type: 3}
       propertyPath: m_Name
       value: ItemHotBarGraphic (3)
@@ -30312,6 +30324,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1208539698}
     m_Modifications:
+    - target: {fileID: -8271754952108001597, guid: 202e7101d99ddf542a2c56ff5cddab5e, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 737953724
+      objectReference: {fileID: 0}
+    - target: {fileID: -8271754952108001597, guid: 202e7101d99ddf542a2c56ff5cddab5e, type: 3}
+      propertyPath: SceneMigrationSynchronization
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8271754952108001597, guid: 202e7101d99ddf542a2c56ff5cddab5e, type: 3}
+      propertyPath: InScenePlacedSourceGlobalObjectIdHash
+      value: 3771434667
+      objectReference: {fileID: 0}
     - target: {fileID: 338484249275698925, guid: 202e7101d99ddf542a2c56ff5cddab5e, type: 3}
       propertyPath: m_Name
       value: ItemHotBarGraphic (2)
@@ -36346,6 +36370,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1208539698}
     m_Modifications:
+    - target: {fileID: -8271754952108001597, guid: 202e7101d99ddf542a2c56ff5cddab5e, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 239677514
+      objectReference: {fileID: 0}
+    - target: {fileID: -8271754952108001597, guid: 202e7101d99ddf542a2c56ff5cddab5e, type: 3}
+      propertyPath: SceneMigrationSynchronization
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8271754952108001597, guid: 202e7101d99ddf542a2c56ff5cddab5e, type: 3}
+      propertyPath: InScenePlacedSourceGlobalObjectIdHash
+      value: 3771434667
+      objectReference: {fileID: 0}
     - target: {fileID: 338484249275698925, guid: 202e7101d99ddf542a2c56ff5cddab5e, type: 3}
       propertyPath: m_Name
       value: ItemHotBarGraphic (1)
@@ -38904,6 +38940,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1208539698}
     m_Modifications:
+    - target: {fileID: -8271754952108001597, guid: 202e7101d99ddf542a2c56ff5cddab5e, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 1532201129
+      objectReference: {fileID: 0}
+    - target: {fileID: -8271754952108001597, guid: 202e7101d99ddf542a2c56ff5cddab5e, type: 3}
+      propertyPath: SceneMigrationSynchronization
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8271754952108001597, guid: 202e7101d99ddf542a2c56ff5cddab5e, type: 3}
+      propertyPath: InScenePlacedSourceGlobalObjectIdHash
+      value: 3771434667
+      objectReference: {fileID: 0}
     - target: {fileID: 338484249275698925, guid: 202e7101d99ddf542a2c56ff5cddab5e, type: 3}
       propertyPath: m_Name
       value: ItemHotBarGraphic (4)
@@ -45399,6 +45447,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1208539698}
     m_Modifications:
+    - target: {fileID: -8271754952108001597, guid: 202e7101d99ddf542a2c56ff5cddab5e, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 1091126577
+      objectReference: {fileID: 0}
+    - target: {fileID: -8271754952108001597, guid: 202e7101d99ddf542a2c56ff5cddab5e, type: 3}
+      propertyPath: SceneMigrationSynchronization
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8271754952108001597, guid: 202e7101d99ddf542a2c56ff5cddab5e, type: 3}
+      propertyPath: InScenePlacedSourceGlobalObjectIdHash
+      value: 3771434667
+      objectReference: {fileID: 0}
     - target: {fileID: 338484249275698925, guid: 202e7101d99ddf542a2c56ff5cddab5e, type: 3}
       propertyPath: m_Name
       value: ItemHotBarGraphic

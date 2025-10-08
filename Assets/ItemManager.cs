@@ -22,6 +22,7 @@ public class ItemManager : NetworkBehaviour
             {
                 itemSlots[i] = itemUIParent.GetChild(i).GetComponent<ItemHotbarGraphic>();
                 itemSlots[i].GetComponent<ItemHotbarGraphic>().holdPos = hand;
+                itemSlots[i].GetComponent<ItemHotbarGraphic>().manager = this;
             }
 
             OnPickUpItem(hammer);
@@ -61,6 +62,31 @@ public class ItemManager : NetworkBehaviour
         }
     }
     
+    public Item GetItemInSlot(int index)
+    {
+        return itemSlots[index].item;
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void SpawnItemServerRpc(ulong clientID, string itemName)
+    {
+        ulong playerObjectID = NetworkManager.Singleton.ConnectedClients[clientID].PlayerObject.NetworkObjectId;
+        SpawnItemClientRpc(playerObjectID, itemName, clientID);
+    }
+
+    [ClientRpc]
+    void SpawnItemClientRpc(ulong netObjID, string itemName, ulong clientID)
+    {
+        if (NetworkManager.Singleton.LocalClientId == clientID) return;
+
+        if(NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(netObjID, out var player))
+        {
+            Transform hand = player.GetComponent<BodyPartManager>().hand;
+            GameObject item = ItemHolder.Instance.GetItem(itemName);
+            selectedSlot.spawnedItem = Instantiate(item, hand);
+        }
+    }
+
     void SlotSelection()
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
