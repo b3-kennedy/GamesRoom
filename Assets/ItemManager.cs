@@ -4,7 +4,7 @@ using UnityEngine;
 public class ItemManager : NetworkBehaviour
 {
 
-    Transform itemUIParent;
+    public Transform itemUIParent;
     [HideInInspector] public ItemHotbarGraphic[] itemSlots;
 
     ItemHotbarGraphic prevSlot;
