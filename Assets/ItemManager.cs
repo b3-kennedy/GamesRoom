@@ -1,3 +1,4 @@
+using Assets.CreditClicker;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -99,15 +100,28 @@ public class ItemManager : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void ChangeItemVisibilityServerRpc(ulong clientID, bool value, int slotIndex)
     {
-        ChangeItemVisibilityClientRpc(clientID, value, slotIndex);
+        ulong playerObjectID = NetworkManager.Singleton.ConnectedClients[clientID].PlayerObject.NetworkObjectId;
+        ChangeItemVisibilityClientRpc(playerObjectID, clientID, value, slotIndex);
     }
 
     [ClientRpc]
-    void ChangeItemVisibilityClientRpc(ulong clientID, bool value, int slotIndex)
+    void ChangeItemVisibilityClientRpc(ulong netObjID, ulong clientID, bool value, int slotIndex)
     {
         if (NetworkManager.Singleton.LocalClientId == clientID) return;
+        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(netObjID, out var player))
+        {
+            ItemHotbarGraphic slot = player.GetComponent<ItemManager>().itemSlots[slotIndex];
+            if(value)
+            {
+                slot.spawnedItem.SetActive(true);
+            }
+            else
+            {
+                slot.spawnedItem.SetActive(false);
+            }
+        }
 
-        
+
     }
 
     void SlotSelection()
