@@ -90,7 +90,8 @@ public class ItemManager : NetworkBehaviour
         {
             Transform hand = player.GetComponent<BodyPartManager>().hand;
             GameObject item = ItemHolder.Instance.GetItem(itemName);
-            Debug.Log(clientID);
+            Debug.Log("client: " + clientID);
+            Debug.Log("slot: " + slotIndex);
             player.GetComponent<ItemManager>().itemSlots[slotIndex].spawnedItem = Instantiate(item, hand);
         }
     }
