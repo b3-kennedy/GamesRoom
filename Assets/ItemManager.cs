@@ -5,7 +5,7 @@ public class ItemManager : NetworkBehaviour
 {
 
     Transform itemUIParent;
-    ItemHotbarGraphic[] itemSlots;
+    [HideInInspector] public ItemHotbarGraphic[] itemSlots;
 
     ItemHotbarGraphic prevSlot;
     ItemHotbarGraphic selectedSlot;
@@ -90,7 +90,7 @@ public class ItemManager : NetworkBehaviour
         {
             Transform hand = player.GetComponent<BodyPartManager>().hand;
             GameObject item = ItemHolder.Instance.GetItem(itemName);
-            selectedSlot.spawnedItem = Instantiate(item, hand);
+            player.GetComponent<ItemManager>().itemSlots[slotIndex].spawnedItem = Instantiate(item, hand);
         }
     }
 

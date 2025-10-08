@@ -2,7 +2,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ItemHotbarGraphic : NetworkBehaviour
+public class ItemHotbarGraphic : MonoBehaviour
 {
     [HideInInspector] public Image selectGraphic;
     public bool isSelected;
