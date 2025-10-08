@@ -6,6 +6,8 @@ public class ItemManager : NetworkBehaviour
 
     Transform itemUIParent;
     ItemHotbarGraphic[] itemSlots;
+
+    ItemHotbarGraphic prevSlot;
     ItemHotbarGraphic selectedSlot;
     int index;
 
@@ -14,18 +16,23 @@ public class ItemManager : NetworkBehaviour
     public Item hammer;
     public override void OnNetworkSpawn()
     {
-        if(IsOwner)
+        itemSlots = new ItemHotbarGraphic[5];
+        itemUIParent = transform.Find("PlayerUI").transform.GetChild(0);
+        for (int i = 0; i < itemSlots.Length; i++)
         {
-            itemSlots = new ItemHotbarGraphic[5];
-            itemUIParent = GameObject.Find("PlayerUI").transform.GetChild(0);
-            for (int i = 0; i < itemSlots.Length; i++)
-            {
-                itemSlots[i] = itemUIParent.GetChild(i).GetComponent<ItemHotbarGraphic>();
-                itemSlots[i].GetComponent<ItemHotbarGraphic>().holdPos = hand;
-                itemSlots[i].GetComponent<ItemHotbarGraphic>().manager = this;
-            }
-
+            itemSlots[i] = itemUIParent.GetChild(i).GetComponent<ItemHotbarGraphic>();
+            itemSlots[i].GetComponent<ItemHotbarGraphic>().holdPos = hand;
+            itemSlots[i].GetComponent<ItemHotbarGraphic>().manager = this;
+            itemSlots[i].GetComponent<ItemHotbarGraphic>().index = i;
+        }
+        
+        if (IsOwner)
+        {
             OnPickUpItem(hammer);
+        }
+        else
+        {
+            itemUIParent.gameObject.SetActive(false);
         }
     }
     
@@ -68,14 +75,14 @@ public class ItemManager : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void SpawnItemServerRpc(ulong clientID, string itemName)
+    public void SpawnItemServerRpc(ulong clientID, string itemName, int slotIndex)
     {
         ulong playerObjectID = NetworkManager.Singleton.ConnectedClients[clientID].PlayerObject.NetworkObjectId;
-        SpawnItemClientRpc(playerObjectID, itemName, clientID);
+        SpawnItemClientRpc(playerObjectID, itemName, clientID, slotIndex);
     }
 
     [ClientRpc]
-    void SpawnItemClientRpc(ulong netObjID, string itemName, ulong clientID)
+    void SpawnItemClientRpc(ulong netObjID, string itemName, ulong clientID, int slotIndex)
     {
         if (NetworkManager.Singleton.LocalClientId == clientID) return;
 
@@ -85,6 +92,20 @@ public class ItemManager : NetworkBehaviour
             GameObject item = ItemHolder.Instance.GetItem(itemName);
             selectedSlot.spawnedItem = Instantiate(item, hand);
         }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    void ChangeItemVisibilityServerRpc(ulong clientID, bool value, int slotIndex)
+    {
+        ChangeItemVisibilityClientRpc(clientID, value, slotIndex);
+    }
+
+    [ClientRpc]
+    void ChangeItemVisibilityClientRpc(ulong clientID, bool value, int slotIndex)
+    {
+        if (NetworkManager.Singleton.LocalClientId == clientID) return;
+
+        
     }
 
     void SlotSelection()
