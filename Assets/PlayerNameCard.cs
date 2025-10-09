@@ -2,7 +2,7 @@ using UnityEngine;
 using Unity.Netcode;
 using TMPro;
 
-public class PlayerNameCard : MonoBehaviour
+public class PlayerNameCard : NetworkBehaviour
 {
     public TextMeshProUGUI nameTMP;
     GameObject player;
@@ -10,9 +10,14 @@ public class PlayerNameCard : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+
+    }
+
+    public override void OnNetworkSpawn()
+    {
         player = transform.root.gameObject;
         cam = player.GetComponent<PlayerLook>().normalCamera.gameObject;
-        nameTMP.text = player.GetComponent<SteamPlayer>().playerName; 
+        nameTMP.text = player.GetComponent<SteamPlayer>().playerName;
     }
 
     // Update is called once per frame
