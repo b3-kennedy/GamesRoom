@@ -35,6 +35,8 @@ public class SteamPlayer : NetworkBehaviour
         if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(netObjId, out var player))
         {
             player.GetComponent<SteamPlayer>().playerName = name;
+            PlayerNameCard card = player.transform.GetChild(4).GetComponent<PlayerNameCard>();
+            card.SetPlayerName(netObjId,name);
         }
     }
 }

@@ -19,19 +19,10 @@ public class PlayerNameCard : NetworkBehaviour
         if (localPlayer != null)
         {
             cam = localPlayer.GetComponent<PlayerLook>().normalCamera.gameObject;
-        }
-
-        if (IsServer)
-        {
-            player = transform.root.gameObject;
-            nameTMP.text = player.GetComponent<SteamPlayer>().playerName;
-            SetPlayerNameClientRpc(player.GetComponent<NetworkObject>().NetworkObjectId, nameTMP.text);
-        }
-        
+        }        
     }
     
-    [ClientRpc]
-    void SetPlayerNameClientRpc(ulong playerNetID, string name)
+    public void SetPlayerName(ulong playerNetID, string name)
     {
         if(NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(playerNetID, out var player))
         {
