@@ -10,16 +10,16 @@ public class PlayerNameCard : NetworkBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-
-    }
-
-    public override void OnNetworkSpawn()
-    {
         var localPlayer = NetworkManager.Singleton.SpawnManager.GetLocalPlayerObject();
         if (localPlayer != null)
         {
             cam = localPlayer.GetComponent<PlayerLook>().normalCamera.gameObject;
-        }        
+        }
+    }
+
+    public override void OnNetworkSpawn()
+    {
+    
     }
     
     public void SetPlayerName(ulong playerNetID, string name)
