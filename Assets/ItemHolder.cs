@@ -4,7 +4,7 @@ using UnityEngine;
 public class ItemHolder : MonoBehaviour
 {
     public static ItemHolder Instance;
-    private Dictionary<string, GameObject> items = new Dictionary<string, GameObject>();
+    public Dictionary<string, GameObject> items = new Dictionary<string, GameObject>();
 
     void Awake()
     {

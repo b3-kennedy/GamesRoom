@@ -6,6 +6,8 @@ public class Item : NetworkBehaviour
     [HideInInspector] public Transform cam;
     [HideInInspector] public GameObject player;
 
+    public float price;
+
     public bool isAltUse;
     
     public virtual void Use() { }

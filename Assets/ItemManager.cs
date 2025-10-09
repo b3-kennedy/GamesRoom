@@ -30,12 +30,7 @@ public class ItemManager : NetworkBehaviour
             itemSlots[i].GetComponent<ItemHotbarGraphic>().index = i;
         }
         
-        if (IsOwner)
-        {
-            OnPickUpItem(hammer);
-            OnPickUpItem(soundboard);
-        }
-        else
+        if(!IsOwner)
         {
             itemUIParent.gameObject.SetActive(false);
         }
