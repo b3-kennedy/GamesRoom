@@ -10,7 +10,7 @@ public class PlayerNameCard : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        player = NetworkManager.Singleton.SpawnManager.GetLocalPlayerObject().gameObject;
+        player = transform.root.gameObject;
         cam = player.GetComponent<PlayerLook>().normalCamera.gameObject;
         nameTMP.text = player.GetComponent<SteamPlayer>().playerName; 
     }
