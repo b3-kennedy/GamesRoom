@@ -37,6 +37,7 @@ public class PlayerNameCard : NetworkBehaviour
         {
             PlayerNameCard card = player.transform.GetChild(4).GetComponent<PlayerNameCard>();
             card.nameTMP.text = name;
+            Debug.Log(name);
         }
     }
 
