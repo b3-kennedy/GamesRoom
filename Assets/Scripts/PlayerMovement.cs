@@ -184,9 +184,6 @@ public class PlayerMovement : NetworkBehaviour
             Vector3 vel = player.GetComponent<Rigidbody>().linearVelocity;
 
             ragdollEnabler.ragdollRoot.GetComponent<Rigidbody>().AddForce(dir * force, ForceMode.Impulse);
-            player.ChangeOwnership(0);
-            player.GetComponent<PlayerLook>().normalCamera.gameObject.SetActive(false);
-            player.GetComponent<PlayerLook>().ragdollCamera.gameObject.SetActive(false);
             RagdollAndAddForceClientRpc(networkObjectID, force, dir, vel);
         }
 
