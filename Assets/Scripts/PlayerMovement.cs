@@ -187,24 +187,25 @@ public class PlayerMovement : NetworkBehaviour
             RagdollAndAddForceClientRpc(networkObjectID, force, dir, vel);
         }
 
-        
+
     }
 
     [ClientRpc]
     void RagdollAndAddForceClientRpc(ulong networkObjectID, float force, Vector3 dir, Vector3 velocity)
     {
-        if(IsOwner)
+        if (IsOwner)
         {
             EnableModel();
         }
-    
+        if (IsServer) return; //stops force being applied twice on host
+
         if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectID, out var player))
         {
             RagdollEnabler ragdollEnabler = player.GetComponent<RagdollEnabler>();
             ragdollEnabler.EnableRagdoll(velocity);
 
-            // Rigidbody root = ragdollEnabler.ragdollRoot.GetComponent<Rigidbody>();
-            // root.AddForce(dir * force, ForceMode.Impulse); // each client does this locally
+            Rigidbody root = ragdollEnabler.ragdollRoot.GetComponent<Rigidbody>();
+            root.AddForce(dir * force, ForceMode.Impulse); // each client does this locally
         }
     }
 
