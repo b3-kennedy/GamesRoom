@@ -1,3 +1,4 @@
+using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -18,13 +19,19 @@ public class Hammer : Item
         anim.SetTrigger("Swing");
         if(Physics.Raycast(cam.transform.position, cam.transform.forward, out RaycastHit hit, range))
         {
-            if (hit.collider.CompareTag("Player"))
-            {
-                Debug.Log("hit player");
-                Vector3 direction = (hit.collider.transform.position - player.transform.position).normalized;
-                ulong id = hit.collider.GetComponent<NetworkObject>().NetworkObjectId;
-                hit.collider.GetComponent<PlayerMovement>().RagdollAndAddForceServerRpc(id, 200, direction);
-            }
+            StartCoroutine(Wait(hit));
+        }
+    }
+    
+    IEnumerator Wait(RaycastHit hit)
+    {
+        yield return new WaitForSeconds(0.5f);
+        if (hit.collider.CompareTag("Player"))
+        {
+            Debug.Log("hit player");
+            Vector3 direction = (hit.collider.transform.position - player.transform.position).normalized;
+            ulong id = hit.collider.GetComponent<NetworkObject>().NetworkObjectId;
+            hit.collider.GetComponent<PlayerMovement>().RagdollAndAddForceServerRpc(id, 200, direction);
         }
     }
 
