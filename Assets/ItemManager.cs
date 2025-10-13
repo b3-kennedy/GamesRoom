@@ -46,6 +46,7 @@ public class ItemManager : NetworkBehaviour
                 slot.item = item;
                 slot.item.cam = GetComponent<PlayerLook>().normalCamera;
                 slot.item.player = gameObject;
+                slot.item.anim = GetComponent<PlayerMovement>().anim;
                 return;
             }
         }
@@ -165,7 +166,7 @@ public class ItemManager : NetworkBehaviour
 
         float scroll = Input.GetAxis("Mouse ScrollWheel");
 
-        if (scroll > 0)
+        if (scroll < 0)
         {
             index++;
             if (index >= 5)
@@ -175,7 +176,7 @@ public class ItemManager : NetworkBehaviour
 
             SelectSlot(index);
         }
-        else if (scroll < 0)
+        else if (scroll > 0)
         {
             index--;
             if (index < 0)
@@ -185,20 +186,25 @@ public class ItemManager : NetworkBehaviour
             SelectSlot(index);
         }
     }
-    
+
     void SelectSlot(int index)
     {
-        for (int i = 0; i < itemSlots.Length; i++)
+        if (selectedSlot != null)
         {
-            if(i == index)
+            if(selectedSlot.item != null)
             {
-                itemSlots[i].OnSelect();
-                selectedSlot = itemSlots[i];
+                selectedSlot.item.OnUnequip();
             }
-            else
-            {
-                itemSlots[i].OnDeselect();
-            }
+            
+            selectedSlot.OnDeselect();
         }
+
+        selectedSlot = itemSlots[index];
+        selectedSlot.OnSelect();
+        if(selectedSlot.item != null)
+        {
+            selectedSlot.item.OnEquip();
+        }
+        
     }
 }
