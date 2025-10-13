@@ -47,6 +47,8 @@ public class PlayerMovement : NetworkBehaviour
 
     Vector3 sprintMomentum = Vector3.zero;
 
+    public bool disableModel;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -58,9 +60,14 @@ public class PlayerMovement : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        if(IsOwner)
+        if (IsOwner)
         {
-            DisableModel();
+            if (disableModel)
+            {
+                DisableModel();
+            }
+            
+            
         }
     }
     
