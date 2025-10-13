@@ -197,7 +197,6 @@ public class PlayerMovement : NetworkBehaviour
         {
             EnableModel();
         }
-        if (IsServer) return; //stops force being applied twice on host
     
         if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectID, out var player))
         {
