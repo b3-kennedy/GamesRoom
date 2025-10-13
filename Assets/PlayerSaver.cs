@@ -4,6 +4,7 @@ using System.IO;
 using System.Collections;
 using UnityEngine.SceneManagement;
 using Steamworks;
+using System.Collections.Generic;
 
 public class PlayerSaver : NetworkBehaviour
 {
@@ -12,6 +13,8 @@ public class PlayerSaver : NetworkBehaviour
     public NetworkVariable<int> dodgerHighScore;
     public NetworkVariable<int> combinerHighScore;
     public NetworkVariable<int> snakeHighScore;
+
+    public List<string> itemsList = new List<string>();
     public override void OnNetworkSpawn()
     {
         if (!IsOwner) return;
@@ -73,6 +76,12 @@ public class PlayerSaver : NetworkBehaviour
 
         LoadScoreServerRpc(saveDataWrapper.playerData.flappyBirdHighScore, saveDataWrapper.playerData.dodgerHighScore, 
         saveDataWrapper.playerData.combinerHighScore, saveDataWrapper.playerData.snakeHighScore);
+        itemsList.Clear();
+        if (saveDataWrapper.playerData.items != null)
+        {
+            itemsList.AddRange(saveDataWrapper.playerData.items);
+            Debug.Log($"Loaded {itemsList.Count} items: {string.Join(", ", itemsList)}");
+        }
         StartCoroutine(Wait());
     }
 
@@ -130,7 +139,8 @@ public class PlayerSaver : NetworkBehaviour
             creditCount = GetComponent<SteamPlayer>().credits.Value,
             flappyBirdHighScore = fbHighScore.Value,
             dodgerHighScore = dodgerHighScore.Value,
-            combinerHighScore = combinerHighScore.Value
+            combinerHighScore = combinerHighScore.Value,
+            items = itemsList
         };
 
         // Write back to file

@@ -34,6 +34,13 @@ public class ItemManager : NetworkBehaviour
         {
             itemUIParent.gameObject.SetActive(false);
         }
+        
+        foreach (var item in GetComponent<PlayerSaver>().itemsList)
+        {
+            Item itemToAdd = ItemHolder.Instance.GetItem(item).GetComponent<Item>();
+            OnPickUpItem(itemToAdd);
+        }
+        GetComponent<PlayerSaver>().itemsList.Clear();
     }
     
     public void OnPickUpItem(Item item)

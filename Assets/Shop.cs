@@ -55,6 +55,7 @@ public class Shop : NetworkBehaviour
         Item item = ItemHolder.Instance.GetItem(itemName).GetComponent<Item>();
         var playerObject = NetworkManager.Singleton.SpawnManager.GetLocalPlayerObject();
         playerObject.GetComponent<ItemManager>().OnPickUpItem(item);
+        playerObject.GetComponent<PlayerSaver>().itemsList.Add(item.name);
         CheckPrice();
     }
     

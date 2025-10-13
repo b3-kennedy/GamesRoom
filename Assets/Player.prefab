@@ -1703,6 +1703,7 @@ MonoBehaviour:
     m_InternalValue: 0
   snakeHighScore:
     m_InternalValue: 0
+  itemsList: []
 --- !u!114 &7067778551015217070
 MonoBehaviour:
   m_ObjectHideFlags: 0
