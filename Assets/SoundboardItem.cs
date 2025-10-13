@@ -8,6 +8,15 @@ public class SoundboardItem : Item
     {
         manager = player.GetComponent<ItemManager>();
     }
+
+    public override void OnEquip()
+    {
+        transform.SetLocalPositionAndRotation(new Vector3(0.023f, -0.00999999978f, 0.0329999998f), Quaternion.Euler(35.8539925f, 96.9758072f, 94.1845245f));
+        base.OnEquip();
+        Debug.Log(anim.GetLayerName(1));
+        anim.SetLayerWeight(3, 1f);
+    }
+
     public override void Use()
     {
 
@@ -32,5 +41,10 @@ public class SoundboardItem : Item
         {
             manager.canSwitch = true;
         }
+    }
+
+    public override void OnUnequip()
+    {
+        anim.SetLayerWeight(3, 0f);
     }
 }
