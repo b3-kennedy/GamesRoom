@@ -204,8 +204,8 @@ public class PlayerMovement : NetworkBehaviour
             RagdollEnabler ragdollEnabler = player.GetComponent<RagdollEnabler>();
             ragdollEnabler.EnableRagdoll(velocity);
 
-            Rigidbody root = ragdollEnabler.ragdollRoot.GetComponent<Rigidbody>();
-            root.AddForce(dir * force, ForceMode.Impulse); // each client does this locally
+            // Rigidbody root = ragdollEnabler.ragdollRoot.GetComponent<Rigidbody>();
+            // root.AddForce(dir * force, ForceMode.Impulse); // each client does this locally
         }
     }
 
