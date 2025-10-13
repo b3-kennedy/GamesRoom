@@ -12,7 +12,7 @@ public class ItemManager : NetworkBehaviour
     ItemHotbarGraphic selectedSlot;
     int index;
 
-    public Transform hand;
+    [HideInInspector] public Transform hand;
 
     public Item hammer;
     public Item soundboard;
@@ -22,6 +22,7 @@ public class ItemManager : NetworkBehaviour
     {
         itemSlots = new ItemHotbarGraphic[5];
         itemUIParent = transform.Find("PlayerUI").transform.GetChild(0);
+        hand = GetComponent<RagdollEnabler>().spine.GetChild(0).GetChild(0).GetChild(2).GetChild(0).GetChild(0).GetChild(0).GetChild(0);
         for (int i = 0; i < itemSlots.Length; i++)
         {
             itemSlots[i] = itemUIParent.GetChild(i).GetComponent<ItemHotbarGraphic>();

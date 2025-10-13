@@ -1,20 +1,21 @@
+using Unity.Multiplayer.Samples.Utilities.ClientAuthority;
 using Unity.Netcode;
 using Unity.Netcode.Components;
 using UnityEngine;
 
 public class RagdollEnabler : NetworkBehaviour
 {
-    public Animator animator;
-    public Transform ragdollRoot;
-    public Transform head;
-    public Transform spine;
+    [HideInInspector] public Animator animator;
+    [HideInInspector] public Transform ragdollRoot;
+    [HideInInspector] public Transform head;
+    [HideInInspector] public Transform spine;
     public bool startRagdoll = false;
     Rigidbody[] rigidbodies;
     CharacterJoint[] joints;
     Collider[] colliders;
 
     public GameObject normalCamera;
-    public GameObject ragdollCamera;
+    [HideInInspector] public GameObject ragdollCamera;
 
     [HideInInspector] public bool isRagdoll = false;
     public Vector3 headPosition;
@@ -23,12 +24,17 @@ public class RagdollEnabler : NetworkBehaviour
 
     void Awake()
     {
-
-
+        animator = transform.GetComponentInChildren<Animator>();
+        GetComponent<ClientNetworkAnimator>().Animator = animator;
     }
 
     public override void OnNetworkSpawn()
-    {
+    {        
+        ragdollRoot = transform.GetChild(0).GetChild(1).GetChild(0);
+        head = ragdollRoot.GetChild(2).GetChild(0).GetChild(0).GetChild(1).GetChild(0);
+        spine = ragdollRoot.GetChild(2);
+        ragdollCamera = ragdollRoot.GetChild(3).gameObject;
+    
         Physics.IgnoreLayerCollision(8, 9);
         rigidbodies = ragdollRoot.GetComponentsInChildren<Rigidbody>();
         joints = ragdollRoot.GetComponentsInChildren<CharacterJoint>();

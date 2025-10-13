@@ -1,6 +1,7 @@
 using System.ComponentModel.Design.Serialization;
 using Unity.Netcode;
 using Unity.Netcode.Components;
+using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
@@ -26,8 +27,8 @@ public class PlayerMovement : NetworkBehaviour
 
     [Header("References")]
     public Transform orientation;
-    public Animator anim;
-    public Transform model;
+    [HideInInspector] public Animator anim;
+    [HideInInspector] public Transform model;
     private float horizontal;
     private float vertical;
     public bool isSprinting = false;
@@ -43,7 +44,7 @@ public class PlayerMovement : NetworkBehaviour
     bool wasGroundedLastFrame = true;
     bool isFalling;
 
-    public SkinnedMeshRenderer[] renderers;
+    [HideInInspector] public SkinnedMeshRenderer[] renderers;
 
     Vector3 sprintMomentum = Vector3.zero;
 
@@ -60,6 +61,10 @@ public class PlayerMovement : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
+        model = transform.GetChild(0).GetChild(1);
+        anim = model.GetComponent<Animator>();
+        renderers[0] = model.GetChild(1).GetComponent<SkinnedMeshRenderer>();
+        renderers[1] = model.GetChild(2).GetComponent<SkinnedMeshRenderer>();
         if (IsOwner)
         {
             if (disableModel)

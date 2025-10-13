@@ -6,7 +6,7 @@ public class PlayerLook : NetworkBehaviour
     [Header("References")]
     public Transform playerBody; // Assign the player's body (usually the parent of the camera)
     public Transform normalCamera;        // Assign the camera
-    public Transform ragdollCamera;
+    [HideInInspector] public Transform ragdollCamera;
 
     [Header("Settings")]
     public float mouseSensitivity = 100f;
@@ -25,8 +25,10 @@ public class PlayerLook : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
+        ragdollCamera = transform.GetChild(0).GetChild(1).GetChild(0).GetChild(3);
         if (!IsOwner)
         {
+            
             normalCamera.gameObject.SetActive(false);
             ragdollCamera.gameObject.SetActive(false);
         }
