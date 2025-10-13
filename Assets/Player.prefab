@@ -1703,6 +1703,7 @@ MonoBehaviour:
     m_InternalValue: 0
   snakeHighScore:
     m_InternalValue: 0
+  itemSlotsParent: {fileID: 2364265301615735621}
   itemsList: []
 --- !u!114 &7067778551015217070
 MonoBehaviour:
@@ -5251,6 +5252,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e73532a7390eb63478b711ed13d6a6a8, type: 3}
+--- !u!224 &2364265301615735621 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 515938121308808005, guid: e73532a7390eb63478b711ed13d6a6a8, type: 3}
+  m_PrefabInstance: {fileID: 2875394701822251008}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &8780877763373792211 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6790449613957671891, guid: e73532a7390eb63478b711ed13d6a6a8, type: 3}

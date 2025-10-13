@@ -14,6 +14,7 @@ public class PlayerSaver : NetworkBehaviour
     public NetworkVariable<int> combinerHighScore;
     public NetworkVariable<int> snakeHighScore;
 
+    public Transform itemSlotsParent;
     public List<string> itemsList = new List<string>();
     public override void OnNetworkSpawn()
     {
@@ -132,6 +133,17 @@ public class PlayerSaver : NetworkBehaviour
         {
             saveDataWrapper = new SaveData();
         }
+
+        itemsList.Clear();
+        for (int i = 0; i < itemSlotsParent.childCount; i++)
+        {
+            Item item = itemSlotsParent.GetChild(i).GetComponent<ItemHotbarGraphic>().item;
+            if(item)
+            {
+                itemsList.Insert(i, item.name);
+            }
+        }
+        
 
         // Update playerData
         saveDataWrapper.playerData = new PlayerData
