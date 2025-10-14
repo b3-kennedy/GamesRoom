@@ -10,6 +10,8 @@ public class PlayerSpawner : NetworkBehaviour
 
     public static PlayerSpawner Instance;
 
+    public GameObject testModel;
+
 
     void Awake()
     {
@@ -35,6 +37,9 @@ public class PlayerSpawner : NetworkBehaviour
             foreach (var id in clientsCompleted)
             {
                 GameObject player = Instantiate(playerPrefab);
+                GameObject model = player.transform.GetChild(0).GetChild(1).gameObject;
+                Destroy(model);
+                GameObject newModel = Instantiate(testModel, player.transform.GetChild(0));
                 player.GetComponent<NetworkObject>().SpawnAsPlayerObject(id, true);
             }
         }
