@@ -23,6 +23,7 @@ TagManager:
   - Undefined
   - CombinerGameOver
   - Shop
+  - SkinChanger
   layers:
   - Default
   - TransparentFX

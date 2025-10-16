@@ -55,6 +55,11 @@ public class Interact : NetworkBehaviour
 
                     hit.collider.GetComponent<Shop>().OpenShop(gameObject);
                 }
+                
+                if(hit.collider.CompareTag("SkinChanger"))
+                {
+                    hit.collider.GetComponent<SkinChanger>().ChangeServerRpc(OwnerClientId);
+                }
 
             }
         }

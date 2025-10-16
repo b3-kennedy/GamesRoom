@@ -27,14 +27,14 @@ public class RagdollEnabler : NetworkBehaviour
         animator = transform.GetComponentInChildren<Animator>();
         GetComponent<ClientNetworkAnimator>().Animator = animator;
     }
-
-    public override void OnNetworkSpawn()
-    {        
+    
+    void OnSpawn()
+    {
         ragdollRoot = transform.GetChild(0).GetChild(1).GetChild(0);
         head = ragdollRoot.GetChild(2).GetChild(0).GetChild(0).GetChild(1).GetChild(0);
         spine = ragdollRoot.GetChild(2);
         ragdollCamera = ragdollRoot.GetChild(3).gameObject;
-    
+
         Physics.IgnoreLayerCollision(8, 9);
         rigidbodies = ragdollRoot.GetComponentsInChildren<Rigidbody>();
         joints = ragdollRoot.GetComponentsInChildren<CharacterJoint>();
@@ -53,6 +53,11 @@ public class RagdollEnabler : NetworkBehaviour
             rigidbody.useGravity = false;
             rigidbody.isKinematic = true;
         }
+    }
+
+    public override void OnNetworkSpawn()
+    {
+        OnSpawn();
     }
 
     [ServerRpc(RequireOwnership = false)]

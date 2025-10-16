@@ -26,14 +26,14 @@ public class PlayerSaver : NetworkBehaviour
     {
         if (!IsOwner) return;
         SaveOnDisconnect();
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
-        NetworkManager.Singleton.Shutdown();
-        if (SteamClient.IsValid && SteamClient.IsLoggedOn)
-        {
-            SteamClient.Shutdown();
-        }
-        SceneManager.LoadScene("LobbyAndMainMenu", LoadSceneMode.Single);
+        // Cursor.lockState = CursorLockMode.None;
+        // Cursor.visible = true;
+        // NetworkManager.Singleton.Shutdown();
+        // if (SteamClient.IsValid && SteamClient.IsLoggedOn)
+        // {
+        //     SteamClient.Shutdown();
+        // }
+        // SceneManager.LoadScene("LobbyAndMainMenu", LoadSceneMode.Single);
 
     }
 
