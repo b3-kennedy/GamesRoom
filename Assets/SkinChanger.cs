@@ -21,7 +21,8 @@ public class SkinChanger : NetworkBehaviour
     {
         yield return null; // wait one frame
         GameObject newModel = Instantiate(testSkin, pos, Quaternion.identity);
+        newModel.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientID);
+        yield return new WaitForSeconds(1f);
         newModel.transform.position = pos;
-        newModel.GetComponent<NetworkObject>().SpawnWithOwnership(clientID);
     }
 }
