@@ -24,5 +24,20 @@ public class SkinChanger : NetworkBehaviour
         newModel.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientID);
         yield return new WaitForSeconds(1f);
         newModel.transform.position = pos;
+        SetPositionClientRpc(pos, new ClientRpcParams
+        {
+            Send = new ClientRpcSendParams
+            {
+                TargetClientIds = new ulong[] { clientID }
+            }
+        });
+    }
+
+    [ClientRpc]
+    private void SetPositionClientRpc(Vector3 pos, ClientRpcParams clientRpcParams = default)
+    {
+        if (!IsOwner) return; // Extra safety check
+
+        transform.position = pos;
     }
 }
