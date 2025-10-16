@@ -21,9 +21,8 @@ public class SkinChanger : NetworkBehaviour
     {
         yield return null; // wait one frame
         GameObject newModel = Instantiate(testSkin, pos, Quaternion.identity);
-        newModel.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientID);
-        Debug.Log(pos);
         newModel.transform.position = pos;
+        newModel.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientID);
         TeleportClientRpc(newModel.GetComponent<NetworkObject>().NetworkObjectId, pos);
     }
     
