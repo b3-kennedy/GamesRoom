@@ -1,6 +1,7 @@
 using Unity.Netcode;
 using UnityEngine;
 using System.Collections;
+using Unity.Netcode.Components;
 
 public class SkinChanger : NetworkBehaviour
 {
@@ -23,5 +24,15 @@ public class SkinChanger : NetworkBehaviour
         newModel.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientID);
         Debug.Log(pos);
         newModel.transform.position = pos;
+        TeleportClientRpc(newModel.GetComponent<NetworkObject>().NetworkObjectId, pos);
+    }
+    
+    [ClientRpc]
+    void TeleportClientRpc(ulong netObjID, Vector3 pos)
+    {
+        if(NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(netObjID, out var player))
+        {
+            player.GetComponent<NetworkTransform>().Teleport(pos, Quaternion.identity, Vector3.one);
+        }
     }
 }
